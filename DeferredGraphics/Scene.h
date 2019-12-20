@@ -3,6 +3,7 @@
 #include <glm/glm/gtx/transform.hpp>
 #include "TemplateUtils.h"
 #include "Entity.h"
+#include "EngineTypes.h"
 
 class Scene
 {

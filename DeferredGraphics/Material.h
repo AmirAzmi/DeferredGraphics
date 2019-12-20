@@ -2,8 +2,8 @@
 #include <glew/GL/glew.h>
 #include <glm/glm/glm.hpp>
 #include <string>
-#include "Shader.h"
 #include <map>
+#include "Shader.h"
 
 class Material
 {

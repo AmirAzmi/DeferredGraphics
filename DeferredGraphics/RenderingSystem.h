@@ -3,7 +3,7 @@
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtx/transform.hpp>
 #include <vector>
-class Scene;
+#include "Scene.h"
 
 class RenderingSystem
 {

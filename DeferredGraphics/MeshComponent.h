@@ -1,8 +1,8 @@
 #pragma once
 #include <glm/glm/glm.hpp>
-#include "Material.h"
-#include "Entity.h"
 #include "Mesh.h"
+#include "Material.h"
+#include "EngineTypes.h"
 
 class MeshComponent
 {
@@ -11,7 +11,7 @@ class MeshComponent
   ShaderHandle shader;
   EntityPtr entity;
 
-  MeshComponent(EntityPtr entity);
+  MeshComponent(Entity * entity);
 
 public:
   GLuint DrawMode = GL_TRIANGLES;
@@ -44,3 +44,4 @@ public:
 };
 
 using MeshComponentPtr = MeshComponent*;
+

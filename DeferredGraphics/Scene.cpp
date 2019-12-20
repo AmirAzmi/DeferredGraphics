@@ -15,7 +15,7 @@ std::vector<MeshComponentPtr> & Scene::getMeshes()
 EntityPtr Scene::addEntity(std::string name)
 {
   //add the entity with the given name
-  ListOfEntities.emplace_back(name);
+  ListOfEntities.push_back(new Entity(name, *this));
 
   //return the entity since we know its at the back
   return ListOfEntities.back();
@@ -54,9 +54,12 @@ void Scene::removeEntity(std::string name)
       //look for the first specified entity
       if (ListOfEntities[i]->name == name)
       {
+        //delete the entity at that location
+        delete ListOfEntities[i];
+
         //remove the entity at that point
         ListOfEntities.erase(ListOfEntities.begin() + i);
-
+ 
         //break out of the loop because you removed the entity
         break;
       }

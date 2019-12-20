@@ -1,6 +1,6 @@
 #include "RenderingSystem.h"
-#include "MeshComponent.hpp"
-#include "Scene.h"
+#include "MeshComponent.h"
+#include "EngineTypes.h"
 
 //update the mesh components of the entities
 void RenderingSystem::Update(Scene& scene)

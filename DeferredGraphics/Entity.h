@@ -2,13 +2,13 @@
 #include <glm/glm/glm.hpp>
 #include <glew/GL/glew.h>
 #include <string>
+#include "EngineTypes.h"
 
-#include "MeshComponent.hpp"
-#include "Scene.h"
+class Scene;
 
 class Entity
 {
-  MeshComponentPtr meshComponent;
+  MeshComponentPtr meshComponent; 
   Scene& scene;
 
 public:

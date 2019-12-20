@@ -1,7 +1,8 @@
 #pragma once
 #include <cstddef>
 #include <vector>
-#include "MeshComponent.hpp"
+#include "MeshComponent.h"
+#include "EngineTypes.h"
 //fill in all the component classes here
 
 template<typename... Types>

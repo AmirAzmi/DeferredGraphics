@@ -1,6 +1,6 @@
-#include "Shader.h"
 #include <vector>
 #include <fstream>
+#include "Shader.h"
 
 Shader::Shader(std::string vertexShader, std::string fragmentShader):programID(0)
 {
