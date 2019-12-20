@@ -1,0 +1,66 @@
+﻿  Entity.cpp
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\MeshComponent.hpp(12,19): error C3646: 'entity': unknown override specifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\MeshComponent.hpp(12,19): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\MeshComponent.hpp(14,34): error C2061: syntax error: identifier 'EntityPtr'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\MeshComponent.hpp(20,25): error C3646: 'getEntityPtr': unknown override specifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\MeshComponent.hpp(20,25): error C2059: syntax error: '('
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\MeshComponent.hpp(21,3): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(9,15): error C2065: 'EntityPtr': undeclared identifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(9,8): error C2923: 'std::vector': 'EntityPtr' is not a valid template type argument for parameter '_Ty'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.23.28105\include\vector(352,37): error C3203: 'allocator': unspecialized class template can't be used as a template argument for template parameter '_Alloc', expected a real type
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(36,22): error C3646: 'addEntity': unknown override specifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(36,22): error C2059: syntax error: '('
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(36,40): error C2238: unexpected token(s) preceding ';'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(37,23): error C3646: 'findEntity': unknown override specifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(37,23): error C2059: syntax error: '('
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(37,41): error C2238: unexpected token(s) preceding ';'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,3): warning C4984: 'if constexpr' is a C++17 language extension
+  RenderingSystem.cpp
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,3): message : This diagnostic occurred in the compiler generated function 'T Entity::add(T)'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\TemplateUtils.h(16,36): error C2065: 'MeshComponentPtr': undeclared identifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\TemplateUtils.h(16,52): error C3544: 'Types': parameter pack expects a type template argument
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\TemplateUtils.h(16,53): error C3544: 'Types': parameter pack expects a type template argument
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(9,15): error C2065: 'EntityPtr': undeclared identifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(9,8): error C2923: 'std::vector': 'EntityPtr' is not a valid template type argument for parameter '_Ty'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.23.28105\include\vector(352,37): error C3203: 'allocator': unspecialized class template can't be used as a template argument for template parameter '_Alloc', expected a real type
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(34,15): error C2065: 'MeshComponentPtr': undeclared identifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(34,8): error C2923: 'std::vector': 'MeshComponentPtr' is not a valid template type argument for parameter '_Ty'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(36,22): error C3646: 'addEntity': unknown override specifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(36,22): error C2059: syntax error: '('
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(36,40): error C2238: unexpected token(s) preceding ';'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(37,23): error C3646: 'findEntity': unknown override specifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(37,23): error C2059: syntax error: '('
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(37,41): error C2238: unexpected token(s) preceding ';'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Scene.h(39,1): warning C4624: 'Scene': destructor was implicitly defined as deleted
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(11,33): error C3646: 'meshComponent': unknown override specifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(11,33): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,3): message : This diagnostic occurred in the compiler generated function 'T Entity::add(T)'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,35): error C3861: 'MeshComponentPtr': identifier not found
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,35): message : This diagnostic occurred in the compiler generated function 'T Entity::add(T)'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(39,5): error C3861: 'meshComponent': identifier not found
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(39,5): message : This diagnostic occurred in the compiler generated function 'T Entity::add(T)'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(42,12): error C3861: 'meshComponent': identifier not found
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(42,12): message : This diagnostic occurred in the compiler generated function 'T Entity::add(T)'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\RenderingSystem.cpp(9,59): error C2440: 'initializing': cannot convert from 'std::vector' to 'std::vector<MeshComponentPtr,std::allocator<_Ty>>'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\RenderingSystem.cpp(9,59): error C2440:         with
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\RenderingSystem.cpp(9,59): error C2440:         [
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\RenderingSystem.cpp(9,59): error C2440:             _Ty=MeshComponentPtr
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\RenderingSystem.cpp(9,59): error C2440:         ]
+  Scene.cpp
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\RenderingSystem.cpp(9,40): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(11,33): error C3646: 'meshComponent': unknown override specifier
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(11,33): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(12,8): error C2143: syntax error: missing ';' before '&'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(12,8): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(12,15): error C2238: unexpected token(s) preceding ';'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(21,41): error C2061: syntax error: identifier 'Scene'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,3): message : This diagnostic occurred in the compiler generated function 'T Entity::add(T)'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,35): error C3861: 'MeshComponentPtr': identifier not found
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(36,35): message : This diagnostic occurred in the compiler generated function 'T Entity::add(T)'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(39,5): error C3861: 'meshComponent': identifier not found
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(39,5): message : This diagnostic occurred in the compiler generated function 'T Entity::add(T)'
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(42,12): error C3861: 'meshComponent': identifier not found
+  Generating Code...
+C:\Users\amira\source\repos\DeferredGraphics\DeferredGraphics\Entity.h(42,12): message : This diagnostic occurred in the compiler generated function 'T Entity::add(T)'

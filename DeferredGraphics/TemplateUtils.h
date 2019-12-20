@@ -1,0 +1,101 @@
+#pragma once
+#include <cstddef>
+#include <vector>
+#include "MeshComponent.hpp"
+//fill in all the component classes here
+
+template<typename... Types>
+struct TypeList
+{
+  template<template<typename...> typename T>
+  using apply = T<Types...>;
+
+  static constexpr auto size = sizeof...(Types);
+};
+
+using ComponentTypeList = TypeList<MeshComponentPtr>; //fill in component types here
+
+namespace detail
+{
+  template<class T, std::size_t N, class... Args>
+  struct get_index_of_element_from_tuple_by_type_impl;
+
+  template<class T, std::size_t N, class... Args>
+  struct get_index_of_element_from_tuple_by_type_impl<T, N, T, Args...>
+  {
+    static constexpr auto value = N;
+  };
+
+  template<class T, std::size_t N, class U, class... Args>
+  struct get_index_of_element_from_tuple_by_type_impl<T, N, U, Args...>
+  {
+    static constexpr auto value = get_index_of_element_from_tuple_by_type_impl<T, N + 1, Args...>::value;
+  };
+
+  template<class... Trest>
+  struct unique_types;
+
+  template<class T1, class T2, class... Trest>
+  struct unique_types<T1, T2, Trest...> : private unique_types<T1, T2>
+    , unique_types<T1, Trest...>
+    , unique_types<T2, Trest...>
+  {
+  };
+
+  template<class T1, class T2>
+  struct unique_types<T1, T2>
+  {
+    static_assert(!std::is_same<T1, T2>::value, "All types must be unique in this arg list.");
+  };
+
+  /*!
+     *  @brief
+     *    One element is guaranteed to be unique.
+     */
+  template<class T1>
+  struct unique_types<T1>
+  {
+  };
+}  // namespace detail
+
+template<template<typename...> class TContainer, typename... Args>
+class ContainerTuple : private detail::unique_types<Args...>
+{
+private:
+  using ContainerTupleImpl = std::tuple<TContainer<Args>...>;
+
+private:
+  ContainerTupleImpl m_Impl;
+
+public:
+  inline ContainerTuple(void) noexcept :
+    m_Impl()
+  {
+  }
+
+  inline ContainerTupleImpl& raw() noexcept
+  {
+    return m_Impl;
+  }
+
+  inline const ContainerTupleImpl& raw() const noexcept
+  {
+    return m_Impl;
+  }
+
+  template<typename T>
+  inline TContainer<T>& get(void) noexcept
+  {
+    return std::get<detail::get_index_of_element_from_tuple_by_type_impl<T, 0, Args...>::value>(raw());
+  }
+
+  template<typename T>
+  inline const TContainer<T>& get(void) const noexcept
+  {
+    return std::get<detail::get_index_of_element_from_tuple_by_type_impl<T, 0, Args...>::value>(raw());
+  }
+};
+
+template<typename... Args>
+using VectorTuple = ContainerTuple<std::vector, Args...>; //make a vector for each of the types
+using ComponentLists = ComponentTypeList::apply<VectorTuple>; //create the component vectors
