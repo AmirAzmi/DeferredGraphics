@@ -2,6 +2,11 @@
 #include "MeshComponent.h"
 #include "EngineTypes.h"
 
+RenderingSystem::RenderingSystem():projectionMatrixID(-1), viewMatrixID(-1)
+{
+
+}
+
 //update the mesh components of the entities
 void RenderingSystem::Update(Scene& scene)
 {

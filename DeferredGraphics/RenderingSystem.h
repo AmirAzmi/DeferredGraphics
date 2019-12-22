@@ -9,6 +9,8 @@ class RenderingSystem
 {
   GLuint projectionMatrixID;
   GLuint viewMatrixID;
-  void Update(Scene& scene);
+public:
+  RenderingSystem();
+  void Update(Scene & scene);
 };
 

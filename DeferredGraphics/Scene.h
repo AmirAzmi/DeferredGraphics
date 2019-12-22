@@ -5,11 +5,11 @@
 #include "Entity.h"
 #include "EngineTypes.h"
 
+
 class Scene
 {
   std::vector<EntityPtr> ListOfEntities; //list of entities
   ComponentLists ListOfTypes; //list of component types
-  Scene(int windowWidth, int windowHeight);
 
   glm::mat4 projectionMatrix;
   glm::mat4 viewMatrix;
@@ -24,6 +24,7 @@ class Scene
 
 public:
 
+  Scene(int windowWidth, int windowHeight);
   glm::mat4 getProjectionMatrix();
   glm::mat4 getViewMatrix();
   glm::vec3 getEyePosition();
@@ -33,6 +34,9 @@ public:
   float getFarDistance();
   float getFOV();
   std::vector<MeshComponentPtr>& getMeshes();
+
+  void init();
+  void Display();
 
   EntityPtr addEntity(std::string name);
   EntityPtr findEntity(std::string name);

@@ -2,10 +2,8 @@
 #include <glfw/GLFW/glfw3.h>
 #include <glm/glm/glm.hpp>
 
-#include "Imgui/imgui.h"
-#include "Imgui/imgui_impl_glfw.h"
-#include "Imgui/imgui_impl_opengl3.h"
-
+#include "Editor.h"
+#include "SystemManager.h"
 GLFWwindow* window;
 int windowWidth = 1024;
 int windowHeight = 768;
@@ -40,7 +38,6 @@ int main()
   if (glewInit() != GLEW_OK)
   {
     fprintf(stderr, "Failed to initialize GLEW\n");
-    //getchar();
     glfwTerminate();
     return -1;
   }
@@ -48,48 +45,52 @@ int main()
   // Ensure we can capture the escape key being pressed below
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-  ImGui::CreateContext();
-  bool show_demo_window = true;
-  ImGuiIO& io = ImGui::GetIO();
-  ImGui::StyleColorsDark();
-  ImGui_ImplGlfw_InitForOpenGL(window, true);
-  ImGui_ImplOpenGL3_Init(glsl_version);
+  //initialize the imgui editor
+  Editor ImGuiEditor;
+
+  //initialize the window
+  ImGuiEditor.init(window, glsl_version);
+
+  //intialize the scene
+  Scene* scene = new Scene(windowWidth, windowHeight);
+  
+  //initialize the systems the scene will be using
+  SystemManager systems;
+  systems.Init();
 
   do
   {
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-
-    ImGui::Begin("Amir Azmi");
-
-
+    //render the window with the title Amir Azmi
+    ImGuiEditor.preRender("Amir Azmi");
+    
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     glViewport(0, 0, width, height);
 
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glCullFace(GL_BACK);
 
-    //initialize the scene
+    //update the objects in the scene
+    systems.Update(*scene);
 
-    //update the scene
+    //render the contents of ImGui
+    ImGuiEditor.Render();
 
-    ImGui::End();
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+    //Call Imguie::End and other post render information
+    ImGuiEditor.postRender();
 
     glfwSwapBuffers(window);
     glfwPollEvents();
 
   } while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
-  ImGui_ImplOpenGL3_Shutdown();
-  ImGui::DestroyContext();
+  //free the memory for the systems
+  systems.Shutdown();
+
+  ImGuiEditor.shutdown();
   // Close OpenGL window and terminate GLFW
   glfwTerminate();
 

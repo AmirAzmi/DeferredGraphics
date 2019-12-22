@@ -35,6 +35,9 @@ inline T Entity::add(T component)
   //check to add meshComponent
   if constexpr (std::is_same_v<T, MeshComponentPtr>)
   {
+    //allocate the component
+    T* component = new T();
+
     //set the pointer of the meshComponent to be a valid pointer
     meshComponent = component; 
 
@@ -44,7 +47,6 @@ inline T Entity::add(T component)
 
   //passed in something that was not a component
   return nullptr;
-
 }
 
 //remove components from the entity
@@ -54,8 +56,8 @@ inline void Entity::remove(T component)
   //if a valid component is to be removed
   if (component)
   {
-    //set that component to be null
-    component = nullptr;
+    //delete the component
+    delete component;
   }
 }
 
