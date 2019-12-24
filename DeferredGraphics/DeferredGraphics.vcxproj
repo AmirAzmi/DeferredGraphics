@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_demo.cpp" />
@@ -145,8 +146,10 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SystemManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui.h" />
@@ -162,7 +165,12 @@
     <ClInclude Include="MeshComponent.hpp" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SystemManager.h" />
     <ClInclude Include="TemplateUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PhongShading.frag" />
+    <None Include="PhongShading.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
