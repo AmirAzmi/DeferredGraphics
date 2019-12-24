@@ -51,7 +51,6 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader):programID(0
     printf("%s\n", &VertexShaderErrorMessage[0]);
   }
 
-
   // Compile Fragment Shader
   printf("Compiling shader : %s\n", fragmentShader.c_str());
   char const* FragmentSourcePointer = FragmentShaderCode.c_str();
@@ -76,7 +75,6 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader):programID(0
   glAttachShader(ProgramID, VertexShaderID);
   glAttachShader(ProgramID, FragmentShaderID);
   glLinkProgram(ProgramID);
-
 
   // Check the program
   glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);

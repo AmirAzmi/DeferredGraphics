@@ -76,6 +76,9 @@ int main()
     //update the objects in the scene
     systems.Update(*scene);
 
+    //compile the shader?
+    //Shader shader("phongShading.vert","phongShading.frag");
+
     //render the contents of ImGui
     ImGuiEditor.Render();
 
