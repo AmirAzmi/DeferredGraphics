@@ -35,8 +35,10 @@ public:
   float getFOV();
   std::vector<MeshComponentPtr>& getMeshes();
 
-  void init();
-  void Display();
+  void Init();
+  void PreRender();
+  void Render();
+  void PostRender();
 
   EntityPtr addEntity(std::string name);
   EntityPtr findEntity(std::string name);

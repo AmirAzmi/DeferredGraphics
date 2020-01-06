@@ -11,11 +11,16 @@ class MeshComponent
   ShaderHandle shader;
   EntityPtr entity;
 
-  MeshComponent(Entity * entity);
+  //MeshComponent(EntityPtr entity, MeshHandle meshHandle, ShaderHandle shaderHandle);
 
-public:
+  MeshComponent(EntityPtr entity, MeshHandle meshHandle, ShaderHandle shaderHandle):entity(entity),mesh(meshHandle), shader(shaderHandle)
+  {
+    
+  }
+
+
+  public:
   GLuint DrawMode = GL_TRIANGLES;
-
 
   EntityPtr getEntityPtr()
   {

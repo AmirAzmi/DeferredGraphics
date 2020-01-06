@@ -2,6 +2,7 @@
 #include <glm/glm/glm.hpp>
 #include <glew/GL/glew.h>
 #include <string>
+#include <utility>
 #include "EngineTypes.h"
 
 class Scene;
@@ -20,23 +21,23 @@ public:
 
   Entity(std::string name, Scene& scene);
 
-  template<typename T>
-  T add(T component);
+  template<typename T, typename ...Ts>
+  T add(Ts&&... args);
 
   template <typename T>
-  void remove(T component);
+  void remove();
 
 };
 
 //add components to the entity
-template<typename T>
-inline T Entity::add(T component)
+template<typename T, typename ...Ts>
+inline T Entity::add(Ts&&... args)
 {
-  //check to add meshComponent
-  if constexpr (std::is_same_v<T, MeshComponentPtr>)
+  //check to add meshComponent note: make sure to compare types not pointers of types
+  if constexpr (std::is_same_v<T, MeshComponent>)
   {
     //allocate the component
-    T* component = new T();
+    T* component = new T(std::forward<Ts>(args)...);
 
     //set the pointer of the meshComponent to be a valid pointer
     meshComponent = component; 
@@ -51,13 +52,11 @@ inline T Entity::add(T component)
 
 //remove components from the entity
 template<typename T>
-inline void Entity::remove(T component)
+inline void Entity::remove()
 {
-  //if a valid component is to be removed
-  if (component)
+  if constexpr (std::is_same_v<T, MeshComponentPtr>)
   {
-    //delete the component
-    delete component;
+    delete meshComponent;
   }
 }
 

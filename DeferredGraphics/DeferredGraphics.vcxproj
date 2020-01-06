@@ -160,9 +160,9 @@
     <ClInclude Include="Imgui\imstb_textedit.h" />
     <ClInclude Include="Imgui\imstb_truetype.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshComponent.hpp" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SystemManager.h" />

@@ -4,7 +4,7 @@
 
 Mesh::Mesh(std::string filePath)
 {
-  std::ifstream file(filePath);  //read in the file
+  std::ifstream file(filePath);//read in the file
   std::string text_file_string;//stores all the text into string
   std::string line;            //variable for reading in a line
 
@@ -192,6 +192,11 @@ glm::vec3 Mesh::getValuesInBetweenWhiteSpacesVec3(std::string line)
     }
     else
     {
+      if (value.empty())
+      {
+        continue;
+      }
+
       //once you find a space store the value into the glm temp vector
       positionVertex[counter++] = std::stof(value);
 

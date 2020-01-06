@@ -53,6 +53,7 @@ int main()
 
   //intialize the scene
   Scene* scene = new Scene(windowWidth, windowHeight);
+  scene->Init();
   
   //initialize the systems the scene will be using
   SystemManager systems;
@@ -62,7 +63,7 @@ int main()
   {
     //render the window with the title Amir Azmi
     ImGuiEditor.preRender("Amir Azmi");
-    
+
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     glViewport(0, 0, width, height);
@@ -75,9 +76,6 @@ int main()
 
     //update the objects in the scene
     systems.Update(*scene);
-
-    //compile the shader?
-    //Shader shader("phongShading.vert","phongShading.frag");
 
     //render the contents of ImGui
     ImGuiEditor.Render();

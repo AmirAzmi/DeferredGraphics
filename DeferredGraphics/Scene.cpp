@@ -12,6 +12,51 @@ std::vector<MeshComponentPtr> & Scene::getMeshes()
   return ListOfTypes.get<MeshComponentPtr>();
 }
 
+void Scene::Init()
+{
+
+  //declare the shaders that will be used for this scene
+  Shader phongShader("PhongShading.vert","PhongShading.frag");
+
+  //setup the preliminaries to the mesh component
+  //necessary
+  // ->add a mesh to the component
+  // ->add a shader to the component
+  // ->have a refrence to the entity
+
+  //optional
+  // ->add a material to the component
+
+  //use the shader for the scene currently
+  phongShader.UseShader();
+
+  //add objects to the scene
+  EntityPtr objectOne = addEntity("Object One");
+
+  //add a mesh to the component
+  Mesh mesh = Mesh("Resources//cube.obj");
+
+  //note ask shareef how to use constructors but refrence as handles?
+  //add a mesh component pointer to the object with the setup from the prelims
+  MeshComponentPtr meshComp = objectOne->add<MeshComponentPtr>(objectOne, mesh, phongShader);
+
+  //manipulate the properties of the object by getting it from the component
+  meshComp->getEntityPtr()->scale = glm::vec3(2.0f,2.0f,2.0f);
+  
+}
+
+void Scene::PreRender()
+{
+}
+
+void Scene::Render()
+{
+}
+
+void Scene::PostRender()
+{
+}
+
 EntityPtr Scene::addEntity(std::string name)
 {
   //add the entity with the given name

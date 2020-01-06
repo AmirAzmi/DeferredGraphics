@@ -17,6 +17,7 @@ public:
   void setVec2(const std::string& name, glm::vec2 value);
   void setVec3(const std::string& name, glm::vec3 value);
   void setVec4(const std::string& name, glm::vec4 value);
+
   GLuint getProgramID()
   {
     return programID;

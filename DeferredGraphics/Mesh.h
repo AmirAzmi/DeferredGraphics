@@ -19,12 +19,12 @@ class Mesh
   std::vector<GLuint> indices = {};
 
 
-  Mesh(std::string filePath);
   Mesh();
 
   glm::vec3 getValuesInBetweenWhiteSpacesVec3(std::string line);
   glm::vec2 getValuesInBetweenWhiteSpacesVec2(std::string line);
 public:
+  Mesh(std::string filePath);
   GLuint getPosVBO();
   GLuint getNormsVBO();
   GLuint getIndexVBO();
