@@ -1,6 +1,7 @@
 #include "RenderingSystem.h"
 #include "MeshComponent.h"
 #include "EngineTypes.h"
+#include "Entity.h"
 
 RenderingSystem::RenderingSystem():projectionMatrixID(-1), viewMatrixID(-1)
 {
@@ -30,6 +31,9 @@ void RenderingSystem::Update(Scene& scene)
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, meshComponent->getMesh()->getNormsVBO());
     glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (void*)0);
+
+    //bind the index buffer that will be transferred to the GPU
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshComponent->getMesh()->getIndexVBO());
 
     //object to world matrix
     glm::mat4 ObjectToWorld = glm::translate(meshComponent->getEntityPtr()->position) * glm::rotate(meshComponent->getEntityPtr()->angle, meshComponent->getEntityPtr()->axisOfRotation) * glm::scale(meshComponent->getEntityPtr()->scale);

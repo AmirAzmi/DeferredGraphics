@@ -7,7 +7,7 @@ out vec3 world_normal_position;
 
 uniform mat4 object_to_world;
 uniform mat4 view_matrix;
-uniform mat4 projection_matrix;
+uniform mat4 perspective_matrix;
 uniform mat4 normal_matrix;
 
 void main()
@@ -17,5 +17,5 @@ void main()
   world_normal_position = vec3(normal_matrix * vec4(aNormal, 1.0f));    
 
 
-  gl_Position = projection_matrix * view_matrix * vec4(world_position, 1.0f);
+  gl_Position = perspective_matrix * view_matrix * vec4(world_position, 1.0f);
 }

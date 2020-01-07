@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Entity.h"
 
 Scene::Scene(int windowWidth, int windowHeight):fov(90.0f), nearDistance(0.1f), farDistance(1000.0f), 
 eyePosition(glm::vec3(0.0f,0.0f,5.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, 0.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
@@ -7,7 +8,7 @@ eyePosition(glm::vec3(0.0f,0.0f,5.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, 0.
   viewMatrix = glm::lookAt(eyePosition, cameraDirection, upDirection);
 }
 
-std::vector<MeshComponentPtr> & Scene::getMeshes()
+std::vector<MeshComponentPtr> &Scene::getMeshes()
 {
   return ListOfTypes.get<MeshComponentPtr>();
 }
@@ -16,29 +17,28 @@ void Scene::Init()
 {
 
   //declare the shaders that will be used for this scene
-  Shader phongShader("PhongShading.vert","PhongShading.frag");
+  ShaderHandle phongShader = std::make_shared<Shader>("PhongShading.vert","PhongShading.frag");
 
   //setup the preliminaries to the mesh component
-  //necessary
   // ->add a mesh to the component
   // ->add a shader to the component
+  // ->add a material to the component
   // ->have a refrence to the entity
 
-  //optional
-  // ->add a material to the component
-
   //use the shader for the scene currently
-  phongShader.UseShader();
+  phongShader->UseShader();
 
   //add objects to the scene
   EntityPtr objectOne = addEntity("Object One");
 
   //add a mesh to the component
-  Mesh mesh = Mesh("Resources//cube.obj");
+  MeshHandle mesh = std::make_shared<Mesh>("Resources//cube.obj");
 
-  //note ask shareef how to use constructors but refrence as handles?
+  //add a material component
+  MaterialHandle material = std::make_shared<Material>(phongShader);
+
   //add a mesh component pointer to the object with the setup from the prelims
-  MeshComponentPtr meshComp = objectOne->add<MeshComponentPtr>(objectOne, mesh, phongShader);
+  MeshComponentPtr meshComp = objectOne->add<MeshComponent>(objectOne, mesh, phongShader, material);
 
   //manipulate the properties of the object by getting it from the component
   meshComp->getEntityPtr()->scale = glm::vec3(2.0f,2.0f,2.0f);

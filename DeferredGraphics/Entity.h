@@ -4,15 +4,14 @@
 #include <string>
 #include <utility>
 #include "EngineTypes.h"
-
-class Scene;
+#include "Scene.h"
 
 class Entity
 {
   MeshComponentPtr meshComponent; 
-  Scene& scene;
 
 public:
+  Scene& scene;
   std::string name;
   glm::vec3 position;
   glm::vec3 axisOfRotation;
@@ -22,7 +21,7 @@ public:
   Entity(std::string name, Scene& scene);
 
   template<typename T, typename ...Ts>
-  T add(Ts&&... args);
+  T* add(Ts&&... args);
 
   template <typename T>
   void remove();
@@ -31,7 +30,7 @@ public:
 
 //add components to the entity
 template<typename T, typename ...Ts>
-inline T Entity::add(Ts&&... args)
+inline T* Entity::add(Ts&&... args)
 {
   //check to add meshComponent note: make sure to compare types not pointers of types
   if constexpr (std::is_same_v<T, MeshComponent>)
@@ -41,6 +40,9 @@ inline T Entity::add(Ts&&... args)
 
     //set the pointer of the meshComponent to be a valid pointer
     meshComponent = component; 
+
+    //
+    scene.ListOfTypes.get<T*>().push_back(component);
 
     //return the component
     return meshComponent;
