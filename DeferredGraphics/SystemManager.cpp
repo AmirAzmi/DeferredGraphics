@@ -6,9 +6,9 @@ void SystemManager::Init(int windowWidth, int windowHeight)
   renderer = new RenderingSystem(windowWidth, windowHeight);
 }
 
-void SystemManager::Update(Scene& scene)
+void SystemManager::Update(Scene& scene, int windowWidth, int windowHeight)
 {
-  renderer->Update(scene);
+  renderer->Update(scene, windowWidth, windowHeight);
 }
 
 void SystemManager::Shutdown()

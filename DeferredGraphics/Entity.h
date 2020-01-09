@@ -8,7 +8,8 @@
 
 class Entity
 {
-  MeshComponentPtr meshComponent; 
+  MeshComponentPtr meshComponent;
+  LightComponentPtr lightComponent;
 
 public:
   Scene& scene;
@@ -48,6 +49,22 @@ inline T* Entity::add(Ts&&... args)
     return meshComponent;
   }
 
+  //check to add meshComponent note: make sure to compare types not pointers of types
+  if constexpr (std::is_same_v<T, LightComponent>)
+  {
+    //allocate the component
+    T* component = new T(std::forward<Ts>(args)...);
+
+    //set the pointer of the meshComponent to be a valid pointer
+    lightComponent = component;
+
+    //add the component to the T list and in this case T is MeshComponent
+    scene.ListOfTypes.get<T*>().push_back(component);
+
+    //return the component
+    return lightComponent;
+  }
+
   //passed in something that was not a component
   return nullptr;
 }
@@ -59,6 +76,11 @@ inline void Entity::remove()
   if constexpr (std::is_same_v<T, MeshComponentPtr>)
   {
     delete meshComponent;
+  }
+
+  if constexpr (std::is_same_v<T, LightComponentPtr>)
+  {
+    delete lightComponent;
   }
 }
 

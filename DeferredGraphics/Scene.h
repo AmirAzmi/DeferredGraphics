@@ -35,6 +35,7 @@ public:
   float getFarDistance();
   float getFOV();
   std::vector<MeshComponentPtr>& getMeshes();
+  std::vector<LightComponentPtr>& getLights();
 
   void Init();
   void PreRender();

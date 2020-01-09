@@ -35,5 +35,6 @@ public:
     light.linear = 0.7f;
     light.quadratic = 1.8f;
   }
-
 };
+
+using LightComponentPtr = LightComponent *;

@@ -75,7 +75,7 @@ int main()
     glCullFace(GL_BACK);
 
     //update the objects in the scene
-    systems.Update(*scene);
+    systems.Update(*scene, windowWidth, windowHeight);
 
     //render the scene
     scene->Render();

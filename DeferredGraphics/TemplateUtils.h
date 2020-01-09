@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <vector>
 #include "MeshComponent.h"
+#include "LightComponent.h"
 #include "EngineTypes.h"
 //fill in all the component classes here
 
@@ -14,7 +15,7 @@ struct TypeList
   static constexpr auto size = sizeof...(Types);
 };
 
-using ComponentTypeList = TypeList<MeshComponentPtr>; //fill in component types here
+using ComponentTypeList = TypeList<MeshComponentPtr, LightComponentPtr>; //fill in component types here
 
 namespace detail
 {

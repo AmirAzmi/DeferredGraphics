@@ -10,7 +10,7 @@ class SystemManager
 public:
 
   void Init(int windowWidth, int windowHeight);
-  void Update(Scene& scene);
+  void Update(Scene& scene, int windowWidth, int windowHeight);
   void Shutdown();
 };
 

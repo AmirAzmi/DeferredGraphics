@@ -10,8 +10,14 @@ eyePosition(glm::vec3(0.0f,0.0f,5.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, 0.
 
 std::vector<MeshComponentPtr> &Scene::getMeshes()
 {
-  //returns the vector of componentptrs in the scene
+  //returns the vector of MeshComponentPtrs in the scene
   return ListOfTypes.get<MeshComponentPtr>();
+}
+
+std::vector<LightComponentPtr>& Scene::getLights()
+{
+  //returns the vector of LightComponentPtrs in the scene
+  return ListOfTypes.get<LightComponentPtr>();
 }
 
 void Scene::Init()

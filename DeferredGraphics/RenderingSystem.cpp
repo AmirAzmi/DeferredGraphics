@@ -10,6 +10,26 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //set the deffered lighting shader that should be used
   defferedLightingShaderID = std::make_shared<Shader>("defferedLightingPass.vert", "defferedLightingPass.frag", true);
   forwardLightingShaderID = std::make_shared <Shader>("forwardLightingPass.vert", "forwardLightingPass.frag", false);
+  
+  //generate the first ssbo
+  glGenBuffers(2, &ssboID[0]);
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[0]);
+  glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(shader_data), &shader_data, GL_DYNAMIC_COPY);
+
+  //generate the second ssbo
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[1]);
+  glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(shader_data), &shader_data, GL_DYNAMIC_COPY);
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+  //initialize the ssbo for the deffered lighting pass
+  blockIndex[0] = glGetProgramResourceIndex(defferedLightingShaderID->getProgramID(), GL_SHADER_STORAGE_BLOCK, "shader_data");
+  glShaderStorageBlockBinding(defferedLightingShaderID->getProgramID(), blockIndex[0], ssboBindingPointIndex[0]);
+  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ssboBindingPointIndex[0], ssboID[0]);
+
+  //initialize the ssbo for the forward lighting pass
+  blockIndex[1] = glGetProgramResourceIndex(forwardLightingShaderID->getProgramID(), GL_SHADER_STORAGE_BLOCK, "shader_data");
+  glShaderStorageBlockBinding(forwardLightingShaderID->getProgramID(), blockIndex[1], ssboBindingPointIndex[1]);
+  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ssboBindingPointIndex[1], ssboID[1]);
 
   //generate the framebuffer to draw to
   glGenFramebuffers(1, &gBufferFBOID);
@@ -56,11 +76,16 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
 }
 
 //update the mesh components of the entities
-void RenderingSystem::Update(Scene& scene)
+void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 {
   //gets all the current mesh components in th scene
   std::vector<MeshComponentPtr> meshes = scene.getMeshes();
 
+  //gets all the current mesh components in th scene
+  std::vector<LightComponentPtr> lights = scene.getLights();
+
+  //Geometry Pass
+  //------------------------------------------------------------
   //first it sorts the list where the values from getDeffered are put into buckets
   auto iterator_to_forward_list = std::partition(meshes.begin(), meshes.end(), [](MeshComponentPtr mesh) {return mesh->getShader()->getDeffered(); });
 
@@ -70,13 +95,41 @@ void RenderingSystem::Update(Scene& scene)
   //clear color buffer bit and depth buffer info from the default framebuffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
- //draw deffered objectrs first
+  //ssbo loop thorugh lights for light mapping for deffered lights
+
+ 
+  //draw deffered objectrs first
   std::for_each(meshes.begin(), iterator_to_forward_list, [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, true); });
 
   //unbind the g framebuffer
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+  //lighting Pass
+  //------------------------------------------------------------
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   defferedLightingShaderID->UseShader();
+
+  //set the active textures to be displayed on the quad
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, gPositionID);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, gNormalID);
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, gColorSpecID);
+
+  //loop through lights for light mapping for forward lights
+
+  //render quads
+
+  //copy content of geometry's depth buffer to default framebuffer's depth buffer
+  //----------------------------------------------------------------------------------
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, gBufferFBOID);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
+  //blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
+  //the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
+  //depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
+  glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   //draw forward objects next
   std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
@@ -101,6 +154,13 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene & scene, bool isDeffered
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getMesh()->getNormsVBO());
     glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (void*)0);
+
+    //enable UV data that will be transferred to the GPU
+    
+    /*glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getMesh()->getUVBO());
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    */
 
     //bind the index buffer that will be transferred to the GPU
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getMesh()->getIndexVBO());
