@@ -7,9 +7,10 @@
 class Shader
 {
   GLuint programID;
+  bool isDeffered;
 
 public:
-  Shader(std::string vertexShader, std::string fragmentShader);
+  Shader(std::string vertexShader, std::string fragmentShader, bool isDeffered);
   void UseShader();
   void setBool(const std::string& name, bool value) const;
   void setInt(const std::string& name, int value) const;
@@ -21,6 +22,11 @@ public:
   GLuint getProgramID()
   {
     return programID;
+  }
+
+  bool getDeffered()
+  {
+    return isDeffered;
   }
 
 };

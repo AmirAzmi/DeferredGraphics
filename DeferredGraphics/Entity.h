@@ -41,7 +41,7 @@ inline T* Entity::add(Ts&&... args)
     //set the pointer of the meshComponent to be a valid pointer
     meshComponent = component; 
 
-    //
+    //add the component to the T list and in this case T is MeshComponent
     scene.ListOfTypes.get<T*>().push_back(component);
 
     //return the component

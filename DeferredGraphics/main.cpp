@@ -51,14 +51,14 @@ int main()
   //initialize the window
   ImGuiEditor.init(window, glsl_version);
 
+  //initialize the systems the scene will be using
+  SystemManager systems;
+  systems.Init(windowWidth, windowHeight);
+
   //intialize the scene
   Scene* scene = new Scene(windowWidth, windowHeight);
   scene->Init();
   
-  //initialize the systems the scene will be using
-  SystemManager systems;
-  systems.Init();
-
   do
   {
     //render the window with the title Amir Azmi
@@ -76,6 +76,9 @@ int main()
 
     //update the objects in the scene
     systems.Update(*scene);
+
+    //render the scene
+    scene->Render();
 
     //render the contents of ImGui
     ImGuiEditor.Render();

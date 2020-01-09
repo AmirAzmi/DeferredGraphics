@@ -1,1 +1,10 @@
-﻿  DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe
+﻿  RenderingSystem.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(36,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(36,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(59,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(59,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
+  SystemManager.cpp
+  main.cpp
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe

@@ -109,12 +109,6 @@ Mesh::Mesh(std::string filePath)
     }
   }
 
-  /*//if uv is empty that means nothing was parsed into it so lets just store it with 0s
-  if (uv.empty())
-  {
-    uv.resize(0, glm::vec2{0,0});
-  }*/
-
   //generate the Vertex Array Object
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);

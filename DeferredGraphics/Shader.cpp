@@ -2,7 +2,7 @@
 #include <fstream>
 #include "Shader.h"
 
-Shader::Shader(std::string vertexShader, std::string fragmentShader):programID(0)
+Shader::Shader(std::string vertexShader, std::string fragmentShader, bool isDeffered):programID(0), isDeffered(isDeffered)
 {
   // Create the shaders
   GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);

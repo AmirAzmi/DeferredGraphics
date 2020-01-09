@@ -159,16 +159,22 @@
     <ClInclude Include="Imgui\imstb_rectpack.h" />
     <ClInclude Include="Imgui\imstb_textedit.h" />
     <ClInclude Include="Imgui\imstb_truetype.h" />
+    <ClInclude Include="LightComponent.h" />
+    <ClInclude Include="LightSystem.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="TemplateUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="defferedLightingPass.frag" />
+    <None Include="defferedLightingPass.vert" />
+    <None Include="gBuffer.frag" />
+    <None Include="gBuffer.vert" />
     <None Include="PhongShading.frag" />
     <None Include="PhongShading.vert" />
   </ItemGroup>

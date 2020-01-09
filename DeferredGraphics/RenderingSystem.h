@@ -9,8 +9,21 @@ class RenderingSystem
 {
   GLuint projectionMatrixID;
   GLuint viewMatrixID;
-public:
-  RenderingSystem();
-  void Update(Scene & scene);
-};
 
+  GLuint gBufferFBOID;
+  GLuint gPositionID;
+  GLuint gNormalID;
+  GLuint gColorSpecID;
+
+  GLuint rboDepthID;
+  
+  ShaderHandle defferedLightingShaderID;
+  ShaderHandle forwardLightingShaderID;
+
+  bool isDeffered;
+
+public:        
+  RenderingSystem(int windowWidth, int windowHeight);
+  void Update(Scene& scene);
+  void Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered);
+};

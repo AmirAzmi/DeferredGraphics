@@ -86,9 +86,6 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderingSystem.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -131,12 +128,33 @@
     <ClInclude Include="MeshComponent.h">
       <Filter>Header Files\Component</Filter>
     </ClInclude>
+    <ClInclude Include="LightComponent.h">
+      <Filter>Header Files\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSystem.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingSystem.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PhongShading.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="PhongShading.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="gBuffer.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="gBuffer.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="defferedLightingPass.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="defferedLightingPass.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

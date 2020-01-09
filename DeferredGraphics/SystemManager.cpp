@@ -1,9 +1,9 @@
 #include "SystemManager.h"
 
-void SystemManager::Init()
+void SystemManager::Init(int windowWidth, int windowHeight)
 {
   //initialize the renderer
-  renderer = new RenderingSystem();
+  renderer = new RenderingSystem(windowWidth, windowHeight);
 }
 
 void SystemManager::Update(Scene& scene)

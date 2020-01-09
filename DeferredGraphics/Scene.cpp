@@ -10,14 +10,14 @@ eyePosition(glm::vec3(0.0f,0.0f,5.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, 0.
 
 std::vector<MeshComponentPtr> &Scene::getMeshes()
 {
+  //returns the vector of componentptrs in the scene
   return ListOfTypes.get<MeshComponentPtr>();
 }
 
 void Scene::Init()
 {
-
   //declare the shaders that will be used for this scene
-  ShaderHandle phongShader = std::make_shared<Shader>("PhongShading.vert","PhongShading.frag");
+  ShaderHandle gBuffer = std::make_shared<Shader>("gBuffer.vert","gBuffer.frag", true);
 
   //setup the preliminaries to the mesh component
   // ->add a mesh to the component
@@ -25,8 +25,6 @@ void Scene::Init()
   // ->add a material to the component
   // ->have a refrence to the entity
 
-  //use the shader for the scene currently
-  phongShader->UseShader();
 
   //add objects to the scene
   EntityPtr objectOne = addEntity("Object One");
@@ -34,15 +32,20 @@ void Scene::Init()
   //add a mesh to the component
   MeshHandle mesh = std::make_shared<Mesh>("Resources//cube.obj");
 
-  //add a material component
-  MaterialHandle material = std::make_shared<Material>(phongShader);
+  //add a material to the component
+  MaterialHandle material = std::make_shared<Material>(gBuffer);
+
+  //material information
+  material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+  material->setFloat("specular_intensity", 30.0f);
 
   //add a mesh component pointer to the object with the setup from the prelims
-  MeshComponentPtr meshComp = objectOne->add<MeshComponent>(objectOne, mesh, phongShader, material);
+  MeshComponentPtr meshComp = objectOne->add<MeshComponent>(objectOne, mesh, gBuffer, material);
 
   //manipulate the properties of the object by getting it from the component
-  meshComp->getEntityPtr()->scale = glm::vec3(2.0f,2.0f,2.0f);
-  
+  meshComp->getEntityPtr()->scale = glm::vec3(1.0f,1.0f,1.0f);
+  meshComp->getEntityPtr()->angle = 0;
+  meshComp->getEntityPtr()->axisOfRotation = glm::vec3(1.0f,0.0f,0.0f);
 }
 
 void Scene::PreRender()

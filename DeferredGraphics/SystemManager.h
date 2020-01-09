@@ -9,7 +9,7 @@ class SystemManager
 
 public:
 
-  void Init();
+  void Init(int windowWidth, int windowHeight);
   void Update(Scene& scene);
   void Shutdown();
 };
