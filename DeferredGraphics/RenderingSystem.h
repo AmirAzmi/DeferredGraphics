@@ -20,6 +20,11 @@ class RenderingSystem
 
   //depth buffer ID
   GLuint rboDepthID;
+
+  //quad data
+  GLuint quadVAOID = 0;
+  GLuint quadVBOID;
+  GLuint quadUVID;
   
   //shader handle for deffered pass and forward pas
   ShaderHandle defferedLightingShaderID;
@@ -42,4 +47,5 @@ public:
   RenderingSystem(int windowWidth, int windowHeight);
   void Update(Scene& scene, int windowWidth, int windowHeight);
   void Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered);
+  void DrawQuad();
 };

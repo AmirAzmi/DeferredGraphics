@@ -47,6 +47,7 @@ void Scene::Init()
 
   //add a mesh component pointer to the object with the setup from the prelims
   MeshComponentPtr meshComp = objectOne->add<MeshComponent>(objectOne, mesh, gBuffer, material);
+  LightComponentPtr lightComp = objectOne->add<LightComponent>();
 
   //manipulate the properties of the object by getting it from the component
   meshComp->getEntityPtr()->scale = glm::vec3(1.0f,1.0f,1.0f);

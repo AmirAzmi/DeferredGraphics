@@ -16,8 +16,8 @@ public:
     glm::vec3 specularColor;//12 bytes 32 % 16
     float specularIntensity;//4 bytes 44 % 4
 
+    glm::vec3 position;      //padding bytes for next array element
     float quadratic;        //4 bytes 48 % 4
-    glm::vec3 padding;      //padding bytes for next array element
 
     //attenuation factors
     //-------------------------------

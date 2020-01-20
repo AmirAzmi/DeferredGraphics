@@ -15,7 +15,7 @@ uniform mat4 normal_matrix;
 void main()
 {
   world_position = vec3(object_to_world * vec4(aPos, 1.0f));
-  world_normal_position = vec3(normal_matrix * vec4(aNormal, 1.0f)); 
+  world_normal_position = vec3(normal_matrix * vec4(aNormal, 0.0f)); 
   texture_coordinates = aTexCoords;
 
   gl_Position = perspective_matrix * view_matrix * vec4(world_position, 1.0f);

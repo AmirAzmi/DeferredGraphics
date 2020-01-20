@@ -10,7 +10,7 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //set the deffered lighting shader that should be used
   defferedLightingShaderID = std::make_shared<Shader>("defferedLightingPass.vert", "defferedLightingPass.frag", true);
   forwardLightingShaderID = std::make_shared <Shader>("forwardLightingPass.vert", "forwardLightingPass.frag", false);
-  
+
   //generate the first ssbo
   glGenBuffers(2, &ssboID[0]);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[0]);
@@ -73,6 +73,14 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     std::cout << "Framebuffer not complete!" << std::endl;
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+  // shader configuration
+  // for deffered shader
+  // --------------------
+  defferedLightingShaderID->UseShader();
+  defferedLightingShaderID->setInt("gPosition", 0);
+  defferedLightingShaderID->setInt("gNormal", 1);
+  defferedLightingShaderID->setInt("gAlbedoSpec", 2);
 }
 
 //update the mesh components of the entities
@@ -93,11 +101,31 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBOID);
 
   //clear color buffer bit and depth buffer info from the default framebuffer
+  glClearColor(0.5f,0.3f, 0.2f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   //ssbo loop thorugh lights for light mapping for deffered lights
+  int index = 0;
+  for (const auto& light : lights)
+  {
+    shader_data.lights[index] = light->light;
+    ++index;
+  }
 
- 
+  //bind the ssbo for each shader and memcpy the light data into the lights
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[0]);
+  GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+  shader_data.numberOfLights = index;
+  memcpy(p, &shader_data, sizeof(shader_data));
+  glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+  //bind the ssbo for each shader and memcpy the light data into the lights
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[1]);
+  GLvoid* q = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+  shader_data.numberOfLights = index;
+  memcpy(q, &shader_data, sizeof(shader_data));
+  glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
   //draw deffered objectrs first
   std::for_each(meshes.begin(), iterator_to_forward_list, [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, true); });
 
@@ -106,6 +134,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 
   //lighting Pass
   //------------------------------------------------------------
+  glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   defferedLightingShaderID->UseShader();
 
@@ -117,9 +146,10 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, gColorSpecID);
 
-  //loop through lights for light mapping for forward lights
+  defferedLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
   //render quads
+  DrawQuad();
 
   //copy content of geometry's depth buffer to default framebuffer's depth buffer
   //----------------------------------------------------------------------------------
@@ -135,7 +165,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
 }
 
-void RenderingSystem::Draw(MeshComponentPtr mesh, Scene & scene, bool isDeffered)
+void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
 {
   if (mesh->getShader()->getDeffered() == isDeffered)
   {
@@ -156,7 +186,7 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene & scene, bool isDeffered
     glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (void*)0);
 
     //enable UV data that will be transferred to the GPU
-    
+
     /*glEnableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getMesh()->getUVBO());
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -187,6 +217,60 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene & scene, bool isDeffered
     //draw the objects with the mesh components
     glDrawElements(mesh->getDrawMode(), (GLsizei)mesh->getMesh()->getIndexBuffer().size(), GL_UNSIGNED_INT, 0);
   }
+}
+
+void RenderingSystem::DrawQuad()
+{
+  //this means that the quadVAO is null and I want to create a quad so give me a real ID
+  if (quadVAOID == 0)
+  {
+    float quadVertices[] =
+    {
+      // positions        
+      -1.0f,  1.0f, 0.0f,
+      -1.0f, -1.0f, 0.0f,
+       1.0f,  1.0f, 0.0f,
+       1.0f, -1.0f, 0.0f,
+    };
+
+    float quadUVs[] =
+    {
+      // texture Coords
+      0.0f, 1.0f,
+      0.0f, 0.0f,
+      1.0f, 1.0f,
+      1.0f, 0.0f,
+    };
+
+    //generate the vao for the quad
+    glGenVertexArrays(1, &quadVAOID);
+
+    //generate the vertex and UV buffers for the quad
+    glGenBuffers(1, &quadVBOID);
+    glGenBuffers(1, &quadUVID);
+
+    //bind the VAO for transferring of data to the GPU
+    glBindVertexArray(quadVAOID);
+
+    //enable position data that will be transferred to the GPU from the quad vertices
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBOID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    //enable uv data that will be transferred to the GPU
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, quadUVID);
+    glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, (void*)0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadUVs), &quadUVs, GL_STATIC_DRAW);
+    std::cout << "";
+
+  }
+
+  //draw the quad data and unbind the VAO for other things to be drawn
+  glBindVertexArray(quadVAOID);
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+  glBindVertexArray(0);
 }
 
 
