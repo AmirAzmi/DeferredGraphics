@@ -45,11 +45,7 @@ int main()
   // Ensure we can capture the escape key being pressed below
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-  //initialize the imgui editor
-  Editor ImGuiEditor;
 
-  //initialize the window
-  ImGuiEditor.init(window, glsl_version);
 
   //initialize the systems the scene will be using
   SystemManager systems;
@@ -58,6 +54,12 @@ int main()
   //intialize the scene
   Scene* scene = new Scene(windowWidth, windowHeight);
   scene->Init();
+
+  //initialize the imgui editor
+  Editor ImGuiEditor(*scene);
+
+  //initialize the window
+  ImGuiEditor.init(window, glsl_version);
   
   do
   {
@@ -81,7 +83,7 @@ int main()
     scene->Render();
 
     //render the contents of ImGui
-    ImGuiEditor.Render();
+    ImGuiEditor.Render(*scene);
 
     //Call Imguie::End and other post render information
     ImGuiEditor.postRender();

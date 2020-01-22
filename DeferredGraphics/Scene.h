@@ -2,7 +2,6 @@
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtx/transform.hpp>
 #include "TemplateUtils.h"
-//#include "Entity.h"
 #include "EngineTypes.h"
 
 
@@ -34,6 +33,7 @@ public:
   float getNearDistance();
   float getFarDistance();
   float getFOV();
+  std::vector<EntityPtr>& getEntities();
   std::vector<MeshComponentPtr>& getMeshes();
   std::vector<LightComponentPtr>& getLights();
 

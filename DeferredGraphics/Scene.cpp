@@ -53,6 +53,8 @@ void Scene::Init()
   meshComp->getEntityPtr()->scale = glm::vec3(1.0f,1.0f,1.0f);
   meshComp->getEntityPtr()->angle = 0;
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(1.0f,0.0f,0.0f);
+
+  EntityPtr objectTwo = addEntity("Object Two");
 }
 
 void Scene::PreRender()
@@ -160,4 +162,9 @@ float Scene::getFarDistance()
 float Scene::getFOV()
 {
   return fov;
+}
+
+std::vector<EntityPtr>& Scene::getEntities()
+{
+  return ListOfEntities;
 }

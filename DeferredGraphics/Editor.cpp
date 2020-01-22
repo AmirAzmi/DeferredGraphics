@@ -1,4 +1,5 @@
 #include "Editor.h"
+#include "Entity.h"
 
 void Editor::init(GLFWwindow* window, const char* glslVersion)
 {
@@ -19,7 +20,7 @@ void Editor::preRender(std::string windowName)
   //ImGui::Begin(windowName.c_str());
 }
 
-void Editor::Render()
+void Editor::Render(Scene& scene)
 {
   //*
   //learn everything here
@@ -29,19 +30,50 @@ void Editor::Render()
   //Inspector Window
   ImGui::Begin("Inspector");
 
-  if (ImGui::CollapsingHeader("Object Name"))
+  for (int i = 0; i < scene.getEntities().size(); ++i)
   {
-    ImGui::Indent();
-    if (ImGui::CollapsingHeader("Components"))
+
+    if (ImGui::CollapsingHeader(scene.getEntities()[i]->name.c_str()))
     {
+      ImGui::Indent();
+
+      
+      if (ImGui::TreeNode("Transform"))
+      {
+        if (ImGui::DragFloat3("Scale Value:", &scene.getEntities()[i]->scale.x, .2f))
+        {
+          glm::vec3& scale = scene.getEntities()[i]->scale;
+          scale.x = scale.x;
+          scale.y = scale.y;
+          scale.z = scale.z;
+        }
+
+        ImGui::TreePop();
+      }
+      
+
+      if (scene.getEntities()[i] != nullptr)
+      {
+
+        if (ImGui::TreeNode("Mesh Component"))
+        {
+          
+          ImGui::TreePop();
+        }
+      }
+
+      if (scene.getLights()[i] != nullptr)
+      {
+        if (ImGui::TreeNode("Light Component"))
+        {
+
+          ImGui::TreePop();
+        }
+      }
+
+      ImGui::Unindent();
+
     }
-
-    if (ImGui::CollapsingHeader("Components"))
-    {
-
-    }
-    ImGui::Unindent();
-
   }
 
   ImGui::End();
