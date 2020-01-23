@@ -24,6 +24,9 @@ public:
   template<typename T, typename ...Ts>
   T* add(Ts&&... args);
 
+  template<typename T>
+  T* get();
+
   template <typename T>
   void remove();
 
@@ -40,7 +43,7 @@ inline T* Entity::add(Ts&&... args)
     T* component = new T(std::forward<Ts>(args)...);
 
     //set the pointer of the meshComponent to be a valid pointer
-    meshComponent = component; 
+    meshComponent = component;
 
     //add the component to the T list and in this case T is MeshComponent
     scene.ListOfTypes.get<T*>().push_back(component);
@@ -49,7 +52,7 @@ inline T* Entity::add(Ts&&... args)
     return meshComponent;
   }
 
-  //check to add meshComponent note: make sure to compare types not pointers of types
+  //check to add lightComponent note: make sure to compare types not pointers of types
   if constexpr (std::is_same_v<T, LightComponent>)
   {
     //allocate the component
@@ -66,6 +69,36 @@ inline T* Entity::add(Ts&&... args)
   }
 
   //passed in something that was not a component
+  return nullptr;
+}
+
+//checking if an entity has the component
+template<typename T>
+inline T* Entity::get()
+{
+
+  //check to see if meshComponent was passed in
+  if constexpr (std::is_same_v<T, MeshComponent>)
+  {
+    //check if the meshComponent is valid
+    if (meshComponent != nullptr)
+    {
+      //give the meshComponent
+      return meshComponent;
+    }
+  }
+
+  //check to see if lightComponent was passed in
+  if constexpr (std::is_same_v<T, LightComponent>)
+  {
+    //check if the lightComponent is valid
+    if (lightComponent != nullptr)
+    {
+      //give the lightComponent
+      return lightComponent;
+    }
+  }
+
   return nullptr;
 }
 

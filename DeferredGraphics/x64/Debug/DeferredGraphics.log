@@ -1,10 +1,14 @@
 ﻿  Editor.cpp
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(37,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(37,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(53,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(53,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(76,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(76,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(40,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(40,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(56,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(56,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(81,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(81,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(81,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::get(void)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(92,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(92,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::get(void)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(109,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(109,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(114,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(114,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe

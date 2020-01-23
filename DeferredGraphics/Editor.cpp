@@ -35,12 +35,32 @@ void Editor::Render(Scene& scene)
 
     if (ImGui::CollapsingHeader(scene.getEntities()[i]->name.c_str()))
     {
-      ImGui::Indent();
+     // ImGui::Indent();
 
-      
       if (ImGui::TreeNode("Transform"))
       {
-        if (ImGui::DragFloat3("Scale Value:", &scene.getEntities()[i]->scale.x, .2f))
+        if (ImGui::DragFloat3("Position:", &scene.getEntities()[i]->position.x, .1f))
+        {
+          glm::vec3& position = scene.getEntities()[i]->position;
+          position.x = position.x;
+          position.y = position.y;
+          position.z = position.z;
+        }
+
+        if (ImGui::DragFloat3("Axis of Rotation:", &scene.getEntities()[i]->axisOfRotation.x, .1f))
+        {
+          glm::vec3& AoR = scene.getEntities()[i]->position;
+          AoR.x = AoR.x;
+          AoR.y = AoR.y;
+          AoR.z = AoR.z;
+        }
+
+        if (ImGui::DragFloat("Rotation:", &scene.getEntities()[i]->angle, .1f))
+        {
+          float position = scene.getEntities()[i]->angle;         
+        }
+
+        if (ImGui::DragFloat3("Scale:", &scene.getEntities()[i]->scale.x, .1f))
         {
           glm::vec3& scale = scene.getEntities()[i]->scale;
           scale.x = scale.x;
@@ -50,9 +70,9 @@ void Editor::Render(Scene& scene)
 
         ImGui::TreePop();
       }
-      
 
-      if (scene.getEntities()[i] != nullptr)
+      MeshComponentPtr meshComponent = scene.getEntities()[i]->get<MeshComponent>();
+      if (meshComponent)
       {
 
         if (ImGui::TreeNode("Mesh Component"))
@@ -62,8 +82,10 @@ void Editor::Render(Scene& scene)
         }
       }
 
-      if (scene.getLights()[i] != nullptr)
+      LightComponentPtr lightComponent = scene.getEntities()[i]->get<LightComponent>();
+      if (lightComponent)
       {
+
         if (ImGui::TreeNode("Light Component"))
         {
 
@@ -71,8 +93,7 @@ void Editor::Render(Scene& scene)
         }
       }
 
-      ImGui::Unindent();
-
+      //ImGui::Unindent();
     }
   }
 

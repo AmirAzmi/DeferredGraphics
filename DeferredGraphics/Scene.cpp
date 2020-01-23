@@ -34,6 +34,7 @@ void Scene::Init()
 
   //add objects to the scene
   EntityPtr objectOne = addEntity("Object One");
+  EntityPtr objectTwo = addEntity("Object Two");
 
   //add a mesh to the component
   MeshHandle mesh = std::make_shared<Mesh>("Resources//cube.obj");
@@ -53,8 +54,6 @@ void Scene::Init()
   meshComp->getEntityPtr()->scale = glm::vec3(1.0f,1.0f,1.0f);
   meshComp->getEntityPtr()->angle = 0;
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(1.0f,0.0f,0.0f);
-
-  EntityPtr objectTwo = addEntity("Object Two");
 }
 
 void Scene::PreRender()
