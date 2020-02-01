@@ -7,6 +7,7 @@
 
 class Material
 {
+public:
   ShaderHandle shader;
 
   std::map<std::string, bool> bools;

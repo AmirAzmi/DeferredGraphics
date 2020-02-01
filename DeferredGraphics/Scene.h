@@ -9,6 +9,8 @@ class Scene
 {
   std::vector<EntityPtr> ListOfEntities; //list of entities
 
+
+public:
   glm::mat4 projectionMatrix;
   glm::mat4 viewMatrix;
   glm::vec3 eyePosition;
@@ -18,10 +20,6 @@ class Scene
   float farDistance;
   float fov;
 
-
-
-public:
-  
   ComponentLists ListOfTypes; //list of component types
 
   Scene(int windowWidth, int windowHeight);
@@ -38,7 +36,7 @@ public:
   std::vector<LightComponentPtr>& getLights();
 
   void Init();
-  void PreRender();
+  void PreRender(int windowWidth, int windowHeight);
   void Render();
   void PostRender();
 

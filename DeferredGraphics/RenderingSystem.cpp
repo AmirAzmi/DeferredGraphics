@@ -61,6 +61,8 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
 
   //tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
   unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+
+  //draws all 3 buffers
   glDrawBuffers(3, attachments);
 
   //create and attach depth buffer (renderbuffer)
@@ -146,6 +148,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, gColorSpecID);
 
+  //get the eye position
   defferedLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
   //render quads
@@ -263,8 +266,6 @@ void RenderingSystem::DrawQuad()
     glBindBuffer(GL_ARRAY_BUFFER, quadUVID);
     glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, (void*)0);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadUVs), &quadUVs, GL_STATIC_DRAW);
-    std::cout << "";
-
   }
 
   //draw the quad data and unbind the VAO for other things to be drawn

@@ -4,7 +4,7 @@
 Scene::Scene(int windowWidth, int windowHeight):fov(90.0f), nearDistance(0.1f), farDistance(1000.0f), 
 eyePosition(glm::vec3(0.0f,0.0f,5.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, 0.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
 {
-  projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / windowHeight, nearDistance, farDistance);
+  projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
   viewMatrix = glm::lookAt(eyePosition, cameraDirection, upDirection);
 }
 
@@ -24,6 +24,7 @@ void Scene::Init()
 {
   //declare the shaders that will be used for this scene
   ShaderHandle gBuffer = std::make_shared<Shader>("gBuffer.vert","gBuffer.frag", true);
+  ShaderHandle gBuffer2 = std::make_shared<Shader>("gBuffer.vert","gBuffer.frag", true);
 
   //setup the preliminaries to the mesh component
   // ->add a mesh to the component
@@ -43,25 +44,29 @@ void Scene::Init()
   MaterialHandle material = std::make_shared<Material>(gBuffer);
 
   //material information
-  material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-  material->setFloat("specular_intensity", 30.0f);
+  material->setVec4("diffuse_color", glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+  material->setFloat("specular_intensity", 1.0f);
 
   //add a mesh component pointer to the object with the setup from the prelims
   MeshComponentPtr meshComp = objectOne->add<MeshComponent>(objectOne, mesh, gBuffer, material);
+  MeshComponentPtr meshComp2 = objectTwo->add<MeshComponent>(objectTwo, mesh, gBuffer, material);
   LightComponentPtr lightComp = objectOne->add<LightComponent>();
 
   //manipulate the properties of the object by getting it from the component
-  meshComp->getEntityPtr()->scale = glm::vec3(1.0f,1.0f,1.0f);
+  meshComp->getEntityPtr()->scale = glm::vec3(2.0f,2.0f,1.0f);
   meshComp->getEntityPtr()->angle = 0;
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(1.0f,0.0f,0.0f);
 }
 
-void Scene::PreRender()
+void Scene::PreRender(int windowWidth, int windowHeight)
 {
+  projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
+  glViewport(0,0,windowWidth, windowHeight);
 }
 
 void Scene::Render()
 {
+  
 }
 
 void Scene::PostRender()

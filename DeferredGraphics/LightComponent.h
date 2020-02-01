@@ -14,7 +14,7 @@ public:
     float linear;           //4 bytes 28 % 4
 
     glm::vec3 specularColor;//12 bytes 32 % 16
-    float specularIntensity;//4 bytes 44 % 4
+    float specularExponent;//4 bytes 44 % 4
 
     glm::vec3 position;      //padding bytes for next array element
     float quadratic;        //4 bytes 48 % 4
@@ -27,13 +27,12 @@ public:
   Light light;
   LightComponent() :light()
   {
-    light.ambientColor = glm::vec3(0.2f, 0.2f, 0.2f);
-    light.diffuseColor = glm::vec3(1.0f, 0.0f, 1.0f);
+    light.diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
     light.specularColor = glm::vec3(1.0f, 1.0f, 1.0f);
-    light.specularIntensity = 30;
-    light.constant = 1.0f;
-    light.linear = 0.7f;
-    light.quadratic = 1.8f;
+    light.specularExponent = 30;
+    light.linear = 0.0f;
+    light.quadratic = 0.0f;
+    light.position = glm::vec3(0.0f,0.0f,5.0f);
   }
 };
 

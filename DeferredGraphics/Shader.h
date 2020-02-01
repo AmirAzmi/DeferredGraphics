@@ -29,6 +29,11 @@ public:
     return isDeffered;
   }
 
+  bool * getDeffer()
+  {
+    return &isDeffered;
+  }
+
 };
 
 typedef std::shared_ptr<Shader> ShaderHandle;
