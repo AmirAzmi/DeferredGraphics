@@ -1,12 +1,30 @@
+/*-------------------------------------------------------
+Copyright (C) 2019 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the prior written
+consent of DigiPen Institute of Technology is prohibited.
+File Name: mesh.cpp
+Purpose: model parser implementation
+Language: C++ and Visual Studios 2019
+Platform: <VS 2019 16.2, 8gb RAM, 130 GB hard disk space, video card suporting 1280 x 720, Windows 10 64bit>
+Project: amir.azmi_CS350_1
+Author: Amir Azmi, amr.azmi, 180002217
+Creation date: January 4th , 2020
+--------------------------------------------------------*/
+
 #include "Mesh.h"
 #include <iostream>
 #include <regex>
+#include <map>
 
 Mesh::Mesh(std::string filePath)
 {
   std::ifstream file(filePath);//read in the file
   std::string text_file_string;//stores all the text into string
   std::string line;            //variable for reading in a line
+
+  glm::vec3 max(std::numeric_limits<float>::min());//min point
+  glm::vec3 min(std::numeric_limits<float>::max());//max point
+  glm::vec3 averagePosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
   //if the file is open
   if (file.is_open())
@@ -36,6 +54,16 @@ Mesh::Mesh(std::string filePath)
 
           //gets the values in between the spaces and stores it into a vec3
           vertex = getValuesInBetweenWhiteSpacesVec3(line);
+
+          averagePosition += vertex;
+
+          if (max.x < vertex.x) { max.x = vertex.x; }
+          if (max.y < vertex.y) { max.y = vertex.y; }
+          if (max.z < vertex.z) { max.z = vertex.z; }
+
+          if (min.x > vertex.x) { min.x = vertex.x; }
+          if (min.y > vertex.y) { min.y = vertex.y; }
+          if (min.z > vertex.z) { min.z = vertex.z; }
 
           //stores vertex into vertices buffer
           vertices.push_back(vertex);
@@ -87,19 +115,31 @@ Mesh::Mesh(std::string filePath)
       //if the first character is an 'f' that means its a index ordering
       case 'f':
       {
+        if (line.find('/') == true)
+        {
 
-        //gets the values in between the spaces and stores it into a vec3
-        Face indexLocation = getFaceData(line);
+          //gets the values in between the spaces and stores it into a vec3
+          Face indexLocation = getFaceData(line);
 
-        //stores values into index buffer
-        indices.push_back(indexLocation.vertex_position_indices[0] - 1);
-        indices.push_back(indexLocation.vertex_position_indices[1] - 1);
-        indices.push_back(indexLocation.vertex_position_indices[2] - 1);
+          //stores values into index buffer
+          indices.push_back(indexLocation.vertex_position_indices[0] - 1);
+          indices.push_back(indexLocation.vertex_position_indices[1] - 1);
+          indices.push_back(indexLocation.vertex_position_indices[2] - 1);
 
-        normal_indices.push_back(indexLocation.vertex_normal_indices[0] - 1);
-        normal_indices.push_back(indexLocation.vertex_normal_indices[1] - 1);
-        normal_indices.push_back(indexLocation.vertex_normal_indices[2] - 1);
-        std::cout << "";
+          normal_indices.push_back(indexLocation.vertex_normal_indices[0] - 1);
+          normal_indices.push_back(indexLocation.vertex_normal_indices[1] - 1);
+          normal_indices.push_back(indexLocation.vertex_normal_indices[2] - 1);
+        }
+        else
+        {
+          glm::vec3 faceIndices;
+
+          faceIndices = getValuesInBetweenWhiteSpacesVec3(line);
+
+          indices.push_back(faceIndices[0] - 1);
+          indices.push_back(faceIndices[1] - 1);
+          indices.push_back(faceIndices[2] - 1);
+        }
 
         //break out    
         break;
@@ -112,34 +152,60 @@ Mesh::Mesh(std::string filePath)
     }
   }
 
-  std::vector<glm::vec3> uploadedVertices;
   std::vector<glm::vec2> uploadedUVs;
-  std::vector<glm::vec3> uploadedNormals;
-  std::vector<GLuint> uploadedIndices;
+  std::vector<glm::vec3> faceNormals;
 
-  for (int i = 0; i < indices.size(); i += 3)
+  averagePosition /= vertices.size(); //center object based off of position
+
+  //grab the bounds
+  float rangex = max.x - min.x;
+  float rangey = max.y - min.y;
+  float rangez = max.z - min.z;
+
+  //get the range max
+  float rangemax(std::max(std::max(rangex, rangey), rangez));
+
+  //for all the vertices set the offset so it is centered and dicide by the range max
+  for (auto& vert : vertices)
   {
+    vert -= averagePosition;
+    vert /= rangemax;
+  }
+
+  //normals are now formed into vertex normals from face normals
+  std::map<int, int> count;
+  normals.resize(vertices.size());
+  for (int i = 0; i < indices.size() - 2; i += 3)
+  {
+    //calculate the face normals from the cross product of a triangle
     glm::vec3 v0 = vertices[indices[i]];
     glm::vec3 v1 = vertices[indices[i + 1]];
     glm::vec3 v2 = vertices[indices[i + 2]];
     glm::vec3 R_P = v2 - v0;
     glm::vec3 Q_P = v1 - v0;
-    glm::vec3 normal = glm::normalize(glm::cross(Q_P, R_P));
+    faceNormals.push_back(glm::normalize(glm::cross(Q_P, R_P)));
 
-    uploadedVertices.push_back(v0);
-    uploadedVertices.push_back(v1);
-    uploadedVertices.push_back(v2);
-    uploadedNormals.push_back(normal);
-    uploadedNormals.push_back(normal);
-    uploadedNormals.push_back(normal);
-    uploadedIndices.push_back(i);
-    uploadedIndices.push_back(i + 1);
-    uploadedIndices.push_back(i + 2);
+    //set up the vertex normals (dont know how this works yet)
+    count[indices[i]] += 1;
+    normals[indices[i]] += faceNormals.back();
+    count[indices[i]+1] += 1;
+    normals[indices[i+1]] += faceNormals.back();
+    count[indices[i+2]] += 1;
+    normals[indices[i+2]] += faceNormals.back();
+
+    //upload UV data
     uploadedUVs.push_back(glm::vec2(0.0f, 0.0f));
     uploadedUVs.push_back(glm::vec2(0.0f, 1.0f));
     uploadedUVs.push_back(glm::vec2(1.0f, 1.0f));
   }
 
+  //https://stackoverflow.com/questions/4703432/why-does-my-opengl-phong-shader-behave-like-a-flat-shader
+  //renormalize the normals becuase that is what some website said to do for calculating vertex normals
+  for (int i = 0; i < indices.size(); ++i)
+  {
+    normals[indices[i]] = glm::normalize(normals[indices[i]] / (float)count[indices[i]]);
+  }
+  
   //generate the Vertex Array Object
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
@@ -147,14 +213,14 @@ Mesh::Mesh(std::string filePath)
   //genereate the buffer that stores position data from the vector of vertices
   glGenBuffers(1, &posVBO);
   glBindBuffer(GL_ARRAY_BUFFER, posVBO);
-  glBufferData(GL_ARRAY_BUFFER, uploadedVertices.size() * sizeof(glm::vec3),
-    uploadedVertices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3),
+    vertices.data(), GL_STATIC_DRAW);
 
   //genereate the buffer that stores normal data from the vector of normal
   glGenBuffers(1, &normsVBO);
   glBindBuffer(GL_ARRAY_BUFFER, normsVBO);
-  glBufferData(GL_ARRAY_BUFFER, uploadedNormals.size() * sizeof(glm::vec3),
-    uploadedNormals.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3),
+    normals.data(), GL_STATIC_DRAW);
 
   //genereate the buffer that stores uv data from the vector of uv
   glGenBuffers(1, &uvVBO);
@@ -165,8 +231,8 @@ Mesh::Mesh(std::string filePath)
   //genereate the buffer that stores index data from the vector of indices
   glGenBuffers(1, &indexVBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, uploadedIndices.size() * sizeof(glm::uint),
-    uploadedIndices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(glm::uint),
+    indices.data(), GL_STATIC_DRAW);
 }
 
 GLuint Mesh::getPosVBO()

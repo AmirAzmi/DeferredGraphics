@@ -75,6 +75,9 @@
     <ClCompile Include="SystemManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Behavior.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -137,14 +140,11 @@
     <ClInclude Include="EngineTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Behavior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="PhongShading.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="PhongShading.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
     <None Include="gBuffer.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
@@ -155,6 +155,18 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="defferedLightingPass.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="gBufferViewer.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="gBufferViewer.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="forwardLightingPass.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="forwardLightingPass.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -1,3 +1,16 @@
+/*-------------------------------------------------------
+Copyright (C) 2019 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the prior written
+consent of DigiPen Institute of Technology is prohibited.
+File Name: main.cpp
+Purpose: the game loop fileS
+Language: C++ and Visual Studios 2019
+Platform: <VS 2019 16.2, 8gb RAM, 130 GB hard disk space, video card suporting 1280 x 720, Windows 10 64bit>
+Project: amir.azmi_CS350_1
+Author: Amir Azmi, amr.azmi, 180002217
+Creation date: January 4th , 2020
+--------------------------------------------------------*/
+
 #include <glew/GL/glew.h>
 #include <glfw/GLFW/glfw3.h>
 #include <glm/glm/glm.hpp>
@@ -60,7 +73,7 @@ int main()
   scene->Init();
 
   //initialize the imgui editor
-  Editor ImGuiEditor(*scene);
+  Editor ImGuiEditor(*scene, systems);
 
   //initialize the window
   ImGuiEditor.init(window, glsl_version);
@@ -93,7 +106,7 @@ int main()
     scene->Render();
 
     //render the contents of ImGui
-    ImGuiEditor.Render(*scene);
+    ImGuiEditor.Render(*scene, systems);
 
     //Call Imguie::End and other post render information
     ImGuiEditor.postRender();
@@ -128,7 +141,47 @@ void processInput(GLFWwindow* window, Scene& scene)
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye + glm::vec3(0.0f, 0.01f, 0.0f);
+    scene.eyePosition = eye + glm::vec3(0.0f, 0.05f, 0.0f);
+    scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+  {
+    glm::vec3 eye = scene.getEyePosition();
+    scene.eyePosition = eye - glm::vec3(0.05f, 0.0f, 0.0f);
+    scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+  {
+    glm::vec3 eye = scene.getEyePosition();
+    scene.eyePosition = eye - glm::vec3(0.0f, 0.05f, 0.0f);
+    scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+  {
+    glm::vec3 eye = scene.getEyePosition();
+    scene.eyePosition = eye + glm::vec3(0.05f, 0.0f, 0.0f);
+    scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+  {
+    float fov = scene.getFOV();
+    scene.fov = fov - 0.05f;
+    scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+  {
+    float fov = scene.getFOV();
+    scene.fov = fov + 0.05f;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
   }

@@ -1,3 +1,16 @@
+/*-------------------------------------------------------
+Copyright (C) 2019 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the prior written
+consent of DigiPen Institute of Technology is prohibited.
+File Name: Editor.cpp
+Purpose: Editor implementation with ImGui
+Language: C++ and Visual Studios 2019
+Platform: <VS 2019 16.2, 8gb RAM, 130 GB hard disk space, video card suporting 1280 x 720, Windows 10 64bit>
+Project: amir.azmi_CS350_1
+Author: Amir Azmi, amr.azmi, 180002217
+Creation date: January 4th , 2020
+--------------------------------------------------------*/
+
 #include "Editor.h"
 #include "Entity.h"
 
@@ -20,7 +33,7 @@ void Editor::preRender(std::string windowName)
   //ImGui::Begin(windowName.c_str());
 }
 
-void Editor::Render(Scene& scene)
+void Editor::Render(Scene& scene, SystemManager& Manager)
 {
   //*
   //learn everything here
@@ -30,6 +43,7 @@ void Editor::Render(Scene& scene)
   //Inspector Window
   ImGui::Begin("Inspector");
 
+  
   for (int i = 0; i < scene.getEntities().size(); ++i)
   {
     ImGui::PushID(i);
@@ -62,14 +76,6 @@ void Editor::Render(Scene& scene)
         ImGui::Separator();
         if (ImGui::TreeNode("Mesh Component"))
         {
-
-          /*
-          GLuint drawMode = meshComponent->getDrawMode();
-          if (ImGui::TreeNode("Draw Mode"))
-          {
-            
-          }
-          */
 
           std::shared_ptr<Material> material = meshComponent->getMaterial();
           if (material)
@@ -110,16 +116,6 @@ void Editor::Render(Scene& scene)
                 }
               }
 
-              ImGui::TreePop();
-            }
-          }
-
-          std::shared_ptr<Shader> shader = meshComponent->getShader();
-          if (shader)
-          {
-            if (ImGui::TreeNode("Shader"))
-            {
-              ImGui::Checkbox("Is Deffered", shader->getDeffer());
               ImGui::TreePop();
             }
           }
@@ -167,9 +163,51 @@ void Editor::Render(Scene& scene)
   ImGui::End();
 
   //Entity List Window
-  ImGui::Begin("Entity List");
-  ImGui::End();
+  ImGui::Begin("Settings");
+  ImGui::TextWrapped("WASD moves the camera around the point of the center object.");
+  ImGui::Spacing();
+  ImGui::TextWrapped("Q and E change the FOV of the camera where Q zooms in annd E zooms out.");
+  ImGui::Spacing();
 
+  if (ImGui::CollapsingHeader("Renderer Settings"))
+  {
+    ImGui::TreePush();
+    if (Manager.renderer != nullptr)
+    {
+      if (ImGui::Checkbox("Depth Toggle", &Manager.renderer->depthCopyToggle))
+      {
+      }
+
+      if (ImGui::Checkbox("Split Screen", &Manager.renderer->splitScreen))
+      {
+      }
+
+      if (ImGui::Checkbox("Lights On", &lightsOn))
+      {
+        if (lightsOn == false)
+        {
+          for (int i = 0; i < scene.getEntities().size(); ++i)
+          {
+            scene.getEntities()[i]->get<LightComponent>()->light.diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
+          }
+        }
+        else
+        {
+          for (int i = 0; i < scene.getEntities().size(); ++i)
+          {
+            scene.getEntities()[i]->get<LightComponent>()->light.diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
+          }
+        }
+      }
+
+      // if (ImGui::Checkbox("Deffered", &Manager.renderer->isDeffered))
+      {
+      }
+    }
+    ImGui::TreePop();
+  }
+
+  ImGui::End();
 
   //height of main menu bar is 23 pixels just in case you were wonderings
   //creates a menu bar at the top of the window

@@ -1,14 +1,30 @@
+/*-------------------------------------------------------
+Copyright (C) 2019 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the prior written
+consent of DigiPen Institute of Technology is prohibited.
+File Name: scene.cpp
+Purpose: Scene containing what needs to be updated/drawn
+Language: C++ and Visual Studios 2019
+Platform: <VS 2019 16.2, 8gb RAM, 130 GB hard disk space, video card suporting 1280 x 720, Windows 10 64bit>
+Project: amir.azmi_CS350_1
+Author: Amir Azmi, amr.azmi, 180002217
+Creation date: January 4th , 2020
+--------------------------------------------------------*/
+
 #include "Scene.h"
 #include "Entity.h"
+#include <stdlib.h>
+#include <cstdlib>
+#include <string>
 
-Scene::Scene(int windowWidth, int windowHeight):fov(90.0f), nearDistance(0.1f), farDistance(1000.0f), 
-eyePosition(glm::vec3(0.0f,0.0f,5.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, 0.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
+Scene::Scene(int windowWidth, int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(1000.0f),
+eyePosition(glm::vec3(0.0f, 0.0f, 10.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, 0.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
 {
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
   viewMatrix = glm::lookAt(eyePosition, cameraDirection, upDirection);
 }
 
-std::vector<MeshComponentPtr> &Scene::getMeshes()
+std::vector<MeshComponentPtr>& Scene::getMeshes()
 {
   //returns the vector of MeshComponentPtrs in the scene
   return ListOfTypes.get<MeshComponentPtr>();
@@ -22,51 +38,91 @@ std::vector<LightComponentPtr>& Scene::getLights()
 
 void Scene::Init()
 {
-  //declare the shaders that will be used for this scene
-  ShaderHandle gBuffer = std::make_shared<Shader>("gBuffer.vert","gBuffer.frag", true);
-  ShaderHandle gBuffer2 = std::make_shared<Shader>("gBuffer.vert","gBuffer.frag", true);
-
+  /*********************************************************************************/
   //setup the preliminaries to the mesh component
   // ->add a mesh to the component
   // ->add a shader to the component
   // ->add a material to the component
   // ->have a refrence to the entity
+  /*********************************************************************************/
 
-
-  //add objects to the scene
-  EntityPtr objectOne = addEntity("Object One");
-  EntityPtr objectTwo = addEntity("Object Two");
+  //declare the shaders that will be used for this scene
+  ShaderHandle gBuffer = std::make_shared<Shader>("gBuffer.vert", "gBuffer.frag", true);
+  ShaderHandle forwardRenderer = std::make_shared<Shader>("forwardLightingPass.vert", "forwardLightingPass.frag", false);
 
   //add a mesh to the component
-  MeshHandle mesh = std::make_shared<Mesh>("Resources//cube.obj");
+  MeshHandle cube = std::make_shared<Mesh>("Resources//cube.obj");
+  MeshHandle bunny = std::make_shared<Mesh>("Resources//bunny.obj");
+  MeshHandle sphere = std::make_shared<Mesh>("Resources//sphere.obj");
 
-  //add a material to the component
+  //add a material(s) to the component
   MaterialHandle material = std::make_shared<Material>(gBuffer);
+  MaterialHandle material2 = std::make_shared<Material>(forwardRenderer);
 
-  //material information
-  material->setVec4("diffuse_color", glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+  //Any material information needed
+  material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
   material->setFloat("specular_intensity", 1.0f);
 
+  material2->setVec4("diffuse_color", glm::vec4(0.5f, 0.0f, 0.7f, 1.0f));
+
+  EntityPtr centerObject = addEntity("center object");
+
   //add a mesh component pointer to the object with the setup from the prelims
-  MeshComponentPtr meshComp = objectOne->add<MeshComponent>(objectOne, mesh, gBuffer, material);
-  MeshComponentPtr meshComp2 = objectTwo->add<MeshComponent>(objectTwo, mesh, gBuffer, material);
-  LightComponentPtr lightComp = objectOne->add<LightComponent>();
+  MeshComponentPtr meshComp = centerObject->add<MeshComponent>(centerObject, bunny, gBuffer, material);
+  LightComponentPtr lightComp = centerObject->add<LightComponent>();
 
   //manipulate the properties of the object by getting it from the component
-  meshComp->getEntityPtr()->scale = glm::vec3(2.0f,2.0f,1.0f);
+  meshComp->getEntityPtr()->scale = glm::vec3(2.0f, 2.0f, 2.0f);
   meshComp->getEntityPtr()->angle = 0;
-  meshComp->getEntityPtr()->axisOfRotation = glm::vec3(1.0f,0.0f,0.0f);
+  meshComp->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
+
+  for (int i = 0; i < 8; ++i)
+  {
+    //set the name of each object that is added
+    std::string numberAsString = std::to_string(i + 1);
+    std::string str = "Object ";
+    str.append(numberAsString);
+
+    //add objects to the list
+    EntityPtr object = addEntity(str);
+
+    //add a mesh component pointer to the object with the setup from the prelims
+    MeshComponentPtr meshComp = object->add<MeshComponent>(object, sphere, forwardRenderer, material2);
+    LightComponentPtr lightComp = object->add<LightComponent>();
+
+    //manipulate the properties of the object by getting it from the component
+    meshComp->getEntityPtr()->scale = glm::vec3(1.5f, 1.5f, 1.5f);
+    meshComp->getEntityPtr()->angle = 0;
+    meshComp->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
+    meshComp->getEntityPtr()->currentPosition = i * 45.0f * 3.1415f / 180.0f;
+  }
 }
 
 void Scene::PreRender(int windowWidth, int windowHeight)
 {
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
-  glViewport(0,0,windowWidth, windowHeight);
+  glViewport(0, 0, windowWidth, windowHeight);
 }
 
 void Scene::Render()
 {
-  
+  for (int i = 0; i < getEntities().size(); ++i)
+  {
+    if (getEntities()[i]->name == "center object")
+    {
+      getEntities()[i]->angle += 0.01f;
+    }
+    else
+    {
+      getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition += 0.001f;
+      getEntities()[i]->angle += 0.001f;
+      getEntities()[i]->position = glm::vec3(cosf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition), 0.0f, sinf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition)) * 4.0f;
+      getEntities()[i]->get<LightComponent>()->light.position = getEntities()[i]->position;
+
+      //sets the light color of each object to the objects diffuse color
+      //getEntities()[i]->get<LightComponent>()->light.diffuseColor = getEntities()[i]->get<MeshComponent>()->getMaterial()->vec4s.at("diffuse_color");
+    }
+  }
 }
 
 void Scene::PostRender()
@@ -120,7 +176,7 @@ void Scene::removeEntity(std::string name)
 
         //remove the entity at that point
         ListOfEntities.erase(ListOfEntities.begin() + i);
- 
+
         //break out of the loop because you removed the entity
         break;
       }

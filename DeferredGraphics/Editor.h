@@ -1,28 +1,39 @@
+/*-------------------------------------------------------
+Copyright (C) 2019 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the prior written
+consent of DigiPen Institute of Technology is prohibited.
+File Name: Editor.h
+Purpose: Editor class
+Language: C++ and Visual Studios 2019
+Platform: <VS 2019 16.2, 8gb RAM, 130 GB hard disk space, video card suporting 1280 x 720, Windows 10 64bit>
+Project: amir.azmi_CS350_1
+Author: Amir Azmi, amr.azmi, 180002217
+Creation date: January 4th , 2020
+--------------------------------------------------------*/
+
 #pragma once
 #include "Imgui/imgui.h"
 #include "Imgui/imgui_impl_glfw.h"
 #include "Imgui/imgui_impl_opengl3.h"
 #include "Scene.h"
+#include "SystemManager.h"
 
 #include <string>
 
 class Editor
 {
   Scene& scene;
+  SystemManager& manager;
 public:
+  bool lightsOn = true;
   void init(GLFWwindow* window, const char* glslVersion);
   void preRender(std::string windowNmae);
-  void Render(Scene & scene);
+  void Render(Scene & scene, SystemManager& Manager);
   void postRender();
   void shutdown();
 
-  Editor(Scene& Scene):scene(Scene)
+  Editor(Scene& Scene, SystemManager Manager):scene(Scene), manager(Manager)
   {
-
   }
-
-
-
-
 };
 

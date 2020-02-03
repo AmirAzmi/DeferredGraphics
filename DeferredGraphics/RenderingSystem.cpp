@@ -1,3 +1,16 @@
+/*-------------------------------------------------------
+Copyright (C) 2019 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the prior written
+consent of DigiPen Institute of Technology is prohibited.
+File Name: RenderingSystem.cpp
+Purpose: First system of ECS to draw objects
+Language: C++ and Visual Studios 2019
+Platform: <VS 2019 16.2, 8gb RAM, 130 GB hard disk space, video card suporting 1280 x 720, Windows 10 64bit>
+Project: amir.azmi_CS350_1
+Author: Amir Azmi, amr.azmi, 180002217
+Creation date: January 4th , 2020
+--------------------------------------------------------*/
+
 #include <iostream>
 #include <algorithm>
 #include "RenderingSystem.h"
@@ -10,6 +23,9 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //set the deffered lighting shader that should be used
   defferedLightingShaderID = std::make_shared<Shader>("defferedLightingPass.vert", "defferedLightingPass.frag", true);
   forwardLightingShaderID = std::make_shared <Shader>("forwardLightingPass.vert", "forwardLightingPass.frag", false);
+
+  //set the shader for split screen
+  splitScreenShaderID = std::make_shared<Shader>("gBufferViewer.vert", "gBufferViewer.frag", false);
 
   //generate the first ssbo
   glGenBuffers(2, &ssboID[0]);
@@ -103,7 +119,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBOID);
 
   //clear color buffer bit and depth buffer info from the default framebuffer
-  glClearColor(0.5f,0.3f, 0.2f,1.0f);
+  glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   //ssbo loop thorugh lights for light mapping for deffered lights
@@ -133,6 +149,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 
   //unbind the g framebuffer
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glViewport(0, 0, windowWidth, windowHeight);
 
   //lighting Pass
   //------------------------------------------------------------
@@ -151,21 +168,57 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //get the eye position
   defferedLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
+  glDepthMask(GL_FALSE);
   //render quads
-  DrawQuad();
+  if (splitScreen == true)
+  {
+    glViewport(windowWidth / 2, windowHeight / 2, windowWidth / 2, windowHeight / 2);
+    DrawQuad();
+  }
+  else
+  {
+    glViewport(0, 0, windowWidth, windowHeight);
+    DrawQuad();
+  }
+  glDepthMask(GL_TRUE);
 
-  //copy content of geometry's depth buffer to default framebuffer's depth buffer
-  //----------------------------------------------------------------------------------
-  glBindFramebuffer(GL_READ_FRAMEBUFFER, gBufferFBOID);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
-  //blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
-  //the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
-  //depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
-  glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  if (depthCopyToggle == true)
+  {
+    //copy content of geometry's depth buffer to default framebuffer's depth buffer
+    //----------------------------------------------------------------------------------
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, gBufferFBOID);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
+    //blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
+    //the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
+    //depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
+    if (splitScreen == false)
+    {
+      glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    }
+    else
+    {
+      glBlitFramebuffer(0, 0, windowWidth, windowHeight, windowWidth / 2, windowHeight / 2, windowWidth / 2, windowHeight / 2, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
+
+  forwardLightingShaderID->UseShader();
+  forwardLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
   //draw forward objects next
   std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
+
+  if (splitScreen == true)
+  {
+    //bottom left
+    DrawTextures(gPositionID, 0, 0, windowWidth / 2, windowHeight / 2);
+
+    //bottom right
+    DrawTextures(gNormalID, windowWidth / 2, 0, windowWidth / 2, windowHeight / 2);
+
+    //top left
+    DrawTextures(gColorSpecID, 0, windowHeight / 2, windowWidth / 2, windowHeight / 2);
+  }
 }
 
 void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
@@ -272,6 +325,78 @@ void RenderingSystem::DrawQuad()
   glBindVertexArray(quadVAOID);
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
   glBindVertexArray(0);
+}
+
+void RenderingSystem::DrawTextures(GLuint textureID, unsigned posX, unsigned posY, unsigned windowWidth, unsigned windowHeight)
+{
+  glDisable(GL_DEPTH_TEST);
+  //set the viewport
+  glViewport(posX, posY, windowWidth, windowHeight);
+
+  //activate the txture
+  glActiveTexture(GL_TEXTURE0);
+
+  //bind the texture
+  glBindTexture(GL_TEXTURE_2D, textureID);
+
+  //set the shader in use
+  splitScreenShaderID->UseShader();
+
+  //set uniform for access in the shader
+  GLuint textureLocation = glGetUniformLocation(splitScreenShaderID->getProgramID(), "texture");
+  glUniform1i(textureLocation, 0);
+
+  float Vertices[] =
+  {
+    // positions        
+    -1.0f,  1.0f, 0.0f,
+    -1.0f, -1.0f, 0.0f,
+     1.0f,  1.0f, 0.0f,
+     1.0f, -1.0f, 0.0f,
+  };
+
+  float UVs[] =
+  {
+    // texture Coords
+    0.0f, 1.0f,
+    0.0f, 0.0f,
+    1.0f, 1.0f,
+    1.0f, 0.0f,
+  };
+
+
+  glGenVertexArrays(1, &splitScreenVAOID);
+
+  //bind the buffer data
+  glGenBuffers(1, &splitscreenUVID);
+  glGenBuffers(1, &splitScreenVBOID);
+
+  //bind the VAO for transferring of data to the GPU
+  glBindVertexArray(splitScreenVAOID);
+
+
+  //enable the position data
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, splitScreenVBOID);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+
+  //enable the position data
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, splitscreenUVID);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(UVs), UVs, GL_STATIC_DRAW);
+
+  //draw the texturea
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+  //after drawing disable the position data
+  glDisableVertexAttribArray(0);
+
+  //unbind the texture once its used
+  splitScreenShaderID->UnBindShader();
+
+  glDisable(GL_DEPTH_TEST);
 }
 
 

@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="SystemManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Behavior.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EngineTypes.h" />
     <ClInclude Include="Entity.h" />
@@ -175,8 +177,10 @@
     <None Include="defferedLightingPass.vert" />
     <None Include="gBuffer.frag" />
     <None Include="gBuffer.vert" />
-    <None Include="PhongShading.frag" />
-    <None Include="PhongShading.vert" />
+    <None Include="gBufferViewer.frag" />
+    <None Include="gBufferViewer.vert" />
+    <None Include="forwardLightingPass.frag" />
+    <None Include="forwardLightingPass.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
