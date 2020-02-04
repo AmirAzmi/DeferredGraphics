@@ -160,6 +160,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     ImGui::PopID();
   }
 
+  ImGui::TextWrapped("Each Object has a light component where the light is moving with the object except for the center one.");
   ImGui::End();
 
   //Entity List Window
@@ -206,7 +207,8 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     }
     ImGui::TreePop();
   }
-
+  ImGui::TextWrapped("Split Screen will show you what objects are using deffered rendering versus which objects are not.");
+  ImGui::Spacing();
   ImGui::End();
 
   //height of main menu bar is 23 pixels just in case you were wonderings

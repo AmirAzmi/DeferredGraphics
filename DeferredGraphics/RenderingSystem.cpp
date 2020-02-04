@@ -197,7 +197,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
     }
     else
     {
-      glBlitFramebuffer(0, 0, windowWidth, windowHeight, windowWidth / 2, windowHeight / 2, windowWidth / 2, windowHeight / 2, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+      glBlitFramebuffer(0, 0, windowWidth, windowHeight, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }

@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\amira\Desktop\OpenGl\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\amira\Desktop\OpenGl\libs\lib-vc2019;C:\Users\amira\Desktop\OpenGl\libs\glew_lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)DeferredGraphics\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)DeferredGraphics\libs\glew_lib\Release\x64;$(SolutionDir)DeferredGraphics\libs\lib-vc2019;C:\Users\amira\Desktop\OpenGl\libs\glew_lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\amira\Desktop\OpenGl\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\amira\Desktop\OpenGl\libs\lib-vc2019;C:\Users\amira\Desktop\OpenGl\libs\glew_lib\Release\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)DeferredGraphics\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)DeferredGraphics\libs\glew_lib\Release\x64;$(SolutionDir)DeferredGraphics\libs\lib-vc2019;C:\Users\amira\Desktop\OpenGl\libs\glew_lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
