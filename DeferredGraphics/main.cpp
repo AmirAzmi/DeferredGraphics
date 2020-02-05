@@ -62,8 +62,6 @@ int main()
   // Ensure we can capture the escape key being pressed below
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-
-
   //initialize the systems the scene will be using
   SystemManager systems;
   systems.Init(windowWidth, windowHeight);
@@ -140,50 +138,51 @@ void processInput(GLFWwindow* window, Scene& scene)
 
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
   {
+
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye + glm::vec3(0.0f, 0.05f, 0.0f);
+    scene.eyePosition = eye + scene.cameraDirection * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
-    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
 
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye - glm::vec3(0.05f, 0.0f, 0.0f);
+    scene.eyePosition = eye - glm::normalize(glm::cross(scene.cameraDirection, scene.upDirection)) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
-    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
 
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye - glm::vec3(0.0f, 0.05f, 0.0f);
+    scene.eyePosition = eye - scene.cameraDirection * 0.1f;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
-    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
 
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye + glm::vec3(0.05f, 0.0f, 0.0f);
+    scene.eyePosition = eye + glm::normalize(glm::cross(scene.cameraDirection, scene.upDirection)) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
-    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
 
   if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
   {
-    float fov = scene.getFOV();
-    scene.fov = fov - 0.05f;
+    glm::vec3 eye = scene.getEyePosition();
+    scene.eyePosition = eye - glm::vec3(0.0f,1.0f,0.0f) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
-    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
 
   if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
   {
-    float fov = scene.getFOV();
-    scene.fov = fov + 0.05f;
+    glm::vec3 eye = scene.getEyePosition();
+    scene.eyePosition = eye + glm::vec3(0.0f, 1.0f, 0.0f) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
-    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.cameraDirection, scene.upDirection);
+    scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
 }
 

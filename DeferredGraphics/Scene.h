@@ -25,8 +25,10 @@ class Scene
 public:
   glm::mat4 projectionMatrix;
   glm::mat4 viewMatrix;
-  glm::vec3 eyePosition;
+  glm::vec3 eyePosition; //camera position
   glm::vec3 cameraDirection;
+
+  float cameraSpeed;
   glm::vec3 upDirection;
   float nearDistance;
   float farDistance;
