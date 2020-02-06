@@ -43,7 +43,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //Inspector Window
   ImGui::Begin("Inspector");
 
-  
+
   for (int i = 0; i < scene.getEntities().size(); ++i)
   {
     ImGui::PushID(i);
@@ -189,14 +189,20 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         {
           for (int i = 0; i < scene.getEntities().size(); ++i)
           {
-            scene.getEntities()[i]->get<LightComponent>()->light.diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
+            if (scene.getEntities().back()->get<LightComponent>() != nullptr)
+            {
+              scene.getEntities()[i]->get<LightComponent>()->light.diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
+            }
           }
         }
         else
         {
           for (int i = 0; i < scene.getEntities().size(); ++i)
           {
-            scene.getEntities()[i]->get<LightComponent>()->light.diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
+            if (scene.getEntities().back()->get<LightComponent>() != nullptr)
+            {
+              scene.getEntities()[i]->get<LightComponent>()->light.diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
+            }
           }
         }
       }

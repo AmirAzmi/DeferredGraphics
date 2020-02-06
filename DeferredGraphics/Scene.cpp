@@ -76,7 +76,7 @@ void Scene::Init()
   meshComp->getEntityPtr()->angle = 0;
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
-  for (int i = 0; i < 2; ++i)
+  for (int i = 0; i < 8; ++i)
   {
     //set the name of each object that is added
     std::string numberAsString = std::to_string(i + 1);
@@ -88,7 +88,7 @@ void Scene::Init()
 
     //add a mesh component pointer to the object with the setup from the prelims
     MeshComponentPtr meshComp = object->add<MeshComponent>(object, sphere, forwardRenderer, material2);
-    LightComponentPtr lightComp = object->add<LightComponent>();
+    //LightComponentPtr lightComp = object->add<LightComponent>();
 
     //manipulate the properties of the object by getting it from the component
     meshComp->getEntityPtr()->scale = glm::vec3(1.5f, 1.5f, 1.5f);
@@ -117,7 +117,7 @@ void Scene::Render()
       getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition += 0.001f;
       getEntities()[i]->angle += 0.001f;
       getEntities()[i]->position = glm::vec3(cosf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition), 0.0f, sinf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition)) * 4.0f;
-      getEntities()[i]->get<LightComponent>()->light.position = getEntities()[i]->position;
+      //getEntities()[i]->get<LightComponent>()->light.position = getEntities()[i]->position;
 
       //sets the light color of each object to the objects diffuse color
       //getEntities()[i]->get<LightComponent>()->light.diffuseColor = getEntities()[i]->get<MeshComponent>()->getMaterial()->vec4s.at("diffuse_color");

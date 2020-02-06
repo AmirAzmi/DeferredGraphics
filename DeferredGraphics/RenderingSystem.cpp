@@ -75,16 +75,16 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gColorSpecID, 0);
 
- /* //generate the texture for HDR
-  glGenTextures(1, &HDRID);
-  glBindTexture(GL_TEXTURE_2D, HDRID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gColorSpecID, 0);
-  */
-  //tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
-  unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3};
+  /* //generate the texture for HDR
+   glGenTextures(1, &HDRID);
+   glBindTexture(GL_TEXTURE_2D, HDRID);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gColorSpecID, 0);
+   */
+   //tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
+  unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3 };
 
   //draws all 3 buffers and the hdr buffer
   glDrawBuffers(4, attachments);
@@ -347,6 +347,7 @@ void RenderingSystem::DrawQuad()
 void RenderingSystem::DrawTextures(GLuint textureID, unsigned posX, unsigned posY, unsigned windowWidth, unsigned windowHeight)
 {
   glDisable(GL_DEPTH_TEST);
+  
   //set the viewport
   glViewport(posX, posY, windowWidth, windowHeight);
 
@@ -363,56 +364,60 @@ void RenderingSystem::DrawTextures(GLuint textureID, unsigned posX, unsigned pos
   GLuint textureLocation = glGetUniformLocation(splitScreenShaderID->getProgramID(), "texture");
   glUniform1i(textureLocation, 0);
 
-  float Vertices[] =
+  if(splitScreenVAOID == 0)
   {
-    // positions        
-    -1.0f,  1.0f, 0.0f,
-    -1.0f, -1.0f, 0.0f,
-     1.0f,  1.0f, 0.0f,
-     1.0f, -1.0f, 0.0f,
-  };
+    float Vertices[] =
+    {
+      // positions        
+      -1.0f,  1.0f, 0.0f,
+      -1.0f, -1.0f, 0.0f,
+       1.0f,  1.0f, 0.0f,
+       1.0f, -1.0f, 0.0f,
+    };
 
-  float UVs[] =
-  {
-    // texture Coords
-    0.0f, 1.0f,
-    0.0f, 0.0f,
-    1.0f, 1.0f,
-    1.0f, 0.0f,
-  };
+    float UVs[] =
+    {
+      // texture Coords
+      0.0f, 1.0f,
+      0.0f, 0.0f,
+      1.0f, 1.0f,
+      1.0f, 0.0f,
+    };
 
+    //generate the VAO
+    glGenVertexArrays(1, &splitScreenVAOID);
 
-  glGenVertexArrays(1, &splitScreenVAOID);
+    //bind the buffer data
+    glGenBuffers(1, &splitscreenUVID);
+    glGenBuffers(1, &splitScreenVBOID);
 
-  //bind the buffer data
-  glGenBuffers(1, &splitscreenUVID);
-  glGenBuffers(1, &splitScreenVBOID);
+    //bind the VAO for transferring of data to the GPU
+    glBindVertexArray(splitScreenVAOID);
+
+    //enable the position data
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, splitScreenVBOID);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+
+    //enable the position data
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, splitscreenUVID);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(UVs), UVs, GL_STATIC_DRAW);
+  }
 
   //bind the VAO for transferring of data to the GPU
   glBindVertexArray(splitScreenVAOID);
 
-
-  //enable the position data
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, splitScreenVBOID);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-
-  //enable the position data
-  glEnableVertexAttribArray(2);
-  glBindBuffer(GL_ARRAY_BUFFER, splitscreenUVID);
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(UVs), UVs, GL_STATIC_DRAW);
-
-  //draw the texturea
+  //draw the textures
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-  //after drawing disable the position data
-  glDisableVertexAttribArray(0);
+  //after drawing the VAO in use
+  glBindVertexArray(0);
 
   //unbind the texture once its used
   splitScreenShaderID->UnBindShader();
-
   glDisable(GL_DEPTH_TEST);
 }
 

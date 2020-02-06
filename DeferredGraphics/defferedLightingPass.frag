@@ -49,7 +49,7 @@ struct Light
 
 layout (std430, binding = 0) buffer shader_data
 {
-  Light lights[16];
+  Light lights[1000];
   int numberOfLights;
 };
 
@@ -79,6 +79,25 @@ void main()
  vec3 lighting = diffuse_color * 0.7f;
  vec3 normalized_normal_world_position = normalize(normal_world_position);
 
+   vec3 mapped = vec3(1.0f);
+
+   /*
+  //exposure tone mapping
+  if(exposure_tone_mapping)
+  {
+    mapped = vec3(1.0) - exp(-diffuse_color * exposure);
+  }
+
+  if(uncharted_tone_mapping)
+  {
+     mapped = Uncharted2Tonemap(diffuse_color);
+  }
+
+  if(gamma_correction)
+  {
+    lighting = (pow(lighting * mapped, vec3(1.0/gamma)));
+  }
+  */
   //for all lights
   for(int i = 0; i <  numberOfLights; ++i)
   {
@@ -102,8 +121,9 @@ void main()
     lighting += diffuse + specular;
   }
 
-  vec3 mapped = vec3(1.0f);
-
+  /*
+    doing the tone mapping and gamma correction after lighting calculations is interesting
+  */
   //exposure tone mapping
   if(exposure_tone_mapping)
   {

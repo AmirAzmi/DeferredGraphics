@@ -66,7 +66,7 @@ private:
 
   struct shader_data_t
   {
-    LightComponent::Light lights[16];
+    LightComponent::Light lights[1000];
     int numberOfLights = 1;
   } shader_data;
 
