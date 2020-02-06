@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Behavior.cpp" />
+    <ClCompile Include="DebugRenderingSystem.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behavior.h" />
+    <ClInclude Include="DebugRenderingSystem.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EngineTypes.h" />
     <ClInclude Include="Entity.h" />

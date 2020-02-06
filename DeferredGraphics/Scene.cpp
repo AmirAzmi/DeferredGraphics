@@ -76,7 +76,7 @@ void Scene::Init()
   meshComp->getEntityPtr()->angle = 0;
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
-  for (int i = 0; i < 8; ++i)
+  for (int i = 0; i < 2; ++i)
   {
     //set the name of each object that is added
     std::string numberAsString = std::to_string(i + 1);
@@ -110,7 +110,7 @@ void Scene::Render()
   {
     if (getEntities()[i]->name == "center object")
     {
-      getEntities()[i]->angle += 0.01f;
+      //getEntities()[i]->angle += 0.01f;
     }
     else
     {

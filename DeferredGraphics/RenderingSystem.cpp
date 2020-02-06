@@ -70,16 +70,24 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //generate the textures for the specular + color aka emissive aka albedo
   glGenTextures(1, &gColorSpecID);
   glBindTexture(GL_TEXTURE_2D, gColorSpecID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowWidth, windowHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gColorSpecID, 0);
 
+ /* //generate the texture for HDR
+  glGenTextures(1, &HDRID);
+  glBindTexture(GL_TEXTURE_2D, HDRID);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gColorSpecID, 0);
+  */
   //tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
-  unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+  unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3};
 
-  //draws all 3 buffers
-  glDrawBuffers(3, attachments);
+  //draws all 3 buffers and the hdr buffer
+  glDrawBuffers(4, attachments);
 
   //create and attach depth buffer (renderbuffer)
   glGenRenderbuffers(1, &rboDepthID);
@@ -99,6 +107,7 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   defferedLightingShaderID->setInt("gPosition", 0);
   defferedLightingShaderID->setInt("gNormal", 1);
   defferedLightingShaderID->setInt("gAlbedoSpec", 2);
+  //defferedLightingShaderID->setInt("HDR", 3);
 }
 
 //update the mesh components of the entities
@@ -164,6 +173,14 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   glBindTexture(GL_TEXTURE_2D, gNormalID);
   glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, gColorSpecID);
+  //glActiveTexture(GL_TEXTURE3);
+  //glBindTexture(GL_TEXTURE_2D, HDRID);
+
+  //set the exposure value, gamma, and hdr values
+  defferedLightingShaderID->setFloat("exposure", exposure);
+  defferedLightingShaderID->setFloat("gamma_correction", gamma);
+  defferedLightingShaderID->setFloat("exposure_tone_mapping", exposure_tone_mapping);
+  defferedLightingShaderID->setFloat("uncharted_tone_mapping", uncharted_tone_mapping);
 
   //get the eye position
   defferedLightingShaderID->setVec3("view_position", scene.getEyePosition());

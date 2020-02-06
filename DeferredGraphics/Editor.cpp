@@ -201,9 +201,22 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         }
       }
 
-      // if (ImGui::Checkbox("Deffered", &Manager.renderer->isDeffered))
+      if (ImGui::Checkbox("gamma", &Manager.renderer->gamma))
       {
       }
+
+      if (ImGui::Checkbox("tone mapping", &Manager.renderer->exposure_tone_mapping))
+      {
+      }
+      if (ImGui::Checkbox("uncharted tone mapping", &Manager.renderer->uncharted_tone_mapping))
+      {
+      }
+
+
+      if (ImGui::DragFloat("exposure", &Manager.renderer->exposure, .1f))
+      {
+      }
+
     }
     ImGui::TreePop();
   }

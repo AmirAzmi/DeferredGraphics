@@ -20,8 +20,13 @@ out vec4 color;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
+uniform sampler2D HDR;
 
+uniform float exposure;
 uniform vec3 view_position;
+uniform bool gamma_correction;
+uniform bool exposure_tone_mapping;
+uniform bool uncharted_tone_mapping;
 
 struct Light
 {
@@ -48,6 +53,20 @@ layout (std430, binding = 0) buffer shader_data
   int numberOfLights;
 };
 
+
+//uncharted tone mapping function
+vec3 Uncharted2Tonemap(vec3 x)
+{
+  float A = 0.15;
+	float B = 0.50;
+	float C = 0.10;
+	float D = 0.20;
+	float E = 0.02;
+	float F = 0.30;
+
+    return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+}
+
 void main()
 {
  //retrieve data from gbuffer
@@ -55,32 +74,53 @@ void main()
  vec3 normal_world_position = texture(gNormal, texture_coordinates).rgb;
  vec3 diffuse_color = texture(gAlbedoSpec, texture_coordinates).rgb;
  float specular_intensity = texture(gAlbedoSpec, texture_coordinates).a;
-  
-  vec3 lighting = diffuse_color * 0.7f;
-  vec3 normalized_normal_world_position = normalize(normal_world_position);
+ 
+ const float gamma = 2.2;
+ vec3 lighting = diffuse_color * 0.7f;
+ vec3 normalized_normal_world_position = normalize(normal_world_position);
 
   //for all lights
   for(int i = 0; i <  numberOfLights; ++i)
   {
-     Light light = lights[i];     
+    Light light = lights[i];     
 
-     // diffuse
-     vec3 light_direction = normalize(light.position - world_position);
-     vec3 diffuse = max(dot(normalized_normal_world_position, light_direction), 0.0) * diffuse_color * light.diffuseColor;
+    // diffuse
+    vec3 light_direction = normalize(light.position - world_position);
+    vec3 diffuse = max(dot(normalized_normal_world_position, light_direction), 0.0) * diffuse_color * light.diffuseColor;
 
-     //specular
-     vec3 view_direction = normalize(view_position - world_position);
-     vec3 reflection_vector = normalize(2 * dot(normalized_normal_world_position, light_direction) * normalized_normal_world_position - light_direction); //reflection vector  
-     float spec = pow(max(dot(reflection_vector, view_direction), 0.0), light.specularExponent);
-     vec3 specular = light.diffuseColor * spec * specular_intensity;
+    //specular
+    vec3 view_direction = normalize(view_position - world_position);
+    vec3 reflection_vector = normalize(2 * dot(normalized_normal_world_position, light_direction) * normalized_normal_world_position - light_direction); //reflection vector  
+    float spec = pow(max(dot(reflection_vector, view_direction), 0.0), light.specularExponent);
+    vec3 specular = light.diffuseColor * spec * specular_intensity;
 
-     //attenuation
-     float dist = length(light.position - world_position); //distance from light source to fragment
-     float attenuation = 1.0 / (1.0 + light.linear * dist + light.quadratic * dist * dist);
-     diffuse *= attenuation;
-     specular *= attenuation;
-     lighting += diffuse + specular;
+    //attenuation
+    float dist = length(light.position - world_position); //distance from light source to fragment
+    float attenuation = 1.0 / (1.0 + light.linear * dist + light.quadratic * dist * dist);
+    diffuse *= attenuation;
+    specular *= attenuation;
+    lighting += diffuse + specular;
   }
 
-  color = vec4(lighting, 1.0);
+  vec3 mapped = vec3(1.0f);
+
+  //exposure tone mapping
+  if(exposure_tone_mapping)
+  {
+    mapped = vec3(1.0) - exp(-diffuse_color * exposure);
+  }
+
+  if(uncharted_tone_mapping)
+  {
+     mapped = Uncharted2Tonemap(diffuse_color);
+  }
+
+  if(gamma_correction)
+  {
+    lighting = (pow(lighting * mapped, vec3(1.0/gamma)));
+  }
+
+  color = vec4(lighting, 1.0) * vec4(mapped.xyz, 1.0f);
+  
 }
+

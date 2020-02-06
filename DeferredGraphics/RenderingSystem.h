@@ -31,6 +31,16 @@ class RenderingSystem
   GLuint gNormalID;
   GLuint gColorSpecID;
 
+  //HDR rendering ID
+  GLuint HDRID;
+
+public:
+  float exposure = 1.0f;
+  bool gamma = true;
+  bool exposure_tone_mapping = true;
+  bool uncharted_tone_mapping = false;
+private:
+
   //depth buffer ID
   GLuint rboDepthID;
 

@@ -78,6 +78,9 @@
     <ClCompile Include="Behavior.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DebugRenderingSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="Behavior.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderingSystem.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

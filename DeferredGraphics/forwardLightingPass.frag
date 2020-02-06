@@ -34,7 +34,7 @@ struct Light
 
 layout (std430, binding = 0) buffer shader_data
 {
-  Light lights[16];
+  Light lights[1000];
   int numberOfLights;
 };
 
@@ -50,13 +50,12 @@ out vec4 color;
 
 void main()
 {
-
-
   vec3 lighting = vec3(0.0f,0.0f,1.0f) * 0.7f;
   vec3 normalized_normal_world_position = normalize(normal_world_position);
 
   //for all lights
- /* for(int i = 0; i <  numberOfLights; ++i)
+ /* 
+  for(int i = 0; i <  numberOfLights; ++i)
   {
      Light light = lights[i];     
 
