@@ -15,12 +15,12 @@ Creation date: January 4th , 2020
 
 in vec2 texture_coordinates;
 
-out vec4 color;
+layout (location = 0) out vec4 color;
+layout (location = 1) out vec4 BrightColor;
 
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
-uniform sampler2D HDR;
 
 uniform float exposure;
 uniform vec3 view_position;
@@ -76,28 +76,11 @@ void main()
  float specular_intensity = texture(gAlbedoSpec, texture_coordinates).a;
  
  const float gamma = 2.2;
- vec3 lighting = diffuse_color * 0.7f;
+ vec3 lighting = diffuse_color * 0.7f; //(.7 here is the constant ambient value)
  vec3 normalized_normal_world_position = normalize(normal_world_position);
 
    vec3 mapped = vec3(1.0f);
 
-   /*
-  //exposure tone mapping
-  if(exposure_tone_mapping)
-  {
-    mapped = vec3(1.0) - exp(-diffuse_color * exposure);
-  }
-
-  if(uncharted_tone_mapping)
-  {
-     mapped = Uncharted2Tonemap(diffuse_color);
-  }
-
-  if(gamma_correction)
-  {
-    lighting = (pow(lighting * mapped, vec3(1.0/gamma)));
-  }
-  */
   //for all lights
   for(int i = 0; i <  numberOfLights; ++i)
   {
@@ -109,7 +92,7 @@ void main()
 
     //specular
     vec3 view_direction = normalize(view_position - world_position);
-    vec3 reflection_vector = normalize(2 * dot(normalized_normal_world_position, light_direction) * normalized_normal_world_position - light_direction); //reflection vector  
+    vec3 reflection_vector = 2 * dot(normalized_normal_world_position, light_direction) * normalized_normal_world_position - light_direction; //reflection vector  
     float spec = pow(max(dot(reflection_vector, view_direction), 0.0), light.specularExponent);
     vec3 specular = light.diffuseColor * spec * specular_intensity;
 
@@ -121,9 +104,7 @@ void main()
     lighting += diffuse + specular;
   }
 
-  /*
-    doing the tone mapping and gamma correction after lighting calculations is interesting
-  */
+  //doing the tone mapping and gamma correction after lighting calculations is interesting and correct
   //exposure tone mapping
   if(exposure_tone_mapping)
   {
@@ -140,7 +121,21 @@ void main()
     lighting = (pow(lighting * mapped, vec3(1.0/gamma)));
   }
 
+  //this needs to be done somewhere else
+  //bloom color extraction after lighting values
+
+  float brightness = dot(lighting, vec3(0.2126, 0.7152, 0.0722));
+  vec4 brightColor;
+  if(brightness > 1.0)
+  {
+    brightColor = vec4(lighting , 1.0);
+  }
+  else
+  {
+    brightColor = vec4(0.0, 0.0, 0.0, 1.0);
+  }
+
+  BrightColor = brightColor;
   color = vec4(lighting, 1.0) * vec4(mapped.xyz, 1.0f);
-  
 }
 

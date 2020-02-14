@@ -25,6 +25,7 @@ Mesh::Mesh(std::string filePath)
   glm::vec3 max(std::numeric_limits<float>::min());//min point
   glm::vec3 min(std::numeric_limits<float>::max());//max point
   glm::vec3 averagePosition = glm::vec3(0.0f, 0.0f, 0.0f);
+  bounds.Empty();//clear the bounds to set values
 
   //if the file is open
   if (file.is_open())
@@ -54,6 +55,7 @@ Mesh::Mesh(std::string filePath)
 
           //gets the values in between the spaces and stores it into a vec3
           vertex = getValuesInBetweenWhiteSpacesVec3(line);
+          bounds.Add(vertex);
 
           averagePosition += vertex;
 
@@ -202,7 +204,7 @@ Mesh::Mesh(std::string filePath)
   //https://stackoverflow.com/questions/4703432/why-does-my-opengl-phong-shader-behave-like-a-flat-shader
   //renormalize the normals becuase that is what some website said to do for calculating vertex normals
   for (int i = 0; i < indices.size(); ++i)
-  {
+  { 
     normals[indices[i]] = glm::normalize(normals[indices[i]] / (float)count[indices[i]]);
   }
   
@@ -231,8 +233,7 @@ Mesh::Mesh(std::string filePath)
   //genereate the buffer that stores index data from the vector of indices
   glGenBuffers(1, &indexVBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(glm::uint),
-    indices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(glm::uint), indices.data(), GL_STATIC_DRAW);
 }
 
 GLuint Mesh::getPosVBO()
@@ -260,9 +261,24 @@ GLuint Mesh::getUVBO()
   return uvVBO;
 }
 
-std::vector<GLuint> Mesh::getIndexBuffer()
+std::vector<GLuint> Mesh::getIndices()
 {
   return indices;
+}
+
+std::vector<glm::vec3> Mesh::getVertices()
+{
+  return vertices;
+}
+
+std::vector<glm::vec3> Mesh::getNormals()
+{
+  return normals;
+}
+
+AABB Mesh::getBounds()
+{
+  return bounds;
 }
 
 glm::vec3 Mesh::getValuesInBetweenWhiteSpacesVec3(std::string line)

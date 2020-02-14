@@ -1,0 +1,20 @@
+﻿  Editor.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(53,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(53,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(69,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(69,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(94,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(94,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::get(void)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(105,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(105,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::get(void)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(122,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(122,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(127,3): warning C4984: 'if constexpr' is a C++17 language extension
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(127,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
+     Creating library C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.lib and object C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.exp
+  Generating code
+  1 of 2838 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    55 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.exe

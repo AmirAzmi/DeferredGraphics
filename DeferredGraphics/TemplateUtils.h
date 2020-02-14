@@ -10,7 +10,6 @@ Project: amir.azmi_CS350_1
 Author: Amir Azmi, amr.azmi, 180002217
 Creation date: January 4th , 2020
 --------------------------------------------------------*/
-
 #pragma once
 #include <cstddef>
 #include <vector>

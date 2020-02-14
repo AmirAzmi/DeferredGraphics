@@ -17,6 +17,8 @@ Creation date: January 4th , 2020
 #include <memory>
 #include <string>
 #include <fstream>
+#include "AABB.h"
+
 class Mesh
 {
   GLuint posVBO;
@@ -24,6 +26,7 @@ class Mesh
   GLuint indexVBO;
   GLuint uvVBO;
   GLuint VAO;
+  AABB bounds;
 
   std::vector<glm::vec3> vertices = {};
   std::vector<glm::vec3> normals = {};
@@ -49,8 +52,6 @@ private:
 
 public:
 
-
-
   Mesh(std::string filePath);
   GLuint getPosVBO();
   GLuint getNormsVBO();
@@ -58,7 +59,11 @@ public:
   GLuint getVAO();
   GLuint getUVBO();
 
-  std::vector<GLuint> getIndexBuffer();
+  std::vector<GLuint> getIndices();
+  std::vector<glm::vec3> getVertices();
+  std::vector<glm::vec3> getNormals();
+
+  AABB getBounds();
 
 };
 

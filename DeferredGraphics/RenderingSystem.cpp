@@ -10,7 +10,6 @@ Project: amir.azmi_CS350_1
 Author: Amir Azmi, amr.azmi, 180002217
 Creation date: January 4th , 2020
 --------------------------------------------------------*/
-
 #include <iostream>
 #include <algorithm>
 #include "RenderingSystem.h"
@@ -75,19 +74,11 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gColorSpecID, 0);
 
-  /* //generate the texture for HDR
-   glGenTextures(1, &HDRID);
-   glBindTexture(GL_TEXTURE_2D, HDRID);
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gColorSpecID, 0);
-   */
-   //tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
-  unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3 };
+  //tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
+  unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 
   //draws all 3 buffers and the hdr buffer
-  glDrawBuffers(4, attachments);
+  glDrawBuffers(3, attachments);
 
   //create and attach depth buffer (renderbuffer)
   glGenRenderbuffers(1, &rboDepthID);
@@ -100,6 +91,37 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
     std::cout << "Framebuffer not complete!" << std::endl;
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+
+  //generate the framebuffer Lighting
+  glGenFramebuffers(1, &LightingPassFBOID);
+  glBindFramebuffer(GL_FRAMEBUFFER, LightingPassFBOID);
+
+  //generate the texture for BloomBuffer/ Bright Color values over 190
+  glGenTextures(1, &ColorBufferID);
+  glBindTexture(GL_TEXTURE_2D, ColorBufferID);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ColorBufferID, 0);
+
+  //generate the texture for BloomBuffer/ Bright Color values over 190
+  glGenTextures(1, &BrightBufferID);
+  glBindTexture(GL_TEXTURE_2D, BrightBufferID);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, BrightBufferID, 0);
+
+  //tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
+  unsigned int attachment[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+
+  //draws all 3 buffers and the hdr buffer
+  glDrawBuffers(2, attachment);
+
   // shader configuration
   // for deffered shader
   // --------------------
@@ -107,17 +129,28 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   defferedLightingShaderID->setInt("gPosition", 0);
   defferedLightingShaderID->setInt("gNormal", 1);
   defferedLightingShaderID->setInt("gAlbedoSpec", 2);
-  //defferedLightingShaderID->setInt("HDR", 3);
+}
+
+RenderingSystem::~RenderingSystem()
+{
+  //delete shader attachments
+  glDeleteBuffers(0, &gColorSpecID);
+  glDeleteBuffers(0, &gNormalID);
+  glDeleteBuffers(0, &gPositionID);
+  glDeleteBuffers(0, &BrightBufferID);
+
+  //delete framebuffer container of the attachements
+  glDeleteFramebuffers(0, &gBufferFBOID);
 }
 
 //update the mesh components of the entities
 void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 {
   //gets all the current mesh components in th scene
-  std::vector<MeshComponentPtr> meshes = scene.getMeshes();
+  std::vector<MeshComponentPtr> & meshes = scene.getMeshes();
 
   //gets all the current mesh components in th scene
-  std::vector<LightComponentPtr> lights = scene.getLights();
+  std::vector<LightComponentPtr> & lights = scene.getLights();
 
   //Geometry Pass
   //------------------------------------------------------------
@@ -156,27 +189,24 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //draw deffered objectrs first
   std::for_each(meshes.begin(), iterator_to_forward_list, [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, true); });
 
-  //unbind the g framebuffer
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, windowWidth, windowHeight);
 
-  //lighting Pass
+  //lighting Pass in the default framebuffer, everything is drawn to the quad plane 
   //------------------------------------------------------------
+  glBindFramebuffer(GL_FRAMEBUFFER, LightingPassFBOID);
   glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   defferedLightingShaderID->UseShader();
 
-  //set the active textures to be displayed on the quad
+  //set the active textures to be displayed on the quad with the geometry
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, gPositionID);
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, gNormalID);
   glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, gColorSpecID);
-  //glActiveTexture(GL_TEXTURE3);
-  //glBindTexture(GL_TEXTURE_2D, HDRID);
 
-  //set the exposure value, gamma, and hdr values
+  //set the exposure value, gamma, and hdr values for the defferedLightingShader to use
   defferedLightingShaderID->setFloat("exposure", exposure);
   defferedLightingShaderID->setFloat("gamma_correction", gamma);
   defferedLightingShaderID->setFloat("exposure_tone_mapping", exposure_tone_mapping);
@@ -185,7 +215,17 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //get the eye position
   defferedLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
+  //draw
+  DrawQuad();
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  defferedLightingShaderID->UseShader();
+  glViewport(0, 0, windowWidth, windowHeight);
+
   glDepthMask(GL_FALSE);
+
   //render quads
   if (splitScreen == true)
   {
@@ -216,6 +256,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
     {
       glBlitFramebuffer(0, 0, windowWidth, windowHeight, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
     }
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 
@@ -288,7 +329,7 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
     glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
 
     //draw the objects with the mesh components
-    glDrawElements(mesh->getDrawMode(), (GLsizei)mesh->getMesh()->getIndexBuffer().size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(mesh->getDrawMode(), (GLsizei)mesh->getMesh()->getIndices().size(), GL_UNSIGNED_INT, 0);
   }
 }
 
@@ -347,7 +388,7 @@ void RenderingSystem::DrawQuad()
 void RenderingSystem::DrawTextures(GLuint textureID, unsigned posX, unsigned posY, unsigned windowWidth, unsigned windowHeight)
 {
   glDisable(GL_DEPTH_TEST);
-  
+
   //set the viewport
   glViewport(posX, posY, windowWidth, windowHeight);
 
@@ -364,7 +405,7 @@ void RenderingSystem::DrawTextures(GLuint textureID, unsigned posX, unsigned pos
   GLuint textureLocation = glGetUniformLocation(splitScreenShaderID->getProgramID(), "texture");
   glUniform1i(textureLocation, 0);
 
-  if(splitScreenVAOID == 0)
+  if (splitScreenVAOID == 0)
   {
     float Vertices[] =
     {

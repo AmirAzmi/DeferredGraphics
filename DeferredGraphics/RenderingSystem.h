@@ -25,14 +25,22 @@ class RenderingSystem
   GLuint projectionMatrixID;
   GLuint viewMatrixID;
 
-  //deffered rendering ID
+  //gBuffer ID and FBO ID
   GLuint gBufferFBOID;
   GLuint gPositionID;
   GLuint gNormalID;
   GLuint gColorSpecID;
 
-  //HDR rendering ID
-  GLuint HDRID;
+  //lighting Pass FBO ID
+  GLuint LightingPassFBOID;
+  GLuint BrightBufferID;
+  GLuint ColorBufferID;
+
+  //depth buffer ID
+  GLuint rboDepthID2;
+
+  //GLuint post-processing pass FBO ID
+  //GLuint PostProcessingFBOID;
 
 public:
   float exposure = 1.0f;
@@ -76,6 +84,7 @@ public:
   bool depthCopyToggle = true;
 
   RenderingSystem(int windowWidth, int windowHeight);
+  ~RenderingSystem();
   void Update(Scene& scene, int windowWidth, int windowHeight);
   void Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered);
   void DrawQuad();

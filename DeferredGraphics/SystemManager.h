@@ -13,6 +13,7 @@ Creation date: January 4th , 2020
 
 #pragma once
 #include "RenderingSystem.h"
+#include "DebugRenderingSystem.h"
 
 class Scene;
 
@@ -21,6 +22,7 @@ class SystemManager
 
 public:
   RenderingSystem* renderer;
+  DebugRenderingSystem* debugRenderer;
 
   void Init(int windowWidth, int windowHeight);
   void Update(Scene& scene, int windowWidth, int windowHeight);

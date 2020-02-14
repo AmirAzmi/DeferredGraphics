@@ -81,6 +81,9 @@
     <ClCompile Include="DebugRenderingSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="DebugRenderingSystem.h">
       <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

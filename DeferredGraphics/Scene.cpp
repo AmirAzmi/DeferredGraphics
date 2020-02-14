@@ -10,7 +10,6 @@ Project: amir.azmi_CS350_1
 Author: Amir Azmi, amr.azmi, 180002217
 Creation date: January 4th , 2020
 --------------------------------------------------------*/
-
 #include "Scene.h"
 #include "Entity.h"
 #include <stdlib.h>
@@ -46,14 +45,14 @@ void Scene::Init()
   // ->have a refrence to the entity
   /*********************************************************************************/
 
+  //add a mesh to the component
+  MeshHandle cube = std::make_shared<Mesh>("Resources//cube2.obj");
+  MeshHandle bunny = std::make_shared<Mesh>("Resources//bunny.obj");
+  MeshHandle sphere = std::make_shared<Mesh>("Resources//sphere.obj");
+
   //declare the shaders that will be used for this scene
   ShaderHandle gBuffer = std::make_shared<Shader>("gBuffer.vert", "gBuffer.frag", true);
   ShaderHandle forwardRenderer = std::make_shared<Shader>("forwardLightingPass.vert", "forwardLightingPass.frag", false);
-
-  //add a mesh to the component
-  MeshHandle cube = std::make_shared<Mesh>("Resources//cube.obj");
-  MeshHandle bunny = std::make_shared<Mesh>("Resources//bunny.obj");
-  MeshHandle sphere = std::make_shared<Mesh>("Resources//sphere.obj");
 
   //add a material(s) to the component
   MaterialHandle material = std::make_shared<Material>(gBuffer);
@@ -62,9 +61,9 @@ void Scene::Init()
   //Any material information needed
   material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
   material->setFloat("specular_intensity", 1.0f);
-
   material2->setVec4("diffuse_color", glm::vec4(0.5f, 0.0f, 0.7f, 1.0f));
-
+  
+  //create the Entity ptr
   EntityPtr centerObject = addEntity("center object");
 
   //add a mesh component pointer to the object with the setup from the prelims
@@ -76,7 +75,8 @@ void Scene::Init()
   meshComp->getEntityPtr()->angle = 0;
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
-  for (int i = 0; i < 8; ++i)
+  //create 8 objects
+  for (int i = 0; i < 1; ++i)
   {
     //set the name of each object that is added
     std::string numberAsString = std::to_string(i + 1);
@@ -87,8 +87,8 @@ void Scene::Init()
     EntityPtr object = addEntity(str);
 
     //add a mesh component pointer to the object with the setup from the prelims
-    MeshComponentPtr meshComp = object->add<MeshComponent>(object, sphere, forwardRenderer, material2);
-    //LightComponentPtr lightComp = object->add<LightComponent>();
+    MeshComponentPtr meshComp = object->add<MeshComponent>(object, cube, forwardRenderer, material2);
+    //lightComp = object->add<LightComponent>();
 
     //manipulate the properties of the object by getting it from the component
     meshComp->getEntityPtr()->scale = glm::vec3(1.5f, 1.5f, 1.5f);
@@ -100,10 +100,12 @@ void Scene::Init()
 
 void Scene::PreRender(int windowWidth, int windowHeight)
 {
+  //setup the initial vuew and projection matrices
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
   glViewport(0, 0, windowWidth, windowHeight);
 }
 
+//update the scene objects
 void Scene::Render()
 {
   for (int i = 0; i < getEntities().size(); ++i)

@@ -159,7 +159,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
     ImGui::PopID();
   }
-
   ImGui::TextWrapped("Each Object has a light component where the light is moving with the object except for the center one.");
   ImGui::End();
 
@@ -210,15 +209,12 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       if (ImGui::Checkbox("gamma", &Manager.renderer->gamma))
       {
       }
-
       if (ImGui::Checkbox("tone mapping", &Manager.renderer->exposure_tone_mapping))
       {
       }
       if (ImGui::Checkbox("uncharted tone mapping", &Manager.renderer->uncharted_tone_mapping))
       {
       }
-
-
       if (ImGui::DragFloat("exposure", &Manager.renderer->exposure, .1f))
       {
       }
@@ -228,7 +224,20 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   }
   ImGui::TextWrapped("Split Screen will show you what objects are using deffered rendering versus which objects are not.");
   ImGui::Spacing();
+  if (ImGui::CollapsingHeader("Debug Settings"))
+  {
+    ImGui::TreePush();
+    if (Manager.debugRenderer != nullptr)
+    {
+      if (ImGui::Checkbox("AABB", &Manager.debugRenderer->isAABBOn))
+      {
+      }
+    }
+
+    ImGui::TreePop();
+  }
   ImGui::End();
+
 
   //height of main menu bar is 23 pixels just in case you were wonderings
   //creates a menu bar at the top of the window

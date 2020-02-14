@@ -10,26 +10,18 @@ Project: amir.azmi_CS350_1
 Author: Amir Azmi, amr.azmi, 180002217
 Creation date: January 4th , 2020
 --------------------------------------------------------*/
-
 #version 440 core
 
 struct Light
 {
   vec3 ambientColor; //12 bytes 0 % 16
   float radius;         //4 bytes 12 % 4
-
   vec3 diffuseColor; //12 bytes 16 % 16
   float linear;           //4 bytes 28 % 4
-
   vec3 specularColor;//12 bytes 32 % 16
   float specularExponent;//4 bytes 44 % 4
-
   vec3 position;      //padding bytes for next array element
   float quadratic;        //4 bytes 48 % 4
-
-  //attenuation factors
-  //-------------------------------
-  //Total bytes: 48 bytes however actual total is 64 bytes due to aligning on 16 byte boundary
 };
 
 layout (std430, binding = 0) buffer shader_data
@@ -38,48 +30,44 @@ layout (std430, binding = 0) buffer shader_data
   int numberOfLights;
 };
 
+in vec3 normal_world_position;
+in vec3 world_position;
 
 uniform vec3 view_position;
-
-in vec3 world_position;
-in vec3 normal_world_position;
 uniform vec4 diffuse_color;
 
-// Output data
 out vec4 color;
 
 void main()
 {
-  vec3 lighting = vec3(0.0f,0.0f,1.0f) * 0.7f;
   vec3 normalized_normal_world_position = normalize(normal_world_position);
+  float ambientStrength = 0.1f;
+  vec3 result = vec3(diffuse_color.xyz);
 
-  //for all lights
- /* 
+  //for all lights  
   for(int i = 0; i <  numberOfLights; ++i)
   {
-     Light light = lights[i];     
 
-     // diffuse
-     vec3 light_direction = normalize(light.position - world_position);
-     vec3 diffuse = max(dot(normalized_normal_world_position, light_direction), 0.0) * vec3(diffuse_color .xyz)* light.diffuseColor;
+    Light light = lights[i];   
 
-     //specular
-     vec3 view_direction = normalize(view_position - world_position);
-     vec3 reflection_vector = normalize(2 * dot(normalized_normal_world_position, light_direction) * normalized_normal_world_position - light_direction); //reflection vector  
-     float spec = pow(max(dot(reflection_vector, view_direction), 0.0), light.specularExponent);
-     vec3 specular = 0.5f * light.diffuseColor * spec;
+    // ambient
+    vec3 ambient = ambientStrength * light.diffuseColor;
+  	
+    // diffuse 
+    vec3 normalized_normal_world_position = normalize(normal_world_position);
+    vec3 light_direction = normalize(light.position - world_position);
+    float diff = max(dot(normalized_normal_world_position, light_direction), 0.0f);
+    vec3 diffuse = diff * vec3(diffuse_color.xyz) * light.diffuseColor;
+    
+    // specular
+    float specularStrength = 0.5;
+    vec3 view_direction = normalize(view_position - world_position);
+    vec3 reflection_vector = 2 * dot(normalized_normal_world_position, light_direction) * normalized_normal_world_position - light_direction; //reflection vector  
+    float spec = pow(max(dot(reflection_vector, view_direction), 0.0f), 32);
+    vec3 specular = specularStrength * spec * light.diffuseColor;  
 
-     //attenuation
-     float dist = length(light.position - world_position); //distance from light source to fragment
-     float attenuation = 1.0 / (1.0 + light.linear * dist + light.quadratic * dist * dist);
-     diffuse *= attenuation;
-     specular *= attenuation;
-     lighting += diffuse + specular;
+    result +=  (diffuse + specular + ambient);
   }
 
-  color = vec4(lighting, 1.0);
-  */
-
-  color = diffuse_color;
-  
+  color = vec4(result, 1.0); 
 }

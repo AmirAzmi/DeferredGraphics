@@ -1,15 +1,3 @@
-﻿  Scene.cpp
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(53,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(53,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(69,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(69,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(94,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(94,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::get(void)'
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(105,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(105,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::get(void)'
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(122,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(122,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(127,3): warning C4984: 'if constexpr' is a C++17 language extension
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(127,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Scene.cpp(161): warning C4715: 'Scene::findEntity': not all control paths return a value
+﻿  DebugRenderingSystem.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(120,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe

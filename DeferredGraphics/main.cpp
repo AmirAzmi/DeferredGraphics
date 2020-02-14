@@ -17,6 +17,7 @@ Creation date: January 4th , 2020
 
 #include "Editor.h"
 #include "SystemManager.h"
+
 GLFWwindow* window;
 int windowWidth = 1024;
 int windowHeight = 768;
@@ -24,6 +25,13 @@ const char* glsl_version = "#version 430";
 
 void processInput(GLFWwindow* window, Scene& scene);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+#ifdef _WIN32
+extern "C" {
+  __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+  __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+}
+#endif
 
 int main()
 {

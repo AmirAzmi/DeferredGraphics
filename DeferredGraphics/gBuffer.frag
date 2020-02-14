@@ -23,8 +23,6 @@ in vec2 texture_coordinates;
 uniform vec4 diffuse_color;
 uniform float specular_intensity;
 
-out vec3 color;
-
 void main()
 {    
     // store the fragment position vector in the first gbuffer texture
@@ -38,5 +36,4 @@ void main()
 
     // store specular intensity in gAlbedoSpec's alpha component
     gAlbedoSpec.a = specular_intensity;
-
 }
