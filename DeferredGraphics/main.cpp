@@ -70,13 +70,14 @@ int main()
   // Ensure we can capture the escape key being pressed below
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-  //initialize the systems the scene will be using
-  SystemManager systems;
-  systems.Init(windowWidth, windowHeight);
 
   //intialize the scene
   Scene* scene = new Scene(windowWidth, windowHeight);
   scene->Init();
+
+  //initialize the systems the scene will be using
+  SystemManager systems;
+  systems.Init(*scene, windowWidth, windowHeight);
 
   //initialize the imgui editor
   Editor ImGuiEditor(*scene, systems);

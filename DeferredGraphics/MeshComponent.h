@@ -26,12 +26,14 @@ class MeshComponent
   //-------------------------------
   //total: 32 bytes
 
+
   public:
   MeshComponent(EntityPtr entity, MeshHandle meshHandle, ShaderHandle shaderHandle, MaterialHandle materialHandle):entity(entity),mesh(meshHandle), shader(shaderHandle), material(materialHandle)
   {
     
   }
 
+  std::vector<glm::vec4> vertices;
   GLuint DrawMode = GL_TRIANGLES;
 
   EntityPtr getEntityPtr()
@@ -57,6 +59,16 @@ class MeshComponent
   GLuint getDrawMode()
   {
     return DrawMode;
+  }
+
+  std::vector<glm::vec4> getVec4Vertices()
+  {
+    //convert vertices to vec4
+    for (int i = 0; i < this->getMesh()->getVertices().size(); ++i)
+    {
+      vertices.push_back(glm::vec4(getMesh()->getVertices()[i].x, getMesh()->getVertices()[i].y, getMesh()->getVertices()[i].z, 1.0f));
+    }
+    return vertices;
   }
 };
 

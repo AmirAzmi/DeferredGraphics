@@ -16,13 +16,15 @@ class DebugRenderingSystem
   ShaderHandle debugDrawID;
 
   public:
-  DebugRenderingSystem(int windowWidth, int windowHeight);
+  DebugRenderingSystem(Scene & scene, int windowWidth, int windowHeight);
   ~DebugRenderingSystem();
   void Update(Scene& scene, int windowWidth, int windowHeight);
 
   bool isAABBOn = false;
   bool isOBBOn = false;
   bool isSBBOn = false;
+
+  std::vector<std::vector<glm::vec4>> meshAABBs;
 
   void drawAABB(MeshComponentPtr mesh, Scene& scene);
   void drawOBB(MeshComponentPtr mesh, Scene& scene);

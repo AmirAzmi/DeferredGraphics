@@ -4,9 +4,17 @@
 #include "Entity.h"
 #include "AABB.h"
 
-DebugRenderingSystem::DebugRenderingSystem(int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
+DebugRenderingSystem::DebugRenderingSystem(Scene & scene, int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
 {
   debugDrawID = std::make_shared <Shader>("debugDraw.vert", "debugDraw.frag", false);
+
+  // gets all the current mesh components in th scene
+  std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
+
+  for (auto mesh: meshes)
+  {
+    mesh->vertices = mesh->getVec4Vertices();
+  }
 }
 
 DebugRenderingSystem::~DebugRenderingSystem()
@@ -45,22 +53,18 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
 {
   AABB bounds{};
   bounds.Empty();
-  std::vector<glm::vec4> Vertices;
-  std::vector<glm::vec4> ObjectToWorldVertices;
 
-  //convert vertices to vec4
-  for (int i = 0; i < mesh->getMesh()->getVertices().size(); ++i)
-  {
-    Vertices.push_back(glm::vec4(mesh->getMesh()->getVertices()[i].x, mesh->getMesh()->getVertices()[i].y, mesh->getMesh()->getVertices()[i].z, 1.0f));
-  }
+  std::vector<glm::vec4> ObjectToWorldVertices;
 
   //object to world matrix for a bounding box using the bounding boxes center and size
   glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
 
+
+
   //get the world vertices
-  for (int i = 0; i < Vertices.size(); ++i)
+  for (int i = 0; i < mesh->vertices.size(); ++i)
   {
-    ObjectToWorldVertices.push_back(ObjectToWorld * Vertices[i]);
+    ObjectToWorldVertices.push_back(ObjectToWorld * mesh->vertices[i]);
     bounds.Add(glm::vec3(ObjectToWorldVertices[i].x, ObjectToWorldVertices[i].y, ObjectToWorldVertices[i].z));
   }
 
@@ -123,6 +127,8 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
   //bind the index buffer object to be used for drawing the cube
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boundingBoxIBOID);
   glBindBuffer(GL_ARRAY_BUFFER, boundingBoxVBOID);
+
+  //to update the buffer when it is live
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(cubeVertices), &cubeVertices);
 
   //send the variables "perspective_matrix" and "view matrix" onto the GPU

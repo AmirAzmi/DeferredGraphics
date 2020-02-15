@@ -77,7 +77,7 @@ void Scene::Init()
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
   //create 8 objects
-  for (int i = 0; i < 1; ++i)
+  for (int i = 0; i < 8; ++i)
   {
     //set the name of each object that is added
     std::string numberAsString = std::to_string(i + 1);

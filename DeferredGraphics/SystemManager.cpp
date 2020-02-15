@@ -13,11 +13,11 @@ Creation date: January 4th , 2020
 
 #include "SystemManager.h"
 
-void SystemManager::Init(int windowWidth, int windowHeight)
+void SystemManager::Init(Scene & scene, int windowWidth, int windowHeight)
 {
   //initialize the renderer
   renderer = new RenderingSystem(windowWidth, windowHeight);
-  debugRenderer = new DebugRenderingSystem(windowWidth, windowHeight);
+  debugRenderer = new DebugRenderingSystem(scene, windowWidth, windowHeight);
 }
 
 void SystemManager::Update(Scene& scene, int windowWidth, int windowHeight)

@@ -24,7 +24,7 @@ public:
   RenderingSystem* renderer;
   DebugRenderingSystem* debugRenderer;
 
-  void Init(int windowWidth, int windowHeight);
+  void Init(Scene& scene, int windowWidth, int windowHeight);
   void Update(Scene& scene, int windowWidth, int windowHeight);
   void Shutdown();
 };
