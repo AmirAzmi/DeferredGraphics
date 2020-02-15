@@ -13,7 +13,7 @@ class DebugRenderingSystem
   GLuint boundingBoxIBOID;
 
   //shader used for rendering the lines
-  ShaderHandle forwardLightingShaderID;
+  ShaderHandle debugDrawID;
 
   public:
   DebugRenderingSystem(int windowWidth, int windowHeight);
@@ -29,4 +29,3 @@ class DebugRenderingSystem
   void drawSBB(MeshComponentPtr mesh, Scene& scene);
 
 };
-

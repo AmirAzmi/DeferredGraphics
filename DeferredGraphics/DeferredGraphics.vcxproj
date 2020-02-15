@@ -187,6 +187,8 @@
     <ClInclude Include="TemplateUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="debugDraw.frag" />
+    <None Include="debugDraw.vert" />
     <None Include="defferedLightingPass.frag" />
     <None Include="defferedLightingPass.vert" />
     <None Include="gBuffer.frag" />

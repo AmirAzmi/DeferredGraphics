@@ -41,6 +41,7 @@ class RenderingSystem
 
   //GLuint post-processing pass FBO ID
   //GLuint PostProcessingFBOID;
+  AABB bounds;
 
 public:
   float exposure = 1.0f;

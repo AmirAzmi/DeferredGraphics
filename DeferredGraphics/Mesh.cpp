@@ -25,7 +25,6 @@ Mesh::Mesh(std::string filePath)
   glm::vec3 max(std::numeric_limits<float>::min());//min point
   glm::vec3 min(std::numeric_limits<float>::max());//max point
   glm::vec3 averagePosition = glm::vec3(0.0f, 0.0f, 0.0f);
-  bounds.Empty();//clear the bounds to set values
 
   //if the file is open
   if (file.is_open())
@@ -55,7 +54,7 @@ Mesh::Mesh(std::string filePath)
 
           //gets the values in between the spaces and stores it into a vec3
           vertex = getValuesInBetweenWhiteSpacesVec3(line);
-          bounds.Add(vertex);
+   
 
           averagePosition += vertex;
 
@@ -274,11 +273,6 @@ std::vector<glm::vec3> Mesh::getVertices()
 std::vector<glm::vec3> Mesh::getNormals()
 {
   return normals;
-}
-
-AABB Mesh::getBounds()
-{
-  return bounds;
 }
 
 glm::vec3 Mesh::getValuesInBetweenWhiteSpacesVec3(std::string line)

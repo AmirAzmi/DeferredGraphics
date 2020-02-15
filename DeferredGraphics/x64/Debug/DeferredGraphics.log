@@ -1,3 +1,2 @@
-﻿  DebugRenderingSystem.cpp
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(120,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+﻿  AABB.cpp
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe

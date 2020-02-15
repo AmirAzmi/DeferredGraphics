@@ -13,6 +13,6 @@ Creation date: January 4th , 2020
 
 #include "Entity.h"
 
-Entity::Entity(std::string name, Scene& scene):name(name),  scene(scene), axisOfRotation(0,0,1)
+Entity::Entity(std::string name, Scene& scene):name(name),  scene(scene), axisOfRotation(0,0,1), scale(1,1,1)
 {
 }

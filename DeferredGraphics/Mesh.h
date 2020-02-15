@@ -26,13 +26,14 @@ class Mesh
   GLuint indexVBO;
   GLuint uvVBO;
   GLuint VAO;
-  AABB bounds;
 
   std::vector<glm::vec3> vertices = {};
   std::vector<glm::vec3> normals = {};
   std::vector<glm::vec2> uv = {};
   std::vector<GLuint> indices = {};
   std::vector<GLuint> normal_indices = {};
+
+  AABB bounds;
 
 public:
   struct Face
@@ -62,8 +63,6 @@ public:
   std::vector<GLuint> getIndices();
   std::vector<glm::vec3> getVertices();
   std::vector<glm::vec3> getNormals();
-
-  AABB getBounds();
 
 };
 

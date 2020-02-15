@@ -8,7 +8,7 @@ class AABB
   glm::vec3 min;
   glm::vec3 max;
 
-  void Add(glm::vec3 &point);
+  void Add(const glm::vec3 &point);
   void Empty();
   glm::vec3 getCenter();
   glm::vec3 getSize();

@@ -1,11 +1,12 @@
 #include <algorithm>
 #include "DebugRenderingSystem.h"
 #include "MeshComponent.h"
+#include "Entity.h"
 #include "AABB.h"
 
-DebugRenderingSystem::DebugRenderingSystem(int windowWidth, int windowHeight): projectionMatrixID(-1), viewMatrixID(-1)
+DebugRenderingSystem::DebugRenderingSystem(int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
 {
-  forwardLightingShaderID = std::make_shared <Shader>("forwardLightingPass.vert", "forwardLightingPass.frag", false);
+  debugDrawID = std::make_shared <Shader>("debugDraw.vert", "debugDraw.frag", false);
 }
 
 DebugRenderingSystem::~DebugRenderingSystem()
@@ -16,7 +17,7 @@ DebugRenderingSystem::~DebugRenderingSystem()
 void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 {
   //set the active shader
-  forwardLightingShaderID->UseShader();
+  debugDrawID->UseShader();
 
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
@@ -42,37 +43,62 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
 void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
 {
-  std::vector<glm::uint> cubeIndices = 
+  AABB bounds{};
+  bounds.Empty();
+  std::vector<glm::vec4> Vertices;
+  std::vector<glm::vec4> ObjectToWorldVertices;
+
+  //convert vertices to vec4
+  for (int i = 0; i < mesh->getMesh()->getVertices().size(); ++i)
   {
-    4, 0, 3,
-    4, 3, 7,
-    2, 6, 7,
-    2, 7, 3,
-    1, 5, 2,
-    5, 6, 2,
-    0, 4, 1,
-    4, 5, 1,
-    4, 7, 5,
-    7, 6, 5,
-    0, 1, 2,
-    0, 2, 3
+    Vertices.push_back(glm::vec4(mesh->getMesh()->getVertices()[i].x, mesh->getMesh()->getVertices()[i].y, mesh->getMesh()->getVertices()[i].z, 1.0f));
+  }
+
+  //object to world matrix for a bounding box using the bounding boxes center and size
+  glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
+
+  //get the world vertices
+  for (int i = 0; i < Vertices.size(); ++i)
+  {
+    ObjectToWorldVertices.push_back(ObjectToWorld * Vertices[i]);
+    bounds.Add(glm::vec3(ObjectToWorldVertices[i].x, ObjectToWorldVertices[i].y, ObjectToWorldVertices[i].z));
+  }
+
+  //get min and max
+  glm::vec3 min = bounds.min;
+  glm::vec3 max = bounds.max;
+
+  //cube indices
+  std::vector<glm::uint> cubeIndices =
+  {
+    0,1,
+    1,2,
+    2,3,
+    3,0,
+    0,4,
+    4,5,
+    5,6,
+    6,7,
+    3,7,
+    7,4,
+    1,5,
+    2,6
+  };
+
+  float cubeVertices[] =
+  {
+     max.x, max.y, min.z, //back top right
+     min.x, max.y, min.z, //back top left
+     min.x, min.y, min.z, //back bottom left
+     max.x, min.y, min.z, //back bottom right
+     max.x, max.y, max.z, //front top right
+     min.x, max.y, max.z, //front top left
+     min.x, min.y, max.z, //front bottom left
+     max.x, min.y, max.z  //front bottom right
   };
 
   if (boundingBoxVAOID == 0)
   {
-
-    float cubeVertices[] =
-    {
-       1.0f,  1.0f, -1.0f,
-       1.0f, -1.0f, -1.0f,
-      -1.0f, -1.0f, -1.0f,
-      -1.0f,  1.0f, -1.0f,
-       1.0f,  1.0f,  1.0f,
-       1.0f, -1.0f,  1.0f,
-      -1.0f, -1.0f,  1.0f,
-      -1.0f,  1.0f,  1.0f
-    };
-
     //generate the vao for the cube
     glGenVertexArrays(1, &boundingBoxVAOID);
 
@@ -95,27 +121,19 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
   }
 
   //bind the index buffer object to be used for drawing the cube
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boundingBoxIBOID);  
-
-  //object to world matrix for a bounding box using the bounding boxes center and size
-  glm::mat4 ObjectToWorld = glm::translate(glm::mat4(1), mesh->getMesh()->getBounds().getCenter()) * glm::scale(glm::mat4(1), mesh->getMesh()->getBounds().getSize());
-
-  //object to world matrix sent to the GPU called "object_to_world"
-  GLint umodel_matrix = glGetUniformLocation(mesh->getShader()->getProgramID(), "object_to_world");
-  glUniformMatrix4fv(umodel_matrix, 1, false, &ObjectToWorld[0][0]);
-
-  //normal matrix sent to the GPU called "normal_matrix"
-  GLint unormal_matrix = glGetUniformLocation(mesh->getShader()->getProgramID(), "normal_matrix");
-  glUniformMatrix4fv(unormal_matrix, 1, false, &(glm::transpose(glm::inverse(ObjectToWorld)))[0][0]);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boundingBoxIBOID);
+  glBindBuffer(GL_ARRAY_BUFFER, boundingBoxVBOID);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(cubeVertices), &cubeVertices);
 
   //send the variables "perspective_matrix" and "view matrix" onto the GPU
-  projectionMatrixID = glGetUniformLocation(mesh->getShader()->getProgramID(), "perspective_matrix");
-  viewMatrixID = glGetUniformLocation(mesh->getShader()->getProgramID(), "view_matrix");
+  projectionMatrixID = glGetUniformLocation(debugDrawID->getProgramID(), "perspective_matrix");
+  viewMatrixID = glGetUniformLocation(debugDrawID->getProgramID(), "view_matrix");
 
   //get the projection and view matrix from the scene set it as a variables for the GPU
   glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
   glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
- 
+
+  glLineWidth(2);
   glBindVertexArray(boundingBoxVAOID);
   glDrawElements(GL_LINES, cubeIndices.size(), GL_UNSIGNED_INT, 0);
 }
