@@ -18,6 +18,8 @@ Creation date: January 4th , 2020
 #include "EngineTypes.h"
 #include "Scene.h"
 
+class Behavior;
+
 class Entity
 {
   MeshComponentPtr meshComponent;
@@ -31,6 +33,7 @@ public:
   glm::vec3 scale;
   float angle;
   float currentPosition;
+  std::vector<BehaviorPtr> behaviors; // The list of behaviors attached to this entity.
 
   Entity(std::string name, Scene& scene);
 
@@ -43,6 +46,20 @@ public:
   template <typename T>
   void remove();
 
+  template<typename T, typename ...Ts>
+  T* addBehavior(Ts&&... args)
+  {
+    return static_cast<T*>(addBehaviorImpl(new T(args...)));
+  }
+
+  void onFrameBegin();
+  void update();
+  void onFrameEnd();
+
+  ~Entity();
+
+private:
+  BehaviorPtr addBehaviorImpl(BehaviorPtr behavior);
 };
 
 //add components to the entity

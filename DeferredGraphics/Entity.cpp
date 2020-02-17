@@ -13,6 +13,48 @@ Creation date: January 4th , 2020
 
 #include "Entity.h"
 
+#include "Behavior.h"
+
 Entity::Entity(std::string name, Scene& scene):name(name),  scene(scene), axisOfRotation(0,0,1), scale(1,1,1)
 {
+}
+
+void Entity::onFrameBegin()
+{
+  for (BehaviorPtr behavior : behaviors)
+  {
+    behavior->OnFrameBegin();
+  }
+}
+
+void Entity::update()
+{
+  for (BehaviorPtr behavior : behaviors)
+  {
+    behavior->Update();
+  }
+}
+
+void Entity::onFrameEnd()
+{
+  for (BehaviorPtr behavior : behaviors)
+  {
+    behavior->OnFrameEnd();
+  }
+}
+
+Entity::~Entity()
+{
+  for (BehaviorPtr behavior : behaviors)
+  {
+    delete behavior;
+  }
+  behaviors.clear();
+}
+
+BehaviorPtr Entity::addBehaviorImpl(BehaviorPtr behavior)
+{
+  behavior->owner = this;
+  behaviors.push_back(behavior);
+  return behavior;
 }

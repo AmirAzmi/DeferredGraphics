@@ -28,6 +28,12 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{43dc1bf8-e9c5-4fc0-bef9-1ac9f02edfd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Behavior">
+      <UniqueIdentifier>{f89bea14-2007-48ff-b31c-a68afd9ea99c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Behavior">
+      <UniqueIdentifier>{94a839df-c26b-4763-8828-2de5931541b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -83,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="AABB.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RotationBehavior.cpp">
+      <Filter>Source Files\Behavior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="AABB.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RotationBehavior.h">
+      <Filter>Header Files\Behavior</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

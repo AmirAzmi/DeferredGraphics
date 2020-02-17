@@ -11,9 +11,6 @@ Author: Amir Azmi, amr.azmi, 180002217
 Creation date: January 4th , 2020
 --------------------------------------------------------*/
 #pragma once
-class EngineTypes
-{
-};
 
 class Entity;
 using EntityPtr = Entity*;
@@ -24,5 +21,5 @@ using MeshComponentPtr = MeshComponent*;
 class LightComponent;
 using LightComponentPtr = LightComponent*;
 
-
-
+class Behavior;
+using BehaviorPtr = Behavior*;

@@ -16,6 +16,8 @@ Creation date: January 4th , 2020
 #include <cstdlib>
 #include <string>
 
+#include "RotationBehavior.h"
+
 Scene::Scene(int windowWidth, int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(1000.0f), cameraSpeed(0.1f),
 eyePosition(glm::vec3(0.0f, 0.0f, 10.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, -1.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
 {
@@ -96,6 +98,8 @@ void Scene::Init()
     meshComp2->getEntityPtr()->angle = 0;
     meshComp2->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
     meshComp2->getEntityPtr()->currentPosition = i * 45.0f * 3.1415f / 180.0f;
+
+    object->addBehavior<RotationBehavior>();
   }
 }
 
@@ -104,6 +108,11 @@ void Scene::PreRender(int windowWidth, int windowHeight)
   //setup the initial vuew and projection matrices
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
   glViewport(0, 0, windowWidth, windowHeight);
+
+  for (EntityPtr entity : getEntities())
+  {
+    entity->onFrameBegin();
+  }
 }
 
 //update the scene objects
@@ -113,23 +122,33 @@ void Scene::Render()
   {
     if (getEntities()[i]->name == "Center Object")
     {
-      //getEntities()[i]->angle += 0.01f;
+      // getEntities()[i]->angle += 0.01f;
     }
     else
     {
-      getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition += 0.001f;
-      //getEntities()[i]->angle += 0.001f;
-      getEntities()[i]->position = glm::vec3(cosf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition), 0.0f, sinf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition)) * 4.0f;
-      //getEntities()[i]->get<LightComponent>()->light.position = getEntities()[i]->position;
+      //
+      // THIS CODE WAS REPLACED WITH A BEHAVIOR.
+      //
+
+      // getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition += 0.001f;
+      // getEntities()[i]->angle += 0.001f;
+      // getEntities()[i]->position = glm::vec3(cosf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition), 0.0f, sinf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition)) * 4.0f;
+      // getEntities()[i]->get<LightComponent>()->light.position = getEntities()[i]->position;
 
       //sets the light color of each object to the objects diffuse color
-      //getEntities()[i]->get<LightComponent>()->light.diffuseColor = getEntities()[i]->get<MeshComponent>()->getMaterial()->vec4s.at("diffuse_color");
+      // getEntities()[i]->get<LightComponent>()->light.diffuseColor = getEntities()[i]->get<MeshComponent>()->getMaterial()->vec4s.at("diffuse_color");
     }
+
+    getEntities()[i]->update();
   }
 }
 
 void Scene::PostRender()
 {
+  for (EntityPtr entity : getEntities())
+  {
+    entity->onFrameEnd();
+  }
 }
 
 EntityPtr Scene::addEntity(std::string name)
