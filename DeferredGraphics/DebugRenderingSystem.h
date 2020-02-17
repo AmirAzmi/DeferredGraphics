@@ -27,7 +27,9 @@ class DebugRenderingSystem
   std::vector<std::vector<glm::vec4>> meshAABBs;
 
   void drawAABB(MeshComponentPtr mesh, Scene& scene);
-  void drawOBB(MeshComponentPtr mesh, Scene& scene);
-  void drawSBB(MeshComponentPtr mesh, Scene& scene);
+  void drawCBS(MeshComponentPtr mesh, Scene& scene);
+  void drawRBS(MeshComponentPtr mesh, Scene& scene);
+  void drawLBS(MeshComponentPtr mesh, Scene& scene);
+  void drawPCABS(MeshComponentPtr mesh, Scene& scene);
 
 };

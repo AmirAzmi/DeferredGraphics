@@ -65,7 +65,7 @@ void Scene::Init()
   material2->setVec4("diffuse_color", glm::vec4(0.5f, 0.0f, 0.7f, 1.0f));
   
   //create the Entity ptr
-  EntityPtr centerObject = addEntity("center object");
+  EntityPtr centerObject = addEntity("Center Object");
 
   //add a mesh component pointer to the object with the setup from the prelims
   MeshComponentPtr meshComp = centerObject->add<MeshComponent>(centerObject, bunny, gBuffer, material);
@@ -111,7 +111,7 @@ void Scene::Render()
 {
   for (int i = 0; i < getEntities().size(); ++i)
   {
-    if (getEntities()[i]->name == "center object")
+    if (getEntities()[i]->name == "Center Object")
     {
       //getEntities()[i]->angle += 0.01f;
     }

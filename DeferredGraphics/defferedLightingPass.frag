@@ -94,7 +94,7 @@ void main()
     vec3 view_direction = normalize(view_position - world_position);
     vec3 reflection_vector = 2 * dot(normalized_normal_world_position, light_direction) * normalized_normal_world_position - light_direction; //reflection vector  
     float spec = pow(max(dot(reflection_vector, view_direction), 0.0), light.specularExponent);
-    vec3 specular = light.diffuseColor * spec * specular_intensity;
+    vec3 specular = light.specularColor * spec * specular_intensity;
 
     //attenuation
     float dist = length(light.position - world_position); //distance from light source to fragment

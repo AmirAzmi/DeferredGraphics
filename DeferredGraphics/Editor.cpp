@@ -130,7 +130,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::TreeNode("Light Component"))
         {
-          if (ImGui::DragFloat3("Diffuse:", &lightComponent->light.diffuseColor.x, .1f))
+          if (ImGui::DragFloat3("Diffuse:", &lightComponent->light.diffuseColor.x, .1f, 0.0f, 1000.0f))
           {
           }
 
@@ -138,11 +138,11 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
           {
           }
 
-          if (ImGui::DragFloat3("Specular Color:", &lightComponent->light.specularColor.x, .1f))
+          if (ImGui::DragFloat3("Specular Color:", &lightComponent->light.specularColor.x, .1f, 0.0f, 10.0f))
           {
           }
 
-          if (ImGui::DragFloat("Specular Exponent:", &lightComponent->light.specularExponent, .1f))
+          if (ImGui::DragFloat("Specular Exponent:", &lightComponent->light.specularExponent, .1f, 0.001f, 1000.0f))
           {
           }
 
@@ -164,9 +164,9 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
   //Entity List Window
   ImGui::Begin("Settings");
-  ImGui::TextWrapped("WASD moves the camera around the point of the center object.");
+  ImGui::TextWrapped("WASD moves the camera left, right, in, and out.");
   ImGui::Spacing();
-  ImGui::TextWrapped("Q and E change the FOV of the camera where Q zooms in annd E zooms out.");
+  ImGui::TextWrapped("Q and E move up and down.");
   ImGui::Spacing();
 
   if (ImGui::CollapsingHeader("Renderer Settings"))

@@ -39,12 +39,12 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
   if (isOBBOn == true)
   {
-    std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawOBB(mesh, scene); });
+  //  std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawOBB(mesh, scene); });
   }
 
   if (isSBBOn == true)
   {
-    std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawSBB(mesh, scene); });
+ //  std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawSBB(mesh, scene); });
   }
 
 }
@@ -58,8 +58,6 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
 
   //object to world matrix for a bounding box using the bounding boxes center and size
   glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
-
-
 
   //get the world vertices
   for (int i = 0; i < mesh->vertices.size(); ++i)
@@ -144,10 +142,18 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
   glDrawElements(GL_LINES, cubeIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
-void DebugRenderingSystem::drawOBB(MeshComponentPtr mesh, Scene& scene)
+void DebugRenderingSystem::drawCBS(MeshComponentPtr mesh, Scene& scene)
 {
 }
 
-void DebugRenderingSystem::drawSBB(MeshComponentPtr mesh, Scene& scene)
+void DebugRenderingSystem::drawRBS(MeshComponentPtr mesh, Scene& scene)
+{
+}
+
+void DebugRenderingSystem::drawLBS(MeshComponentPtr mesh, Scene& scene)
+{
+}
+
+void DebugRenderingSystem::drawPCABS(MeshComponentPtr mesh, Scene& scene)
 {
 }
