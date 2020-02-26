@@ -209,10 +209,11 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       if (ImGui::Checkbox("gamma", &Manager.renderer->gamma))
       {
       }
-      if (ImGui::Checkbox("tone mapping", &Manager.renderer->exposure_tone_mapping))
+      if (ImGui::Checkbox("uncharted tone mapping", &Manager.renderer->uncharted_tone_mapping))
       {
       }
-      if (ImGui::Checkbox("uncharted tone mapping", &Manager.renderer->uncharted_tone_mapping))
+      ImGui::TextWrapped("Exposure only works for tone mapping");
+      if (ImGui::Checkbox("tone mapping", &Manager.renderer->exposure_tone_mapping))
       {
       }
       if (ImGui::DragFloat("exposure", &Manager.renderer->exposure, .1f))
@@ -232,6 +233,30 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       if (ImGui::Checkbox("AABB", &Manager.debugRenderer->isAABBOn))
       {
       }
+
+      if (ImGui::TreeNode("Bounding Sphere Calculation Types"))
+      {
+        BoundingSphere::BoundingSphereCalculationType mode = BoundingSphere::BoundingSphereCalculationType::Centroid;
+
+        if (ImGui::RadioButton("Centroid", mode == BoundingSphere::BoundingSphereCalculationType::Centroid))
+        {
+          mode = BoundingSphere::BoundingSphereCalculationType::Centroid;
+        }
+        if (ImGui::RadioButton("Ritters", mode == BoundingSphere::BoundingSphereCalculationType::Ritters))
+        {
+          mode = BoundingSphere::BoundingSphereCalculationType::Ritters;
+        }
+        if (ImGui::RadioButton("ModifiedLarsons", mode == BoundingSphere::BoundingSphereCalculationType::ModifiedLarsons))
+        {
+          mode = BoundingSphere::BoundingSphereCalculationType::ModifiedLarsons;
+        }
+        if (ImGui::RadioButton("PCA", mode == BoundingSphere::BoundingSphereCalculationType::PCA))
+        {
+          mode = BoundingSphere::BoundingSphereCalculationType::PCA;
+        }
+        ImGui::TreePop();
+      }
+
     }
 
     ImGui::TreePop();

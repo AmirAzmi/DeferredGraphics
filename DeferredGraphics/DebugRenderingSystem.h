@@ -1,5 +1,7 @@
 #pragma once
 #include "Scene.h"
+#include "AABB.h"
+#include "BoundingSphere.h"
 
 class DebugRenderingSystem
 {
@@ -27,9 +29,7 @@ class DebugRenderingSystem
   std::vector<std::vector<glm::vec4>> meshAABBs;
 
   void drawAABB(MeshComponentPtr mesh, Scene& scene);
-  void drawCBS(MeshComponentPtr mesh, Scene& scene);
-  void drawRBS(MeshComponentPtr mesh, Scene& scene);
-  void drawLBS(MeshComponentPtr mesh, Scene& scene);
-  void drawPCABS(MeshComponentPtr mesh, Scene& scene);
+  void drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
+
 
 };

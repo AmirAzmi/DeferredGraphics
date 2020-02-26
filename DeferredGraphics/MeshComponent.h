@@ -30,7 +30,6 @@ class MeshComponent
   public:
   MeshComponent(EntityPtr entity, MeshHandle meshHandle, ShaderHandle shaderHandle, MaterialHandle materialHandle):entity(entity),mesh(meshHandle), shader(shaderHandle), material(materialHandle)
   {
-    
   }
 
   std::vector<glm::vec4> vertices;

@@ -93,6 +93,9 @@
     <ClCompile Include="RotationBehavior.cpp">
       <Filter>Source Files\Behavior</Filter>
     </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="RotationBehavior.h">
       <Filter>Header Files\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

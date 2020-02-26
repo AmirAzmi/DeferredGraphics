@@ -2,7 +2,7 @@
 #include "DebugRenderingSystem.h"
 #include "MeshComponent.h"
 #include "Entity.h"
-#include "AABB.h"
+
 
 DebugRenderingSystem::DebugRenderingSystem(Scene & scene, int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
 {
@@ -59,9 +59,10 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
   //object to world matrix for a bounding box using the bounding boxes center and size
   glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
 
-  //get the world vertices
+  //get the world vertices and create an AABB on the go
   for (int i = 0; i < mesh->vertices.size(); ++i)
   {
+    //get vec4 vertices from the mesh component and multiply them by object to woerk to get object to world verices
     ObjectToWorldVertices.push_back(ObjectToWorld * mesh->vertices[i]);
     bounds.Add(glm::vec3(ObjectToWorldVertices[i].x, ObjectToWorldVertices[i].y, ObjectToWorldVertices[i].z));
   }
@@ -142,18 +143,7 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
   glDrawElements(GL_LINES, cubeIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
-void DebugRenderingSystem::drawCBS(MeshComponentPtr mesh, Scene& scene)
+void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type)
 {
-}
-
-void DebugRenderingSystem::drawRBS(MeshComponentPtr mesh, Scene& scene)
-{
-}
-
-void DebugRenderingSystem::drawLBS(MeshComponentPtr mesh, Scene& scene)
-{
-}
-
-void DebugRenderingSystem::drawPCABS(MeshComponentPtr mesh, Scene& scene)
-{
+  BoundingSphere BS{};
 }
