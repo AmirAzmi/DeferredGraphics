@@ -4,14 +4,14 @@
 #include "Entity.h"
 
 
-DebugRenderingSystem::DebugRenderingSystem(Scene & scene, int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
+DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
 {
   debugDrawID = std::make_shared <Shader>("debugDraw.vert", "debugDraw.frag", false);
 
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
 
-  for (auto mesh: meshes)
+  for (auto mesh : meshes)
   {
     mesh->vertices = mesh->getVec4Vertices();
   }
@@ -31,27 +31,58 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
 
   //for each mesh component
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+  //aabb Check
   if (isAABBOn == true)
   {
     std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawAABB(mesh, scene); });
   }
 
-  if (isOBBOn == true)
+  if (isBSOn == true)
   {
-  //  std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawOBB(mesh, scene); });
-  }
+    switch (sphereType)
+    {
+    case BoundingSphere::BoundingSphereCalculationType::Centroid:
+    {
+      std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawBS(mesh, scene, BoundingSphere::BoundingSphereCalculationType::Centroid); });
+      break;
+    }
 
-  if (isSBBOn == true)
-  {
- //  std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawSBB(mesh, scene); });
-  }
+    case BoundingSphere::BoundingSphereCalculationType::Ritters:
+    {
 
+      std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawBS(mesh, scene, BoundingSphere::BoundingSphereCalculationType::Ritters); });
+      break;
+    }
+
+    case BoundingSphere::BoundingSphereCalculationType::ModifiedLarsons:
+    {
+
+      std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawBS(mesh, scene, BoundingSphere::BoundingSphereCalculationType::ModifiedLarsons); });
+      break;
+    }
+
+    case BoundingSphere::BoundingSphereCalculationType::PCA:
+    {
+
+      std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawBS(mesh, scene, BoundingSphere::BoundingSphereCalculationType::PCA); });
+      break;
+    }
+
+    default:
+    {
+      //do not draw if this somehow happens
+      break;
+    }
+    }
+  }
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
 {
-  AABB bounds{};
+  AABB bounds = mesh->getMeshBounds();
   bounds.Empty();
 
   std::vector<glm::vec4> ObjectToWorldVertices;
@@ -66,6 +97,8 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
     ObjectToWorldVertices.push_back(ObjectToWorld * mesh->vertices[i]);
     bounds.Add(glm::vec3(ObjectToWorldVertices[i].x, ObjectToWorldVertices[i].y, ObjectToWorldVertices[i].z));
   }
+
+  mesh->bounds = bounds;
 
   //get min and max
   glm::vec3 min = bounds.min;
@@ -145,5 +178,22 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
 
 void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type)
 {
-  BoundingSphere BS{};
+  //calculate the radius, sectors, and stacks of the sphere
+  BoundingSphere boundingSphere;
+  boundingSphere.info = boundingSphere.calculateBS(type, mesh->getMesh()->getVertices());
+
+  std::vector<glm::vec4> ObjectToWorldVertices;
+
+  //object to world matrix for a bounding box using the bounding boxes center and size
+  glm::mat4 ObjectToWorld = 
+    glm::translate(mesh->getEntityPtr()->position) * 
+    glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * 
+    glm::scale(mesh->getEntityPtr()->scale);
+
+   
+  if (boundingSphereVAOID == 0)
+  {
+
+  }
 }
+

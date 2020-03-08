@@ -145,6 +145,7 @@
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
+    <ClCompile Include="BoundingVolumeHierarchy.cpp" />
     <ClCompile Include="DebugRenderingSystem.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="BoundingSphere.h" />
+    <ClInclude Include="BoundingVolumeHierarchy.h" />
     <ClInclude Include="DebugRenderingSystem.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EngineTypes.h" />

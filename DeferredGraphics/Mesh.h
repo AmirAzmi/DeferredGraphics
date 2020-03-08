@@ -33,8 +33,6 @@ class Mesh
   std::vector<GLuint> indices = {};
   std::vector<GLuint> normal_indices = {};
 
-  AABB bounds;
-
 public:
   struct Face
   {

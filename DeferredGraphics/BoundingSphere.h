@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm/glm.hpp>
+#include <vector>
 
 class BoundingSphere
 {
@@ -14,13 +15,14 @@ public:
 
   struct BSInfo
   {
-
     glm::vec3 center;
     float radius;
   };
 
   BSInfo info; //information containing center and radius
   BoundingSphereCalculationType type; //what emthod to construct the center and sphere
+
+
 public:
   BoundingSphere() :info{ glm::vec3(0.0f,0.0f,0.0f), 0.0f }, type(BoundingSphereCalculationType::Centroid)
   {
@@ -30,6 +32,6 @@ public:
   {
   }
 
-  BSInfo calculateBS(BoundingSphereCalculationType type);
+  BSInfo calculateBS(BoundingSphereCalculationType type, std::vector<glm::vec3> vertices);
 };
 

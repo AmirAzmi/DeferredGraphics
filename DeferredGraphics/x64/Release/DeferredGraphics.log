@@ -1,5 +1,9 @@
-﻿  Behavior.cpp
+﻿  AABB.cpp
   BoundingSphere.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\BoundingSphere.cpp(20,29): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\BoundingSphere.cpp(129,43): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\BoundingSphere.cpp(130,43): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\BoundingSphere.cpp(65,15): warning C4101: 'center_point_between_yz': unreferenced local variable
   DebugRenderingSystem.cpp
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(70,3): warning C4984: 'if constexpr' is a C++17 language extension
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(70,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
@@ -13,7 +17,7 @@ C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(139,3
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(139,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(144,3): warning C4984: 'if constexpr' is a C++17 language extension
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(144,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(143,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(174,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
   Editor.cpp
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(70,3): warning C4984: 'if constexpr' is a C++17 language extension
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(70,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
@@ -40,8 +44,120 @@ C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(139,3
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(139,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(144,3): warning C4984: 'if constexpr' is a C++17 language extension
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(144,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
-  main.cpp
-  RotationBehavior.cpp
+  Mesh.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(119,35): warning C4805: '==': unsafe mix of type 'unsigned __int64' and type 'bool' in operation
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(126,70): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(127,70): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(128,70): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(130,75): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(131,75): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(132,75): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(140,44): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(141,44): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(142,44): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(380,64): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(381,73): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(382,61): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(398,64): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(399,73): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(400,61): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  RenderingSystem.cpp
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(70,3): warning C4984: 'if constexpr' is a C++17 language extension
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(70,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(86,3): warning C4984: 'if constexpr' is a C++17 language extension
@@ -54,7 +170,7 @@ C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(139,3
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(139,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(144,3): warning C4984: 'if constexpr' is a C++17 language extension
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(144,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
-  RenderingSystem.cpp
+  RotationBehavior.cpp
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(70,3): warning C4984: 'if constexpr' is a C++17 language extension
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(70,3): message : This diagnostic occurred in the compiler generated function 'T *Entity::add(Ts &&...)'
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(86,3): warning C4984: 'if constexpr' is a C++17 language extension
@@ -81,10 +197,11 @@ C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(139,3
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(144,3): warning C4984: 'if constexpr' is a C++17 language extension
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Entity.h(144,3): message : This diagnostic occurred in the compiler generated function 'void Entity::remove(void)'
   SystemManager.cpp
+  main.cpp
      Creating library C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.lib and object C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.exp
   Generating code
-  281 of 2983 functions ( 9.4%) were compiled, the rest were copied from previous compilation.
-    52 functions were new in current compilation
-    121 functions had inline decision re-evaluated but remain unchanged
+  389 of 3022 functions (12.9%) were compiled, the rest were copied from previous compilation.
+    38 functions were new in current compilation
+    141 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.exe

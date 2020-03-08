@@ -37,6 +37,18 @@ std::vector<LightComponentPtr>& Scene::getLights()
   return ListOfTypes.get<LightComponentPtr>();
 }
 
+std::vector<AABB>& Scene::getSceneObjectBounds()
+{
+  std::vector<MeshComponentPtr> meshes = getMeshes();
+
+  for(auto & mesh: meshes)
+  { 
+    listOfBounds.push_back(mesh->bounds);
+  }
+
+  return listOfBounds;
+}
+
 void Scene::Init()
 {
   /*********************************************************************************/
@@ -51,6 +63,7 @@ void Scene::Init()
   MeshHandle cube = std::make_shared<Mesh>("Resources//cube2.obj");
   MeshHandle bunny = std::make_shared<Mesh>("Resources//bunny.obj");
   MeshHandle sphere = std::make_shared<Mesh>("Resources//sphere.obj");
+  MeshHandle pitch = std::make_shared<Mesh>("Resources//pitch.obj");
 
   //declare the shaders that will be used for this scene
   ShaderHandle gBuffer = std::make_shared<Shader>("gBuffer.vert", "gBuffer.frag", true);

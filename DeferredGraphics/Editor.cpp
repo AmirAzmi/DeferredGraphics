@@ -155,6 +155,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
           ImGui::TreePop();
         }
       }
+      ImGui::Separator();
     }
 
     ImGui::PopID();
@@ -236,31 +237,43 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
       if (ImGui::TreeNode("Bounding Sphere Calculation Types"))
       {
-        BoundingSphere::BoundingSphereCalculationType mode = BoundingSphere::BoundingSphereCalculationType::Centroid;
+        Manager.debugRenderer->isBSOn = true;
+        BoundingSphere::BoundingSphereCalculationType mode = Manager.debugRenderer->sphereType;
 
         if (ImGui::RadioButton("Centroid", mode == BoundingSphere::BoundingSphereCalculationType::Centroid))
         {
           mode = BoundingSphere::BoundingSphereCalculationType::Centroid;
+          Manager.debugRenderer->sphereType = mode;
         }
         if (ImGui::RadioButton("Ritters", mode == BoundingSphere::BoundingSphereCalculationType::Ritters))
         {
           mode = BoundingSphere::BoundingSphereCalculationType::Ritters;
+          Manager.debugRenderer->sphereType = mode;
         }
         if (ImGui::RadioButton("ModifiedLarsons", mode == BoundingSphere::BoundingSphereCalculationType::ModifiedLarsons))
         {
           mode = BoundingSphere::BoundingSphereCalculationType::ModifiedLarsons;
+          Manager.debugRenderer->sphereType = mode;
         }
         if (ImGui::RadioButton("PCA", mode == BoundingSphere::BoundingSphereCalculationType::PCA))
         {
           mode = BoundingSphere::BoundingSphereCalculationType::PCA;
+          Manager.debugRenderer->sphereType = mode;
         }
+
         ImGui::TreePop();
       }
+
+
 
     }
 
     ImGui::TreePop();
   }
+  ImGui::End();
+
+  ImGui::Begin("Profiler");
+  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
   ImGui::End();
 
 
@@ -282,6 +295,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       ImGui::EndMenu();
     }
   }
+
   ImGui::EndMainMenuBar();
 
 }

@@ -22,14 +22,16 @@ class MeshComponent
   MeshHandle mesh;        //8 bytes
   MaterialHandle material;//8 bytes
   ShaderHandle shader;    //8 bytes
-  EntityPtr entity;       //8 bytes
+  EntityPtr entity;       //8 byteszz
   //-------------------------------
   //total: 32 bytes
 
 
   public:
+  AABB bounds;
   MeshComponent(EntityPtr entity, MeshHandle meshHandle, ShaderHandle shaderHandle, MaterialHandle materialHandle):entity(entity),mesh(meshHandle), shader(shaderHandle), material(materialHandle)
   {
+    bounds.Empty();
   }
 
   std::vector<glm::vec4> vertices;
@@ -59,6 +61,12 @@ class MeshComponent
   {
     return DrawMode;
   }
+
+  AABB getMeshBounds()
+  {
+    return bounds;
+  }
+
 
   std::vector<glm::vec4> getVec4Vertices()
   {

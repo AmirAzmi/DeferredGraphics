@@ -20,6 +20,7 @@ Creation date: January 4th , 2020
 class Scene
 {
   std::vector<EntityPtr> ListOfEntities; //list of entities
+  std::vector<AABB> listOfBounds;
 
 
 public:
@@ -50,6 +51,7 @@ public:
   std::vector<EntityPtr>& getEntities();
   std::vector<MeshComponentPtr>& getMeshes();
   std::vector<LightComponentPtr>& getLights();
+  std::vector<AABB>& getSceneObjectBounds();
 
   void Init();
   void PreRender(int windowWidth, int windowHeight);

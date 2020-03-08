@@ -22,8 +22,7 @@ class Behavior;
 
 class Entity
 {
-  MeshComponentPtr meshComponent;
-  LightComponentPtr lightComponent;
+  ComponentPointerLists pointers;
 
 public:
   Scene& scene;
@@ -66,85 +65,32 @@ private:
 template<typename T, typename ...Ts>
 inline T* Entity::add(Ts&&... args)
 {
-  //check to add meshComponent note: make sure to compare types not pointers of types
-  if constexpr (std::is_same_v<T, MeshComponent>)
-  {
-    //allocate the component
-    T* component = new T(std::forward<Ts>(args)...);
+  //allocate the component
+  T* component = new T(std::forward<Ts>(args)...);
 
-    //set the pointer of the meshComponent to be a valid pointer
-    meshComponent = component;
+  //adds componentptr to list of component pointers by getting the component pointer from the component
+  pointers.get<T*>().pointer = component;
 
-    //add the component to the T list and in this case T is MeshComponent
-    scene.ListOfTypes.get<T*>().push_back(component);
+  //add the component to the T list and in this case T is MeshComponent
+  scene.ListOfTypes.get<T*>().push_back(component);
 
-    //return the component
-    return meshComponent;
-  }
-
-  //check to add lightComponent note: make sure to compare types not pointers of types
-  if constexpr (std::is_same_v<T, LightComponent>)
-  {
-    //allocate the component
-    T* component = new T(std::forward<Ts>(args)...);
-
-    //set the pointer of the meshComponent to be a valid pointer
-    lightComponent = component;
-
-    //add the component to the T list and in this case T is MeshComponent
-    scene.ListOfTypes.get<T*>().push_back(component);
-
-    //return the component
-    return lightComponent;
-  }
-
-  //passed in something that was not a component
-  return nullptr;
+  //return the component
+  return component;
 }
 
 //checking if an entity has the component
 template<typename T>
 inline T* Entity::get()
 {
-
-  //check to see if meshComponent was passed in
-  if constexpr (std::is_same_v<T, MeshComponent>)
-  {
-    //check if the meshComponent is valid
-    if (meshComponent != nullptr)
-    {
-      //give the meshComponent
-      return meshComponent;
-    }
-  }
-
-  //check to see if lightComponent was passed in
-  if constexpr (std::is_same_v<T, LightComponent>)
-  {
-    //check if the lightComponent is valid
-    if (lightComponent != nullptr)
-    {
-      //give the lightComponent
-      return lightComponent;
-    }
-  }
-
-  return nullptr;
+  //get the pointer type of that component
+  return pointers.get<T*>().pointer;
 }
 
 //remove components from the entity
 template<typename T>
 inline void Entity::remove()
 {
-  if constexpr (std::is_same_v<T, MeshComponent>)
-  {
-    delete meshComponent;
-  }
-
-  if constexpr (std::is_same_v<T, LightComponent>)
-  {
-    delete lightComponent;
-  }
+  delete pointers.get<T*>().pointer;
 }
 
 using EntityPtr = Entity*;
