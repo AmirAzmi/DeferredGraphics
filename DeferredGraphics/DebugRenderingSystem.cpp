@@ -26,7 +26,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
 
-  //for each mesh component
+  //for each mesh component make it wireframed
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   //aabb Check
@@ -89,22 +89,29 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     //set the bounding volume of the current meshes in the root node
     BVHTree->boundingVolume = BVHTree->calculateBoundingVolume(BVHTree->meshes);
 
-    BoundingVolumeHierarchy * left_tree = BVHTree;
-    BoundingVolumeHierarchy * right_tree = BVHTree;
-
     //creates the BVH tree so right now the root nodes
-    createBVHTree(BVHTree, BVHTree->meshes, 7);
+    createBVHTree(BVHTree, BVHTree->meshes, numberOfLevels);
+
+    //storing the children of the left and rgiht trees
+    BoundingVolumeHierarchy * left_tree = BVHTree->left_child;
+    BoundingVolumeHierarchy * right_tree = BVHTree->right_child;
+
+    //draw bvh root node
+    drawAABB(BVHTree->boundingVolume, scene);
 
     //Breadth first search to draw the AABBs
     //maybe recursive draw call????
-    while (left_tree != nullptr && right_tree != nullptr)
+    int level = 0;
+    while (left_tree != nullptr && right_tree != nullptr && level < numberOfLevels)
     {
       //this will also draw root
       drawAABB(left_tree->boundingVolume, scene);
       left_tree = left_tree->left_child;
 
-      drawAABB(right_tree->right_child->boundingVolume, scene);
+      drawAABB(right_tree->boundingVolume, scene);
       right_tree = right_tree->right_child;
+      level++;
+
     }
   }
 }
@@ -721,11 +728,6 @@ void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingS
   glLineWidth(2);
   glBindVertexArray(boundingSphereVAOID);
   glDrawElements(GL_LINES, sphereIndices.size(), GL_UNSIGNED_INT, 0);
-}
-
-void DebugRenderingSystem::drawBVH(AABB bounds, Scene& scene, BoundingSphere::BoundingSphereCalculationType type)
-{
-
 }
 
 void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level)

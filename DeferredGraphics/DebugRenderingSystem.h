@@ -2361,14 +2361,13 @@ class DebugRenderingSystem
 
   //draw BVH
   bool isBVHOn = false;
+  int numberOfLevels = 0;
 
   BoundingSphere::BoundingSphereCalculationType sphereType = BoundingSphere::BoundingSphereCalculationType::Centroid;
 
   void drawAABB(MeshComponentPtr mesh, Scene& scene);
   void drawAABB(AABB bounds, Scene& scene);
   void drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
-  void drawBVH(AABB bounds, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
-
   void createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
 
 };

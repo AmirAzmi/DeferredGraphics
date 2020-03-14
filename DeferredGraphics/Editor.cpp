@@ -266,9 +266,13 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
       if (ImGui::Checkbox("Bounding Volume Hierarchy", &Manager.debugRenderer->isBVHOn))
       {
-
+        
       }
 
+      if (Manager.debugRenderer->isBVHOn)
+      {
+        ImGui::SliderInt("Number of Levels", &Manager.debugRenderer->numberOfLevels, 0, 7);
+      }
     }
 
     ImGui::TreePop();
