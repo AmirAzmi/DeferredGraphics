@@ -37,18 +37,6 @@ std::vector<LightComponentPtr>& Scene::getLights()
   return ListOfTypes.get<LightComponentPtr>();
 }
 
-std::vector<AABB>& Scene::getSceneObjectBounds()
-{
-  std::vector<MeshComponentPtr> meshes = getMeshes();
-
-  for(auto & mesh: meshes)
-  { 
-    listOfBounds.push_back(mesh->bounds);
-  }
-
-  return listOfBounds;
-}
-
 void Scene::Init()
 {
   /*********************************************************************************/
@@ -73,7 +61,6 @@ void Scene::Init()
   MaterialHandle material = std::make_shared<Material>(gBuffer);
   MaterialHandle material2 = std::make_shared<Material>(forwardRenderer);
 
-
   //Any material information needed
   material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
   material->setFloat("specular_intensity", 1.0f);
@@ -87,7 +74,7 @@ void Scene::Init()
   LightComponentPtr lightComp = centerObject->add<LightComponent>();
 
   //manipulate the properties of the object by getting it from the component
-  meshComp->getEntityPtr()->scale = glm::vec3(2.0f, 2.0f, 2.0f);
+  meshComp->getEntityPtr()->scale = glm::vec3(1.0f, 1.0f, 1.0f);
   meshComp->getEntityPtr()->angle = 0;
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -103,11 +90,11 @@ void Scene::Init()
     EntityPtr object = addEntity(str);
 
     //add a mesh component pointer to the object with the setup from the prelims
-    MeshComponentPtr meshComp2 = object->add<MeshComponent>(object, sphere, forwardRenderer, material2);
+    MeshComponentPtr meshComp2 = object->add<MeshComponent>(object, cube, forwardRenderer, material2);
     //lightComp = object->add<LightComponent>();
 
     //manipulate the properties of the object by getting it from the component
-    meshComp2->getEntityPtr()->scale = glm::vec3(1.5f, 1.5f, 1.5f);
+    meshComp2->getEntityPtr()->scale = glm::vec3(1.0f, 1.0f, 1.0f);
     meshComp2->getEntityPtr()->angle = 0;
     meshComp2->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
     meshComp2->getEntityPtr()->currentPosition = i * 45.0f * 3.1415f / 180.0f;
@@ -124,6 +111,7 @@ void Scene::PreRender(int windowWidth, int windowHeight)
 
   for (EntityPtr entity : getEntities())
   {
+    //updates the behaviors for all entities
     entity->onFrameBegin();
   }
 }
@@ -133,25 +121,7 @@ void Scene::Render()
 {
   for (int i = 0; i < getEntities().size(); ++i)
   {
-    if (getEntities()[i]->name == "Center Object")
-    {
-      // getEntities()[i]->angle += 0.01f;
-    }
-    else
-    {
-      //
-      // THIS CODE WAS REPLACED WITH A BEHAVIOR.
-      //
-
-      // getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition += 0.001f;
-      // getEntities()[i]->angle += 0.001f;
-      // getEntities()[i]->position = glm::vec3(cosf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition), 0.0f, sinf(getEntities()[i]->get<MeshComponent>()->getEntityPtr()->currentPosition)) * 4.0f;
-      // getEntities()[i]->get<LightComponent>()->light.position = getEntities()[i]->position;
-
-      //sets the light color of each object to the objects diffuse color
-      // getEntities()[i]->get<LightComponent>()->light.diffuseColor = getEntities()[i]->get<MeshComponent>()->getMaterial()->vec4s.at("diffuse_color");
-    }
-
+    //updates the entity behaviors
     getEntities()[i]->update();
   }
 }

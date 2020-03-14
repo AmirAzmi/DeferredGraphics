@@ -211,5 +211,11 @@
     <None Include="debugDraw.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="sphereDebugDraw.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="sphereDebugDraw.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

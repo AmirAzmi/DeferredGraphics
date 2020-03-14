@@ -48,10 +48,10 @@ private:
   glm::vec2 getValuesInBetweenWhiteSpacesVec2(std::string line);
   Face getFaceData(std::string line);
 
-
 public:
 
   Mesh(std::string filePath);
+  Mesh(float radius, int latitudeSlices, int longitudeSlices);
   GLuint getPosVBO();
   GLuint getNormsVBO();
   GLuint getIndexVBO();
@@ -65,4 +65,3 @@ public:
 };
 
 typedef std::shared_ptr<Mesh> MeshHandle;
-

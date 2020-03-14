@@ -28,7 +28,7 @@ public:
   {
   }
 
-  BoundingSphere(BSInfo information, BoundingSphereCalculationType type) :info{ information.center, information.radius }, type(BoundingSphereCalculationType::Centroid)
+  BoundingSphere(BSInfo information, BoundingSphereCalculationType type, int latitudeSlices, int longitudeSlices) :info{ information.center, information.radius }, type(BoundingSphereCalculationType::Centroid)
   {
   }
 

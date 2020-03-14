@@ -1,4 +1,6 @@
-﻿  BoundingVolumeHierarchy.cpp
-  SystemManager.cpp
-  Generating Code...
+﻿  DebugRenderingSystem.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(188,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(249,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(723,68): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(770,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe

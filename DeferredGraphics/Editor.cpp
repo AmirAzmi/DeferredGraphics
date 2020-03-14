@@ -40,7 +40,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::ShowDemoWindow();
   //*/
 
-  //Inspector Window
+  //Inspector Window, Entity List Window
   ImGui::Begin("Inspector");
 
 
@@ -163,7 +163,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::TextWrapped("Each Object has a light component where the light is moving with the object except for the center one.");
   ImGui::End();
 
-  //Entity List Window
+  //Settings Window
   ImGui::Begin("Settings");
   ImGui::TextWrapped("WASD moves the camera left, right, in, and out.");
   ImGui::Spacing();
@@ -264,12 +264,16 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::TreePop();
       }
 
+      if (ImGui::Checkbox("Bounding Volume Hierarchy", &Manager.debugRenderer->isBVHOn))
+      {
 
+      }
 
     }
 
     ImGui::TreePop();
   }
+
   ImGui::End();
 
   ImGui::Begin("Profiler");

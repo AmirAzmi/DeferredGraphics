@@ -186,7 +186,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   memcpy(q, &shader_data, sizeof(shader_data));
   glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
-  //draw deffered objectrs first
+  //draw deffered objects first
   std::for_each(meshes.begin(), iterator_to_forward_list, [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, true); });
 
   glViewport(0, 0, windowWidth, windowHeight);
@@ -263,8 +263,10 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   forwardLightingShaderID->UseShader();
   forwardLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   //draw forward objects next
   std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   if (splitScreen == true)
   {

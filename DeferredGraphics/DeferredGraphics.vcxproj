@@ -203,6 +203,8 @@
     <None Include="gBufferViewer.vert" />
     <None Include="forwardLightingPass.frag" />
     <None Include="forwardLightingPass.vert" />
+    <None Include="sphereDebugDraw.frag" />
+    <None Include="sphereDebugDraw.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

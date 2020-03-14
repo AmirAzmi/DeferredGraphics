@@ -4,10 +4,15 @@
 #include "Scene.h"
 class BoundingVolumeHierarchy
 {
-  BoundingVolumeHierarchy * children[2];
+public:
+  BoundingVolumeHierarchy * left_child;
+  BoundingVolumeHierarchy * right_child;
   std::vector<MeshComponentPtr> meshes;
   AABB boundingVolume;
 
-public:
-  BoundingVolumeHierarchy(Scene & scene);
+  BoundingVolumeHierarchy(std::vector<MeshComponentPtr> meshes);
+  AABB calculateBoundingVolume(std::vector<MeshComponentPtr> meshes);
+  BoundingVolumeHierarchy * createNode(std::vector<MeshComponentPtr> meshes);
+  bool isLeaf();
+
 };

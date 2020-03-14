@@ -18,7 +18,6 @@ out vec3 world_position;
 uniform mat4 view_matrix;
 uniform mat4 perspective_matrix;
 
-
 void main()
 {
   world_position = vec3(vec4(aPos, 1.0f));

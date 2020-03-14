@@ -67,7 +67,7 @@ AABB AABB::combineBounds(std::vector<AABB> bounds)
   AABB totalBounds;
   totalBounds.Empty();
 
-  for (int i = 0;bounds.size(); ++i)
+  for (int i = 0; i < bounds.size(); ++i)
   {
     if (bounds[i].min.x < totalBounds.min.x)
     {
@@ -84,17 +84,17 @@ AABB AABB::combineBounds(std::vector<AABB> bounds)
       totalBounds.min.z = bounds[i].min.z;
     }
 
-    if (bounds[i].max.x < totalBounds.max.x)
+    if (bounds[i].max.x > totalBounds.max.x)
     {
       totalBounds.max.x = bounds[i].max.x;
     }
 
-    if (bounds[i].max.y < totalBounds.max.y)
+    if (bounds[i].max.y > totalBounds.max.y)
     {
       totalBounds.max.y = bounds[i].max.y;
     }
 
-    if (bounds[i].max.z < totalBounds.max.z)
+    if (bounds[i].max.z > totalBounds.max.z)
     {
       totalBounds.max.z = bounds[i].max.z;
     }

@@ -36,7 +36,7 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
     //calculate radius
     for (auto& vertex : vertices)
     {
-      float dist = distanceSquaredVec3(vertex, center); //calcualte distancesquared between each point
+      float dist = glm::distance(vertex, center); //calcualte distance between each point
 
       if (dist > maxmimum_distance_radius)
       {
@@ -48,7 +48,7 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
     info.center = center;
 
     //set the radius (note: I only do one sqrt at the very end instead of doing the sqrt in the loop so it isnt to bad here)
-    info.radius = sqrtf(maxmimum_distance_radius);
+    info.radius = maxmimum_distance_radius;
 
     //return the calculated center and radius
     return info;
@@ -203,14 +203,14 @@ float distanceSquaredVec3(glm::vec3 a, glm::vec3 b)
     (b.y - a.y) * (b.y - a.y) +
     (b.z - a.z) * (b.z - a.z);
 
-  return distance * distance;
+  return distance;
 }
 
 float distanceSquaredFloat(float a, float b)
 {
   float distance = (b - a) * (b - a);
 
-  return distance * distance;
+  return distance;
 }
 
 extremalPoints FindExtremalPoints(std::vector<glm::vec3> points, std::vector<glm::vec3> norms)

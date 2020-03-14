@@ -113,7 +113,7 @@ Mesh::Mesh(std::string filePath)
         }
         break;
       }
-      //if the first character is an 'f' that means its a index ordering
+      //if the first character is an 'f' that means its an index ordering
       case 'f':
       {
         if (line.find('/') == true)
@@ -166,7 +166,7 @@ Mesh::Mesh(std::string filePath)
   //get the range max
   float rangemax(std::max(std::max(rangex, rangey), rangez));
 
-  //for all the vertices set the offset so it is centered and dicide by the range max
+  //for all the vertices set the offset so it is centered and divide by the range max
   for (auto& vert : vertices)
   {
     vert -= averagePosition;
