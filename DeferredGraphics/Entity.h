@@ -90,12 +90,22 @@ inline T* Entity::get()
 template<typename T>
 inline void Entity::remove()
 {
+  //grab the adress of the component
   T * pointer = pointers.get<T*>().pointer;
+
+  //grab the list of that specific component
   auto& list = scene.ListOfTypes.get<T*>();
+
+  //get the iterator of that component
   auto it = std::find(list.begin(), list.end(), pointer);
 
+  //erase it from the list
   list.erase(it);
+
+  //delete the pointer
   delete pointer;
+
+  //invalidate it by setting it to null
   pointers.get<T*>().pointer = nullptr;
 }
 

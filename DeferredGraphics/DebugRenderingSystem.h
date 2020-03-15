@@ -2343,6 +2343,7 @@ class DebugRenderingSystem
 
   //Bounding Volume Hiearchy Data
   BoundingVolumeHierarchy * BVHTree;
+  BoundingVolumeHierarchy * BVHTreeBottomUp;
 
   //shader used for rendering the lines
   ShaderHandle debugDrawID;
@@ -2361,6 +2362,7 @@ class DebugRenderingSystem
 
   //draw BVH
   bool isBVHOn = false;
+  bool isBVHBottomUpOn = false;
   int numberOfLevels = 0;
 
   BoundingSphere::BoundingSphereCalculationType sphereType = BoundingSphere::BoundingSphereCalculationType::Centroid;
@@ -2369,5 +2371,6 @@ class DebugRenderingSystem
   void drawAABB(AABB bounds, Scene& scene);
   void drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
   void createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
+  void createBVHTreeBottomUp(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
 
 };

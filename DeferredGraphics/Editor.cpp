@@ -22,6 +22,20 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   ImGui::StyleColorsDark();
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init(glslVersion);
+
+
+  ImVec4* colors = ImGui::GetStyle().Colors;
+  colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.22f, 0.37f, 0.94f);
+  colors[ImGuiCol_FrameBgHovered] = ImVec4(0.26f, 0.60f, 1.00f, 0.40f);
+  colors[ImGuiCol_FrameBgActive] = ImVec4(0.28f, 0.60f, 0.98f, 0.67f);
+  colors[ImGuiCol_TitleBg] = ImVec4(0.17f, 0.37f, 0.69f, 1.00f);
+  colors[ImGuiCol_Separator] = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
+  
+  ImGuiStyle& style = ImGui::GetStyle();
+  style.FrameRounding = 0.0f;
+  style.ChildRounding = 0.0f;
+  style.ScrollbarRounding = 0.0f;
+  style.WindowRounding = 0.0f;
 }
 
 void Editor::preRender(std::string windowName)
@@ -111,8 +125,14 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
               for (auto& v4 : material->vec4s)
               {
-                if (ImGui::DragFloat4(v4.first.c_str(), &v4.second.x, .1f))
+                if (v4.first == "diffuse_color")
                 {
+                  if (ImGui::ColorEdit3("diffuse_color", &v4.second.x))
+                  {
+                  }
+                }
+                else if (ImGui::DragFloat4(v4.first.c_str(), &v4.second.x, .1f))
+                {                 
                 }
               }
 

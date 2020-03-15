@@ -5,11 +5,12 @@ C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\BoundingSphere
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\BoundingSphere.cpp(65,15): warning C4101: 'center_point_between_yz': unreferenced local variable
   BoundingVolumeHierarchy.cpp
   DebugRenderingSystem.cpp
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(159,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(202,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(263,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(737,68): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(779,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Editor.cpp
   Entity.cpp
-  main.cpp
-  RotationBehavior.cpp
   Mesh.cpp
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(119,35): warning C4805: '==': unsafe mix of type 'unsigned __int64' and type 'bool' in operation
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(126,70): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
@@ -124,12 +125,14 @@ C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(400,6
               T=float
           ]
   RenderingSystem.cpp
+  RotationBehavior.cpp
   Scene.cpp
   SystemManager.cpp
+  main.cpp
      Creating library C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.lib and object C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.exp
   Generating code
-  406 of 3041 functions (13.4%) were compiled, the rest were copied from previous compilation.
-    24 functions were new in current compilation
-    137 functions had inline decision re-evaluated but remain unchanged
+  574 of 3176 functions (18.1%) were compiled, the rest were copied from previous compilation.
+    101 functions were new in current compilation
+    316 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.exe

@@ -108,12 +108,15 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     int level = 0;
     while (left_tree != nullptr && right_tree != nullptr && level < numberOfLevels)
     {
-      //this will also draw root
+      //draw all the left children
       drawAABB(left_tree->boundingVolume, scene);
       left_tree = left_tree->left_child;
 
+      //draw all the right children
       drawAABB(right_tree->boundingVolume, scene);
       right_tree = right_tree->right_child;
+
+      //increment level counter
       level++;
 
     }
@@ -786,5 +789,10 @@ void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy * BVH, std::vec
     BVH->right_child = BVH->right_child->createNode(right);
     createBVHTree(BVH->right_child, right, level - 1);
   }
+}
+
+void DebugRenderingSystem::createBVHTreeBottomUp(BoundingVolumeHierarchy* BVH, std::vector<MeshComponentPtr> meshes, int level)
+{
+
 }
 

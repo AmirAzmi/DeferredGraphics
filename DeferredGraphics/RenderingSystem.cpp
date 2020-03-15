@@ -263,10 +263,10 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   forwardLightingShaderID->UseShader();
   forwardLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   //draw forward objects next
   std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   if (splitScreen == true)
   {
