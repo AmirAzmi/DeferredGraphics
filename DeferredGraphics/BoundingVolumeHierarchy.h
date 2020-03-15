@@ -13,6 +13,7 @@ public:
   BoundingVolumeHierarchy(std::vector<MeshComponentPtr> meshes);
   AABB calculateBoundingVolume(std::vector<MeshComponentPtr> meshes);
   BoundingVolumeHierarchy * createNode(std::vector<MeshComponentPtr> meshes);
+  ~BoundingVolumeHierarchy();
   bool isLeaf();
 
 };

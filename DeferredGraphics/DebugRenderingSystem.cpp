@@ -80,7 +80,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
   if (isBVHOn == true)
   {
-    //create root node
+    //create root node Note: REPLACE WITH POOL OR LINEAR ALLOCATOR
     BVHTree = new BoundingVolumeHierarchy(meshes);
 
     //list of meshes in the root node
@@ -113,6 +113,9 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
       level++;
 
     }
+
+    //PORBABLY WANT TO REPLACE THIS WITH A POOL OR LINEAR ALLOCATOR I DROPPED 30 FUCKING FRAMES FROM THIS
+    delete BVHTree;
   }
 }
 

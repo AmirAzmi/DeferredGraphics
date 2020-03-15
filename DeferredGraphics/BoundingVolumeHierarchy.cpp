@@ -31,6 +31,12 @@ BoundingVolumeHierarchy * BoundingVolumeHierarchy::createNode(std::vector<MeshCo
   
 }
 
+BoundingVolumeHierarchy::~BoundingVolumeHierarchy()
+{
+  delete left_child;
+  delete right_child;
+}
+
 bool BoundingVolumeHierarchy::isLeaf()
 {
   if (this->right_child == nullptr && left_child == nullptr)
