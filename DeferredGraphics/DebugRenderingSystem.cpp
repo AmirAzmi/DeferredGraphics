@@ -41,6 +41,10 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     sphereDebugDrawID->UseShader();
     switch (sphereType)
     {
+    case BoundingSphere::BoundingSphereCalculationType::None:
+    {
+      break;
+    }
     case BoundingSphere::BoundingSphereCalculationType::Centroid:
     {
       std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawBS(mesh, scene, BoundingSphere::BoundingSphereCalculationType::Centroid); });

@@ -1,6 +1,13 @@
 ﻿  DebugRenderingSystem.cpp
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(197,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(258,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(732,68): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(774,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(202,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(263,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(737,68): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(779,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Editor.cpp
+  Entity.cpp
+  RenderingSystem.cpp
+  RotationBehavior.cpp
+  Scene.cpp
+  Generating Code...
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Scene.cpp(166): warning C4715: 'Scene::findEntity': not all control paths return a value
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe

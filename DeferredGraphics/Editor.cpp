@@ -43,7 +43,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //Inspector Window, Entity List Window
   ImGui::Begin("Inspector");
 
-
+  //transform component
   for (int i = 0; i < scene.getEntities().size(); ++i)
   {
     ImGui::PushID(i);
@@ -120,7 +120,22 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
             }
           }
 
+          if (ImGui::Button("Remove Mesh Component"))
+          {
+            scene.getEntities()[i]->remove<MeshComponent>();
+          }
+
           ImGui::TreePop();
+        }
+      }
+      else
+      {
+        ImGui::Separator();
+        //if you want to be able to add mesh component figure out how to
+        //get better defaults for the mesh component
+        if (ImGui::Button("Add Mesh Component"))
+        {
+          //meshComponent = scene.getEntities()[i]->add<MeshComponent>();        
         }
       }
 
@@ -152,7 +167,23 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
           if (ImGui::DragFloat("Attenuation Quadratic:", &lightComponent->light.quadratic, .1f))
           {
           }
+
+          ImGui::Separator();
+          if (ImGui::Button("Remove Light Component"))
+          {
+            scene.getEntities()[i]->remove<LightComponent>();
+          }
+
           ImGui::TreePop();
+        }
+      }
+      else
+      {
+        ImGui::Separator();
+        if (ImGui::Button("Add Light Component"))
+        {
+          lightComponent = scene.getEntities()[i]->add<LightComponent>();
+          lightComponent->light.position = scene.getEntities()[i]->position;
         }
       }
       ImGui::Separator();
@@ -170,6 +201,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::TextWrapped("Q and E move up and down.");
   ImGui::Spacing();
 
+  //render settings
   if (ImGui::CollapsingHeader("Renderer Settings"))
   {
     ImGui::TreePush();
@@ -213,12 +245,16 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       if (ImGui::Checkbox("uncharted tone mapping", &Manager.renderer->uncharted_tone_mapping))
       {
       }
-      ImGui::TextWrapped("Exposure only works for tone mapping");
       if (ImGui::Checkbox("tone mapping", &Manager.renderer->exposure_tone_mapping))
       {
       }
-      if (ImGui::DragFloat("exposure", &Manager.renderer->exposure, .1f))
+
+      if (Manager.renderer->exposure_tone_mapping == true)
       {
+        ImGui::TextWrapped("Exposure only works for tone mapping");
+        if (ImGui::DragFloat("exposure", &Manager.renderer->exposure, .1f))
+        {
+        }
       }
 
     }
@@ -226,6 +262,8 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   }
   ImGui::TextWrapped("Split Screen will show you what objects are using deffered rendering versus which objects are not.");
   ImGui::Spacing();
+
+  //debug settings
   if (ImGui::CollapsingHeader("Debug Settings"))
   {
     ImGui::TreePush();
@@ -235,11 +273,26 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       {
       }
 
+      if (ImGui::Checkbox("Bounding Volume Hierarchy", &Manager.debugRenderer->isBVHOn))
+      {
+        Manager.debugRenderer->isAABBOn = true;
+      }
+
+      if (Manager.debugRenderer->isBVHOn)
+      {
+        ImGui::SliderInt("Number of Levels", &Manager.debugRenderer->numberOfLevels, 0, 7);
+      }
+
       if (ImGui::TreeNode("Bounding Sphere Calculation Types"))
       {
         Manager.debugRenderer->isBSOn = true;
         BoundingSphere::BoundingSphereCalculationType mode = Manager.debugRenderer->sphereType;
 
+        if (ImGui::RadioButton("None", mode == BoundingSphere::BoundingSphereCalculationType::None))
+        {
+          mode = BoundingSphere::BoundingSphereCalculationType::None;
+          Manager.debugRenderer->sphereType = mode;
+        }
         if (ImGui::RadioButton("Centroid", mode == BoundingSphere::BoundingSphereCalculationType::Centroid))
         {
           mode = BoundingSphere::BoundingSphereCalculationType::Centroid;
@@ -263,15 +316,9 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
         ImGui::TreePop();
       }
-
-      if (ImGui::Checkbox("Bounding Volume Hierarchy", &Manager.debugRenderer->isBVHOn))
+      else
       {
-        
-      }
-
-      if (Manager.debugRenderer->isBVHOn)
-      {
-        ImGui::SliderInt("Number of Levels", &Manager.debugRenderer->numberOfLevels, 0, 7);
+        Manager.debugRenderer->isBSOn = false;
       }
     }
 
@@ -280,6 +327,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
   ImGui::End();
 
+  //profiler settings
   ImGui::Begin("Profiler");
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
   ImGui::End();

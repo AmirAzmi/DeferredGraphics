@@ -49,7 +49,7 @@ namespace detail
   template<class T, std::size_t N, class U, class... Args>
   struct get_index_of_element_from_tuple_by_type_impl<T, N, U, Args...>
   {
-    //increment index and check if specialization is hit, if so go uo to the T and T check else strip the U by replacing with
+    //increment index and check if specialization is hit, if so go to the T and T check else strip the U by replacing with
     //the arg list
     static constexpr auto value = get_index_of_element_from_tuple_by_type_impl<T, N + 1, Args...>::value;
   };

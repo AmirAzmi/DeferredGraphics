@@ -7,6 +7,7 @@ class BoundingSphere
 public:
   enum class BoundingSphereCalculationType
   {
+    None,
     Centroid,
     Ritters,
     ModifiedLarsons,

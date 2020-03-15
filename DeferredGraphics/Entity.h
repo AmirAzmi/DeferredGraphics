@@ -90,7 +90,13 @@ inline T* Entity::get()
 template<typename T>
 inline void Entity::remove()
 {
-  delete pointers.get<T*>().pointer;
+  T * pointer = pointers.get<T*>().pointer;
+  auto& list = scene.ListOfTypes.get<T*>();
+  auto it = std::find(list.begin(), list.end(), pointer);
+
+  list.erase(it);
+  delete pointer;
+  pointers.get<T*>().pointer = nullptr;
 }
 
 using EntityPtr = Entity*;
