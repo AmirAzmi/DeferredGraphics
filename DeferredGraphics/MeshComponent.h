@@ -19,22 +19,22 @@ Creation date: January 4th , 2020
 
 class MeshComponent
 {
-  MeshHandle mesh;        //8 bytes
-  MaterialHandle material;//8 bytes
-  ShaderHandle shader;    //8 bytes
-  //-------------------------------
-  //total: 32 bytes
 
 
 public:
 
   EntityPtr entity;       //8 bytes
   AABB bounds;            //24 bytes (2 * vec3)
+  MeshHandle mesh;        //8 bytes
+  MaterialHandle material;//8 bytes
+  ShaderHandle shader;    //8 bytes
+  //-------------------------------
+  //total: 56 bytes
 
   MeshComponent()
   {
     mesh = std::make_shared<Mesh>("Resources//sphere.obj");
-    shader = std::make_shared<Shader>("gBuffer.vert", "gBuffer.frag", true);
+    shader = std::make_shared<Shader>("Shaders/gBuffer.vert", "Shaders/gBuffer.frag", true);
     material = std::make_shared<Material>(shader);
     material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
     material->setFloat("specular_intensity", 1.0f);
@@ -45,6 +45,7 @@ public:
     bounds.Empty();
   }
 
+  //find a way to not do this pls
   std::vector<glm::vec4> vertices;
   GLuint DrawMode = GL_TRIANGLES;
 

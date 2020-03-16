@@ -27,8 +27,14 @@ class Editor
 public:
   bool lightsOn = true;
   unsigned default_name_count = 0;
+  std::vector<std::string> filenames;
+  std::vector<std::string> shader_filenames;
+  std::vector<std::string> mesh_name;
+  std::vector<MeshHandle> mesh_handles;
+  std::vector<std::string> shader_name;
+  std::vector<ShaderHandle> shader_handles;
   void init(GLFWwindow* window, const char* glslVersion);
-  void preRender(std::string windowNmae);
+  void preRender(std::string windowName);
   void Render(Scene & scene, SystemManager& Manager);
   void postRender();
   void shutdown();

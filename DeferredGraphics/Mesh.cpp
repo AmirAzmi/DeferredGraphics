@@ -152,6 +152,10 @@ Mesh::Mesh(std::string filePath)
       }
     }
   }
+  else
+  {
+  exit(1);
+  }
 
   std::vector<glm::vec2> uploadedUVs;
   std::vector<glm::vec3> faceNormals;

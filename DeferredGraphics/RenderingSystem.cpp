@@ -20,11 +20,11 @@ Creation date: January 4th , 2020
 RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionMatrixID(-1), viewMatrixID(-1)
 {
   //set the deffered lighting shader that should be used
-  defferedLightingShaderID = std::make_shared<Shader>("defferedLightingPass.vert", "defferedLightingPass.frag", true);
-  forwardLightingShaderID = std::make_shared <Shader>("forwardLightingPass.vert", "forwardLightingPass.frag", false);
+  defferedLightingShaderID = std::make_shared<Shader>("Shaders/defferedLightingPass.vert", "Shaders/defferedLightingPass.frag", true);
+  forwardLightingShaderID = std::make_shared <Shader>("Shaders/forwardLightingPass.vert", "Shaders/forwardLightingPass.frag", false);
 
   //set the shader for split screen
-  splitScreenShaderID = std::make_shared<Shader>("gBufferViewer.vert", "gBufferViewer.frag", false);
+  splitScreenShaderID = std::make_shared<Shader>("Shaders/gBufferViewer.vert", "Shaders/gBufferViewer.frag", false);
 
   //generate the first ssbo
   glGenBuffers(2, &ssboID[0]);

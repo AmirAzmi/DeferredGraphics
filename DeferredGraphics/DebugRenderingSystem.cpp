@@ -5,8 +5,8 @@
 
 DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
 {
-  debugDrawID = std::make_shared <Shader>("debugDraw.vert", "debugDraw.frag", false);
-  sphereDebugDrawID = std::make_shared <Shader>("sphereDebugDraw.vert", "sphereDebugDraw.frag", false);
+  debugDrawID = std::make_shared <Shader>("Shaders/debugDraw.vert", "Shaders/debugDraw.frag", false);
+  sphereDebugDrawID = std::make_shared <Shader>("Shaders/sphereDebugDraw.vert", "Shaders/sphereDebugDraw.frag", false);
 
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
@@ -137,6 +137,7 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
   glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
 
   //get the world vertices and create an AABB on the go
+ // mesh->vertices.resize(mesh->getMesh()->getVertices().size());
   for (int i = 0; i < mesh->vertices.size(); ++i)
   {
     //get vec4 vertices from the mesh component and multiply them by object to woerk to get object to world verices
@@ -743,7 +744,7 @@ void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingS
 void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level)
 {
   //base case
-  if (level < 0 || meshes.size() < 2)
+  if (level < 0)
   {
     return;
   }

@@ -13,7 +13,10 @@ Creation date: January 4th , 2020
 
 #include "Editor.h"
 #include "Entity.h"
+#include <filesystem> //filenames
+#include <iostream>
 
+namespace fs = std::filesystem;
 void Editor::init(GLFWwindow* window, const char* glslVersion)
 {
   //imgui setup
@@ -31,6 +34,7 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   colors[ImGuiCol_TitleBg] = ImVec4(0.17f, 0.37f, 0.69f, 1.00f);
   colors[ImGuiCol_TitleBgActive] = ImVec4(0.28f, 0.48f, 0.77f, 1.00f);
   colors[ImGuiCol_Separator] = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
+  colors[ImGuiCol_PopupBg] = ImVec4(0.11f, 0.45f, 0.71f, 0.94f);
 
   //styling for the editor
   ImGuiStyle& style = ImGui::GetStyle();
@@ -42,6 +46,70 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
 
   ImGuiIO& io = ImGui::GetIO();
   //load fonts using "io.Fonts->AddFontFromFileTTF("your_font.ttf", size_pixels);"
+
+  //This next set of code is used to generate all mesh handles from the resources 
+  //folder for swapping mehes in realtimechecks current path folder which contains the obj files
+  std::string res = "Resources";
+  std::string shader_folder = "Shaders";
+
+  //search through the current path within resources
+  for (const auto& entry : fs::directory_iterator(res))
+  {
+    filenames.push_back(entry.path().string());
+  }
+
+  //gets the file from the filename and stores it into the mesh_names
+  for (auto& file : filenames)
+  {
+    std::size_t iterator = file.find_last_of("/\\");
+    mesh_name.push_back(res + "/" + file.substr(iterator + 1));
+  }
+
+   //contains the correct path names
+  for (int i = 0; i < mesh_name.size(); ++i)
+  {
+    std::cout << mesh_name[i] <<std::endl;
+    MeshHandle mesh = std::make_shared<Mesh>(mesh_name[i]);
+    mesh_handles.push_back(mesh);
+  }
+  
+  //reuse this buffer 
+  mesh_name.clear();
+  for (auto& file : filenames)
+  {
+    std::size_t iterator = file.find_last_of("/\\");
+    mesh_name.push_back(file.substr(iterator + 1));
+  }
+
+  //search throughthe current path within shaders
+  for (const auto& entry : fs::directory_iterator(shader_folder))
+  {
+    shader_filenames.push_back(entry.path().string());
+  }
+
+  //gets the file from the filename and stores it into the shader_names
+  for (auto& file : shader_filenames)
+  {
+    std::size_t iterator = file.find_last_of("/\\");
+    shader_name.push_back(shader_folder + "/" + file.substr(iterator + 1));
+  }
+  
+  //contains the correct path names for the shader
+  for (int i = 0; i < shader_name.size(); i+=2)
+  {
+    std::cout << shader_name[i] << std::endl;
+    ShaderHandle shader = std::make_shared<Shader>(shader_name[i + 1], shader_name[i], true);
+    shader_handles.push_back(shader);
+  }
+
+  //set names in editor by resusing the shader name buffer
+  shader_name.clear();
+  for (auto& file : shader_filenames)
+  {
+    std::size_t iterator = file.find_last_of("/\\");
+    shader_name.push_back(file.substr(iterator + 1));
+  }
+
 }
 
 void Editor::preRender(std::string windowName)
@@ -57,10 +125,10 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //learn everything here
   ImGui::ShowDemoWindow();
   //*/
-  
+
   //if you want to be able to move the window get rid of the flag in the ImGui::Begin();
   //Inspector Window, Entity List Window
-  ImGui::Begin("Inspector", 0, ImGuiWindowFlags_NoMove);
+  ImGui::Begin("Inspector", 0);
 
   if (ImGui::Button("Add Entity"))
   {
@@ -101,7 +169,36 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::TreeNode("Mesh Component"))
         {
+          //add changing of mesh here
+          if (ImGui::BeginCombo("Mesh List", " + Mesh"))
+          {
+            for (int i = 0; i < mesh_name.size(); ++i)
+            {
+              if (ImGui::Selectable(mesh_name[i].c_str()))
+              {
+                meshComponent->mesh = mesh_handles[i];
+              }
+            }
+
+            ImGui::EndCombo();
+          }
+
+          //add changing of mesh here
+          if (ImGui::BeginCombo("Shader List", " + Shader"))
+          {
+            for (int i = 0; i < shader_name.size(); i += 2)
+            {
+              if (ImGui::Selectable(shader_name[i].c_str()))
+              {
+                meshComponent->shader = shader_handles[i];
+              }
+            }
+
+            ImGui::EndCombo();
+          }
+
           std::shared_ptr<Material> material = meshComponent->getMaterial();
+
           if (material)
           {
             if (ImGui::TreeNode("Material"))
@@ -163,8 +260,9 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::Button("Add Mesh Component"))
         {
-          meshComponent = scene.getEntities()[i]->add<MeshComponent>();      
+          meshComponent = scene.getEntities()[i]->add<MeshComponent>();         
           meshComponent->entity = scene.getEntities()[i];
+          meshComponent->vertices = meshComponent->getVec4Vertices();
         }
       }
 
@@ -232,7 +330,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::End();
 
   //Settings Window
-  ImGui::Begin("Settings",0, ImGuiWindowFlags_NoMove);
+  ImGui::Begin("Settings", 0);
   ImGui::TextWrapped("WASD moves the camera left, right, in, and out.");
   ImGui::Spacing();
   ImGui::TextWrapped("Q and E move up and down.");
@@ -365,7 +463,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::End();
 
   //profiler settings
-  ImGui::Begin("Profiler", 0 , ImGuiWindowFlags_NoMove);
+  ImGui::Begin("Profiler", 0);
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
   ImGui::End();
 

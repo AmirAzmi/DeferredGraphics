@@ -1,2 +1,297 @@
-﻿  main.cpp
-LINK : fatal error LNK1104: cannot open file 'glfw3.lib'
+﻿  AABB.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\AABB.cpp(70,21): warning C4018: '<': signed/unsigned mismatch
+  Behavior.cpp
+  BoundingSphere.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\BoundingSphere.cpp(65,15): warning C4101: 'center_point_between_yz': unreferenced local variable
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\BoundingSphere.cpp(221,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\BoundingSphere.cpp(227,23): warning C4018: '<': signed/unsigned mismatch
+  BoundingVolumeHierarchy.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\MeshComponent.h(86,23): warning C4018: '<': signed/unsigned mismatch
+  DebugRenderingSystem.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\MeshComponent.h(86,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(141,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(777,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(783,39): warning C4018: '<': signed/unsigned mismatch
+  Editor.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\MeshComponent.h(86,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Editor.cpp(118,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Editor.cpp(319,29): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Editor.cpp(329,29): warning C4018: '<': signed/unsigned mismatch
+  Entity.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\MeshComponent.h(86,23): warning C4018: '<': signed/unsigned mismatch
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_glfw.cpp
+  imgui_impl_opengl3.cpp
+  imgui_widgets.cpp
+  main.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\MeshComponent.h(86,23): warning C4018: '<': signed/unsigned mismatch
+  Material.cpp
+  RotationBehavior.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\MeshComponent.h(86,23): warning C4018: '<': signed/unsigned mismatch
+  Shader.cpp
+  Mesh.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(119,35): warning C4805: '==': unsafe mix of type 'unsigned int' and type 'bool' in operation
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(126,70): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(127,70): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(128,70): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(130,75): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(131,75): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(132,75): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(140,44): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(141,44): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(142,44): warning C4244: 'argument': conversion from 'T' to '_Ty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Ty=GLuint
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(183,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(209,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(376,21): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(384,64): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(385,73): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(386,61): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(402,64): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(403,73): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Mesh.cpp(404,61): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  RenderingSystem.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\MeshComponent.h(86,23): warning C4018: '<': signed/unsigned mismatch
+  Scene.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\MeshComponent.h(86,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Scene.cpp(122,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Scene.cpp(153,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Scene.cpp(174,23): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\Scene.cpp(166): warning C4715: 'Scene::findEntity': not all control paths return a value
+  Compiling...
+  SystemManager.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\MeshComponent.h(86,23): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+     Creating library C:\Users\amira\Documents\GitHub\DeferredGraphics\Debug\DeferredGraphics.lib and object C:\Users\amira\Documents\GitHub\DeferredGraphics\Debug\DeferredGraphics.exp
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBindBuffer
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewBindBuffer
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewBindBuffer
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBindBuffer
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBufferData
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewBufferData
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewBufferData
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBufferData
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBufferSubData
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewGenBuffers
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewGenBuffers
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewGenBuffers
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewGenBuffers
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewEnableVertexAttribArray
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewEnableVertexAttribArray
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewEnableVertexAttribArray
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewUniformMatrix4fv
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewUniformMatrix4fv
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewUniformMatrix4fv
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewVertexAttribPointer
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewVertexAttribPointer
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewVertexAttribPointer
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBindVertexArray
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewBindVertexArray
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewBindVertexArray
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBindVertexArray
+DebugRenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewGenVertexArrays
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewGenVertexArrays
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewGenVertexArrays
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewGenVertexArrays
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetWindowSize referenced in function "void __cdecl ImGui_ImplGlfw_NewFrame(void)" (?ImGui_ImplGlfw_NewFrame@@YAXXZ)
+main.obj : error LNK2001: unresolved external symbol _glfwGetWindowSize
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetFramebufferSize referenced in function "void __cdecl ImGui_ImplGlfw_NewFrame(void)" (?ImGui_ImplGlfw_NewFrame@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetWindowAttrib referenced in function "void __cdecl ImGui_ImplGlfw_UpdateMousePosAndButtons(void)" (?ImGui_ImplGlfw_UpdateMousePosAndButtons@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetInputMode referenced in function "void __cdecl ImGui_ImplGlfw_UpdateMouseCursor(void)" (?ImGui_ImplGlfw_UpdateMouseCursor@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwSetInputMode referenced in function "void __cdecl ImGui_ImplGlfw_UpdateMouseCursor(void)" (?ImGui_ImplGlfw_UpdateMouseCursor@@YAXXZ)
+main.obj : error LNK2001: unresolved external symbol _glfwSetInputMode
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetMouseButton referenced in function "void __cdecl ImGui_ImplGlfw_UpdateMousePosAndButtons(void)" (?ImGui_ImplGlfw_UpdateMousePosAndButtons@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetCursorPos referenced in function "void __cdecl ImGui_ImplGlfw_UpdateMousePosAndButtons(void)" (?ImGui_ImplGlfw_UpdateMousePosAndButtons@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwSetCursorPos referenced in function "void __cdecl ImGui_ImplGlfw_UpdateMousePosAndButtons(void)" (?ImGui_ImplGlfw_UpdateMousePosAndButtons@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwCreateStandardCursor referenced in function "bool __cdecl ImGui_ImplGlfw_Init(struct GLFWwindow *,bool,enum GlfwClientApi)" (?ImGui_ImplGlfw_Init@@YA_NPAUGLFWwindow@@_NW4GlfwClientApi@@@Z)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwDestroyCursor referenced in function "void __cdecl ImGui_ImplGlfw_Shutdown(void)" (?ImGui_ImplGlfw_Shutdown@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwSetCursor referenced in function "void __cdecl ImGui_ImplGlfw_UpdateMouseCursor(void)" (?ImGui_ImplGlfw_UpdateMouseCursor@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwSetKeyCallback referenced in function "bool __cdecl ImGui_ImplGlfw_Init(struct GLFWwindow *,bool,enum GlfwClientApi)" (?ImGui_ImplGlfw_Init@@YA_NPAUGLFWwindow@@_NW4GlfwClientApi@@@Z)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwSetCharCallback referenced in function "bool __cdecl ImGui_ImplGlfw_Init(struct GLFWwindow *,bool,enum GlfwClientApi)" (?ImGui_ImplGlfw_Init@@YA_NPAUGLFWwindow@@_NW4GlfwClientApi@@@Z)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwSetMouseButtonCallback referenced in function "bool __cdecl ImGui_ImplGlfw_Init(struct GLFWwindow *,bool,enum GlfwClientApi)" (?ImGui_ImplGlfw_Init@@YA_NPAUGLFWwindow@@_NW4GlfwClientApi@@@Z)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwSetScrollCallback referenced in function "bool __cdecl ImGui_ImplGlfw_Init(struct GLFWwindow *,bool,enum GlfwClientApi)" (?ImGui_ImplGlfw_Init@@YA_NPAUGLFWwindow@@_NW4GlfwClientApi@@@Z)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetJoystickAxes referenced in function "void __cdecl ImGui_ImplGlfw_UpdateGamepads(void)" (?ImGui_ImplGlfw_UpdateGamepads@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetJoystickButtons referenced in function "void __cdecl ImGui_ImplGlfw_UpdateGamepads(void)" (?ImGui_ImplGlfw_UpdateGamepads@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwSetClipboardString referenced in function "void __cdecl ImGui_ImplGlfw_SetClipboardText(void *,char const *)" (?ImGui_ImplGlfw_SetClipboardText@@YAXPAXPBD@Z)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetClipboardString referenced in function "char const * __cdecl ImGui_ImplGlfw_GetClipboardText(void *)" (?ImGui_ImplGlfw_GetClipboardText@@YAPBDPAX@Z)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetTime referenced in function "void __cdecl ImGui_ImplGlfw_NewFrame(void)" (?ImGui_ImplGlfw_NewFrame@@YAXXZ)
+imgui_impl_glfw.obj : error LNK2019: unresolved external symbol _glfwGetWin32Window referenced in function "bool __cdecl ImGui_ImplGlfw_Init(struct GLFWwindow *,bool,enum GlfwClientApi)" (?ImGui_ImplGlfw_Init@@YA_NPAUGLFWwindow@@_NW4GlfwClientApi@@@Z)
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewActiveTexture
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewActiveTexture
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewBlendEquation
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewBlendFuncSeparate
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewDeleteBuffers
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewDeleteBuffers
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewAttachShader
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewAttachShader
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewBlendEquationSeparate
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewCompileShader
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewCompileShader
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewCreateProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewCreateProgram
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewCreateShader
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewCreateShader
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewDeleteProgram
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewDeleteShader
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewDeleteShader
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewDetachShader
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewDetachShader
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewGetAttribLocation
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramInfoLog
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramInfoLog
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramiv
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramiv
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderInfoLog
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderInfoLog
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderiv
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderiv
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewLinkProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewLinkProgram
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewShaderSource
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewShaderSource
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewUniform1i
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewUniform1i
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewUniform1i
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewUseProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewUseProgram
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewDrawElementsBaseVertex
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewBindSampler
+imgui_impl_opengl3.obj : error LNK2001: unresolved external symbol __imp____glewDeleteVertexArrays
+main.obj : error LNK2019: unresolved external symbol __imp__glewInit@0 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwInit referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwTerminate referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwWindowHint referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwCreateWindow referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwWindowShouldClose referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwSetWindowShouldClose referenced in function "void __cdecl processInput(struct GLFWwindow *,class Scene &)" (?processInput@@YAXPAUGLFWwindow@@AAVScene@@@Z)
+main.obj : error LNK2019: unresolved external symbol _glfwSetFramebufferSizeCallback referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwPollEvents referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwGetKey referenced in function "void __cdecl processInput(struct GLFWwindow *,class Scene &)" (?processInput@@YAXPAUGLFWwindow@@AAVScene@@@Z)
+main.obj : error LNK2019: unresolved external symbol _glfwMakeContextCurrent referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwSwapBuffers referenced in function _main
+main.obj : error LNK2001: unresolved external symbol __imp__glewExperimental
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewUniform1f
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewUniform2fv
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewUniform3fv
+Shader.obj : error LNK2001: unresolved external symbol __imp____glewUniform4fv
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewMapBuffer
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewUnmapBuffer
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewDrawBuffers
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBindFramebuffer
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBindRenderbuffer
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBlitFramebuffer
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewCheckFramebufferStatus
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewDeleteFramebuffers
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewFramebufferRenderbuffer
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewFramebufferTexture2D
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewGenFramebuffers
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewGenRenderbuffers
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewRenderbufferStorage
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramResourceIndex
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewShaderStorageBlockBinding
+RenderingSystem.obj : error LNK2001: unresolved external symbol __imp____glewBindBufferBase
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\libs\lib-vc2019\glfw3.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\libs\glew_lib\Release\x64\glew32.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\amira\Documents\GitHub\DeferredGraphics\Debug\DeferredGraphics.exe : fatal error LNK1120: 88 unresolved externals

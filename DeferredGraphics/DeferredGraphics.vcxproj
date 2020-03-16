@@ -91,6 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -103,6 +104,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,6 +119,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,6 +136,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -193,18 +197,18 @@
     <ClInclude Include="TemplateUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="debugDraw.frag" />
-    <None Include="debugDraw.vert" />
-    <None Include="defferedLightingPass.frag" />
-    <None Include="defferedLightingPass.vert" />
-    <None Include="gBuffer.frag" />
-    <None Include="gBuffer.vert" />
-    <None Include="gBufferViewer.frag" />
-    <None Include="gBufferViewer.vert" />
-    <None Include="forwardLightingPass.frag" />
-    <None Include="forwardLightingPass.vert" />
-    <None Include="sphereDebugDraw.frag" />
-    <None Include="sphereDebugDraw.vert" />
+    <None Include="Shaders\debugDraw.frag" />
+    <None Include="Shaders\debugDraw.vert" />
+    <None Include="Shaders\defferedLightingPass.frag" />
+    <None Include="Shaders\defferedLightingPass.vert" />
+    <None Include="Shaders\forwardLightingPass.frag" />
+    <None Include="Shaders\forwardLightingPass.vert" />
+    <None Include="Shaders\gBuffer.frag" />
+    <None Include="Shaders\gBuffer.vert" />
+    <None Include="Shaders\gBufferViewer.frag" />
+    <None Include="Shaders\gBufferViewer.vert" />
+    <None Include="Shaders\sphereDebugDraw.frag" />
+    <None Include="Shaders\sphereDebugDraw.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

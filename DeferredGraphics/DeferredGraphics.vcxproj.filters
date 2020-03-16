@@ -25,14 +25,14 @@
     <Filter Include="Source Files\ImGui">
       <UniqueIdentifier>{4c4593c4-3000-49db-a247-69bd0c761900}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Shaders">
-      <UniqueIdentifier>{43dc1bf8-e9c5-4fc0-bef9-1ac9f02edfd5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Behavior">
       <UniqueIdentifier>{f89bea14-2007-48ff-b31c-a68afd9ea99c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Behavior">
       <UniqueIdentifier>{94a839df-c26b-4763-8828-2de5931541b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{7f36a452-468d-4143-88da-2f93b892af9f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -181,40 +181,40 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="gBuffer.vert">
+    <None Include="Shaders\sphereDebugDraw.frag">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Shaders\sphereDebugDraw.vert">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Shaders\debugDraw.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="gBuffer.frag">
+    <None Include="Shaders\debugDraw.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="defferedLightingPass.vert">
+    <None Include="Shaders\forwardLightingPass.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="defferedLightingPass.frag">
+    <None Include="Shaders\forwardLightingPass.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="gBufferViewer.vert">
+    <None Include="Shaders\gBuffer.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="gBufferViewer.frag">
+    <None Include="Shaders\gBuffer.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="forwardLightingPass.frag">
+    <None Include="Shaders\gBufferViewer.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="forwardLightingPass.vert">
+    <None Include="Shaders\gBufferViewer.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="debugDraw.vert">
+    <None Include="Shaders\defferedLightingPass.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="debugDraw.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="sphereDebugDraw.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="sphereDebugDraw.vert">
+    <None Include="Shaders\defferedLightingPass.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>
