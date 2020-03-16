@@ -26,6 +26,7 @@ class Editor
   SystemManager& manager;
 public:
   bool lightsOn = true;
+  unsigned default_name_count = 0;
   void init(GLFWwindow* window, const char* glslVersion);
   void preRender(std::string windowNmae);
   void Render(Scene & scene, SystemManager& Manager);

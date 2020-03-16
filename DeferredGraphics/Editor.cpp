@@ -64,7 +64,8 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
   if (ImGui::Button("Add Entity"))
   {
-    scene.addEntity("default name");
+    default_name_count++;
+    scene.addEntity("default name " + std::to_string(default_name_count));
   }
 
   //transform component
