@@ -16,26 +16,32 @@ Creation date: January 4th , 2020
 
 void Editor::init(GLFWwindow* window, const char* glslVersion)
 {
+  //imgui setup
   ImGui::CreateContext();
   bool show_demo_window = true;
-  ImGuiIO& io = ImGui::GetIO();
   ImGui::StyleColorsDark();
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init(glslVersion);
 
-
+  //colors for the editor
   ImVec4* colors = ImGui::GetStyle().Colors;
   colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.22f, 0.37f, 0.94f);
   colors[ImGuiCol_FrameBgHovered] = ImVec4(0.26f, 0.60f, 1.00f, 0.40f);
   colors[ImGuiCol_FrameBgActive] = ImVec4(0.28f, 0.60f, 0.98f, 0.67f);
   colors[ImGuiCol_TitleBg] = ImVec4(0.17f, 0.37f, 0.69f, 1.00f);
+  colors[ImGuiCol_TitleBgActive] = ImVec4(0.28f, 0.48f, 0.77f, 1.00f);
   colors[ImGuiCol_Separator] = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
-  
+
+  //styling for the editor
   ImGuiStyle& style = ImGui::GetStyle();
   style.FrameRounding = 0.0f;
   style.ChildRounding = 0.0f;
   style.ScrollbarRounding = 0.0f;
   style.WindowRounding = 0.0f;
+  style.WindowTitleAlign.x = 0.5f;
+
+  ImGuiIO& io = ImGui::GetIO();
+  //load fonts using "io.Fonts->AddFontFromFileTTF("your_font.ttf", size_pixels);"
 }
 
 void Editor::preRender(std::string windowName)
@@ -43,8 +49,6 @@ void Editor::preRender(std::string windowName)
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
-
-  //ImGui::Begin(windowName.c_str());
 }
 
 void Editor::Render(Scene& scene, SystemManager& Manager)
@@ -53,9 +57,15 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //learn everything here
   ImGui::ShowDemoWindow();
   //*/
-
+  
+  //if you want to be able to move the window get rid of the flag in the ImGui::Begin();
   //Inspector Window, Entity List Window
-  ImGui::Begin("Inspector");
+  ImGui::Begin("Inspector", 0, ImGuiWindowFlags_NoMove);
+
+  if (ImGui::Button("Add Entity"))
+  {
+    scene.addEntity("default name");
+  }
 
   //transform component
   for (int i = 0; i < scene.getEntities().size(); ++i)
@@ -90,7 +100,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::TreeNode("Mesh Component"))
         {
-
           std::shared_ptr<Material> material = meshComponent->getMaterial();
           if (material)
           {
@@ -132,7 +141,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
                   }
                 }
                 else if (ImGui::DragFloat4(v4.first.c_str(), &v4.second.x, .1f))
-                {                 
+                {
                 }
               }
 
@@ -151,11 +160,10 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       else
       {
         ImGui::Separator();
-        //if you want to be able to add mesh component figure out how to
-        //get better defaults for the mesh component
         if (ImGui::Button("Add Mesh Component"))
         {
-          //meshComponent = scene.getEntities()[i]->add<MeshComponent>();        
+          meshComponent = scene.getEntities()[i]->add<MeshComponent>();      
+          meshComponent->entity = scene.getEntities()[i];
         }
       }
 
@@ -207,15 +215,23 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         }
       }
       ImGui::Separator();
+
+      if (ImGui::Button("Remove Entity"))
+      {
+        scene.removeEntity(scene.getEntities()[i]->name);
+      }
+
     }
 
     ImGui::PopID();
   }
+
+
   ImGui::TextWrapped("Each Object has a light component where the light is moving with the object except for the center one.");
   ImGui::End();
 
   //Settings Window
-  ImGui::Begin("Settings");
+  ImGui::Begin("Settings",0, ImGuiWindowFlags_NoMove);
   ImGui::TextWrapped("WASD moves the camera left, right, in, and out.");
   ImGui::Spacing();
   ImGui::TextWrapped("Q and E move up and down.");
@@ -300,7 +316,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
       if (Manager.debugRenderer->isBVHOn)
       {
-        ImGui::SliderInt("Number of Levels", &Manager.debugRenderer->numberOfLevels, 0, 7);
+        ImGui::SliderInt("Levels", &Manager.debugRenderer->numberOfLevels, 0, 7);
       }
 
       if (ImGui::TreeNode("Bounding Sphere Calculation Types"))
@@ -348,7 +364,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::End();
 
   //profiler settings
-  ImGui::Begin("Profiler");
+  ImGui::Begin("Profiler", 0 , ImGuiWindowFlags_NoMove);
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
   ImGui::End();
 
@@ -378,7 +394,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
 void Editor::postRender()
 {
-  //ImGui::End();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

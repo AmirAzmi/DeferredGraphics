@@ -71,5 +71,5 @@ void main()
 
   color = vec4(result, 1.0); 
 
-  //color = diffuse_color;
+  color = diffuse_color;
 }

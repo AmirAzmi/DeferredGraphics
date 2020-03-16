@@ -22,14 +22,25 @@ class MeshComponent
   MeshHandle mesh;        //8 bytes
   MaterialHandle material;//8 bytes
   ShaderHandle shader;    //8 bytes
-  EntityPtr entity;       //8 byteszz
   //-------------------------------
   //total: 32 bytes
 
 
-  public:
-  AABB bounds;
-  MeshComponent(EntityPtr entity, MeshHandle meshHandle, ShaderHandle shaderHandle, MaterialHandle materialHandle):entity(entity),mesh(meshHandle), shader(shaderHandle), material(materialHandle)
+public:
+
+  EntityPtr entity;       //8 bytes
+  AABB bounds;            //24 bytes (2 * vec3)
+
+  MeshComponent()
+  {
+    mesh = std::make_shared<Mesh>("Resources//sphere.obj");
+    shader = std::make_shared<Shader>("gBuffer.vert", "gBuffer.frag", true);
+    material = std::make_shared<Material>(shader);
+    material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+    material->setFloat("specular_intensity", 1.0f);
+  }
+
+  MeshComponent(EntityPtr entity, MeshHandle meshHandle, ShaderHandle shaderHandle, MaterialHandle materialHandle) :entity(entity), mesh(meshHandle), shader(shaderHandle), material(materialHandle)
   {
     bounds.Empty();
   }
