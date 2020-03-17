@@ -64,9 +64,11 @@ private:
   GLuint splitscreenUVID;
   
   //shader handle for deffered pass and forward pas
+  ShaderHandle ColorAndBrightShaderID;
   ShaderHandle defferedLightingShaderID;
   ShaderHandle forwardLightingShaderID;
   ShaderHandle splitScreenShaderID;
+  ShaderHandle gBufferShaderID;
 
   //lighting info ID
   GLuint ssboID[2];

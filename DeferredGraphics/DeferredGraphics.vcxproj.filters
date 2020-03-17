@@ -217,5 +217,11 @@
     <None Include="Shaders\defferedLightingPass.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\ColorAndBright.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\ColorAndBright.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

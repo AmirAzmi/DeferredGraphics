@@ -22,6 +22,8 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //set the deffered lighting shader that should be used
   defferedLightingShaderID = std::make_shared<Shader>("Shaders/defferedLightingPass.vert", "Shaders/defferedLightingPass.frag", true);
   forwardLightingShaderID = std::make_shared <Shader>("Shaders/forwardLightingPass.vert", "Shaders/forwardLightingPass.frag", false);
+  gBufferShaderID = std::make_shared<Shader>("Shaders/gBuffer.vert", "Shaders/gBuffer.frag", true);
+  ColorAndBrightShaderID = std::make_shared<Shader>("Shaders/ColorAndBright.vert", "Shaders/ColorAndBright.frag", true);
 
   //set the shader for split screen
   splitScreenShaderID = std::make_shared<Shader>("Shaders/gBufferViewer.vert", "Shaders/gBufferViewer.frag", false);
@@ -46,6 +48,7 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   glShaderStorageBlockBinding(forwardLightingShaderID->getProgramID(), blockIndex[1], ssboBindingPointIndex[1]);
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ssboBindingPointIndex[1], ssboID[1]);
 
+  //BIG NOTE: Layout Location in Shader only matters for what framebuffer is binded to
   //generate the framebuffer to draw to
   glGenFramebuffers(1, &gBufferFBOID);
   glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBOID);
@@ -89,8 +92,6 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //check if framebuffer is complete and unbind the framebuffer
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     std::cout << "Framebuffer not complete!" << std::endl;
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 
   //generate the framebuffer Lighting
   glGenFramebuffers(1, &LightingPassFBOID);
@@ -129,6 +130,10 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   defferedLightingShaderID->setInt("gPosition", 0);
   defferedLightingShaderID->setInt("gNormal", 1);
   defferedLightingShaderID->setInt("gAlbedoSpec", 2);
+
+  ColorAndBrightShaderID->UseShader();
+  ColorAndBrightShaderID->setInt("ucolor", 0);
+  ColorAndBrightShaderID->setInt("BrightColor", 1);
 }
 
 RenderingSystem::~RenderingSystem()
@@ -160,7 +165,41 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //bind the g framebuffer
   glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBOID);
 
+  gBufferShaderID->UseShader();
+
   //clear color buffer bit and depth buffer info from the default framebuffer
+  glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  //draw deffered objects first well in this case draw only the geometry of the deffered objects
+  //first ans save the lighting pass for the when we bind the lighting FBO
+  std::for_each(meshes.begin(), iterator_to_forward_list, [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, true); });
+
+  //set the active textures to be displayed on the quad with the geometry
+  //so what is happening here is we are binding the textures we stored from the g buffer
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, gPositionID);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, gNormalID);
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, gColorSpecID);
+
+  //use the correct shader program in this case we do deffered drawing of items first
+  defferedLightingShaderID->UseShader();
+  defferedLightingShaderID->setFloat("exposure", exposure);
+  defferedLightingShaderID->setFloat("gamma_correction", gamma);
+  defferedLightingShaderID->setFloat("exposure_tone_mapping", exposure_tone_mapping);
+  defferedLightingShaderID->setFloat("uncharted_tone_mapping", uncharted_tone_mapping);
+
+  //get the eye position
+  defferedLightingShaderID->setVec3("view_position", scene.getEyePosition());
+
+  //lighting Pass in the default framebuffer, everything is drawn to the quad plane 
+  //------------------------------------------------------------
+  //bind the lighting pass framebuffer
+  glBindFramebuffer(GL_FRAMEBUFFER, LightingPassFBOID);
+
+  //call the clear color stuff per frame buffer
   glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -179,54 +218,31 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   memcpy(p, &shader_data, sizeof(shader_data));
   glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
-  //bind the ssbo for each shader and memcpy the light data into the lights
-  glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[1]);
-  GLvoid* q = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-  shader_data.numberOfLights = index;
-  memcpy(q, &shader_data, sizeof(shader_data));
-  glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
-  //draw deffered objects first
-  std::for_each(meshes.begin(), iterator_to_forward_list, [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, true); });
-
-  glViewport(0, 0, windowWidth, windowHeight);
-
-  //lighting Pass in the default framebuffer, everything is drawn to the quad plane 
-  //------------------------------------------------------------
-  glBindFramebuffer(GL_FRAMEBUFFER, LightingPassFBOID);
-  glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  defferedLightingShaderID->UseShader();
-
-  //set the active textures to be displayed on the quad with the geometry
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, gPositionID);
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, gNormalID);
-  glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, gColorSpecID);
-
-  //set the exposure value, gamma, and hdr values for the defferedLightingShader to use
-  defferedLightingShaderID->setFloat("exposure", exposure);
-  defferedLightingShaderID->setFloat("gamma_correction", gamma);
-  defferedLightingShaderID->setFloat("exposure_tone_mapping", exposure_tone_mapping);
-  defferedLightingShaderID->setFloat("uncharted_tone_mapping", uncharted_tone_mapping);
-
-  //get the eye position
-  defferedLightingShaderID->setVec3("view_position", scene.getEyePosition());
-
-  //draw
   DrawQuad();
 
+  //set shader here
+  ColorAndBrightShaderID->UseShader();
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, ColorBufferID);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, BrightBufferID);
+
+
+  //The last texture now contains the true colors of the objects, to display the colors of the object on
+  //screen, You must draw within the default framebuffer by first
+  //setting the default framebuffer and then drawing the quad with the textures
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  
+  //resetting the clear color, i might not need to do this here but its proper ettiquete to
+  //clear color and its flags at the start of th enew binded framebuffer
   glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  defferedLightingShaderID->UseShader();
-  glViewport(0, 0, windowWidth, windowHeight);
 
   glDepthMask(GL_FALSE);
 
-  //render quads
+  //if split screen is true, top right should contain total image value using draw quads else we should draw the
+  //quad to the whole screen
   if (splitScreen == true)
   {
     glViewport(windowWidth / 2, windowHeight / 2, windowWidth / 2, windowHeight / 2);
@@ -234,9 +250,14 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   }
   else
   {
+
+    //draw the quad, this draws every texture that was binded within the the last framebuffer
+    //that was binded, in this case 3 textures were binded and the last fbo binded was the lighting
+    //pass fbo
     glViewport(0, 0, windowWidth, windowHeight);
     DrawQuad();
   }
+
   glDepthMask(GL_TRUE);
 
   if (depthCopyToggle == true)
@@ -260,14 +281,31 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 
+
+  //use the lighting shader and set its material also this is where we draw forward rendered objects
+  //in the default framebuffer
+  //------------------------------------------------------------
   forwardLightingShaderID->UseShader();
+
+  //bind the ssbo for each shader and memcpy the light data into the lights
+  glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[1]);
+  GLvoid* q = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+  shader_data.numberOfLights = index;
+  memcpy(q, &shader_data, sizeof(shader_data));
+  glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
   forwardLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //draw the binded texture
+  //DrawQuad();
+
+  //bind the default framebuffer after drawing to the previous frame buffer which was the lighting buffer
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
   //draw forward objects next
   std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+  //need to draw textures after the depth toggle for correct rendering
   if (splitScreen == true)
   {
     //bottom left
@@ -279,6 +317,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
     //top left
     DrawTextures(gColorSpecID, 0, windowHeight / 2, windowWidth / 2, windowHeight / 2);
   }
+
 }
 
 void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)

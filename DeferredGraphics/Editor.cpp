@@ -109,7 +109,6 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
     std::size_t iterator = file.find_last_of("/\\");
     shader_name.push_back(file.substr(iterator + 1));
   }
-
 }
 
 void Editor::preRender(std::string windowName)
@@ -128,7 +127,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
   //if you want to be able to move the window get rid of the flag in the ImGui::Begin();
   //Inspector Window, Entity List Window
-  ImGui::Begin("Inspector", 0);
+  ImGui::Begin("Inspector", 0, ImGuiWindowFlags_NoMove);
 
   if (ImGui::Button("Add Entity"))
   {
@@ -325,12 +324,10 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     ImGui::PopID();
   }
 
-
-  ImGui::TextWrapped("Each Object has a light component where the light is moving with the object except for the center one.");
   ImGui::End();
 
   //Settings Window
-  ImGui::Begin("Settings", 0);
+  ImGui::Begin("Settings", 0, ImGuiWindowFlags_NoMove);
   ImGui::TextWrapped("WASD moves the camera left, right, in, and out.");
   ImGui::Spacing();
   ImGui::TextWrapped("Q and E move up and down.");
@@ -463,7 +460,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::End();
 
   //profiler settings
-  ImGui::Begin("Profiler", 0);
+  ImGui::Begin("Profiler", 0, ImGuiWindowFlags_NoMove);
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
   ImGui::End();
 

@@ -65,7 +65,7 @@ void Scene::Init()
   material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
   material->setFloat("specular_intensity", 1.0f);
   material2->setVec4("diffuse_color", glm::vec4(0.5f, 0.0f, 0.7f, 1.0f));
-  
+
   //create the Entity ptr
   EntityPtr centerObject = addEntity("Center Object");
 
@@ -146,45 +146,39 @@ EntityPtr Scene::addEntity(std::string name)
 
 EntityPtr Scene::findEntity(std::string name)
 {
-  //if the list is not empty
-  if (!ListOfEntities.empty())
-  {
-    //loop through the entity list
-    for (int i = 0; i < ListOfEntities.size(); ++i)
-    {
-      //look for the entity specified
-      if (ListOfEntities[i]->name == name)
-      {
-        //return the potr to that entity
-        return ListOfEntities[i];
-      }
-    }
 
-    //could not find entity in the list of entities
-    return nullptr;
+  //loop through the entity list
+  for (int i = 0; i < ListOfEntities.size(); ++i)
+  {
+    //look for the entity specified
+    if (ListOfEntities[i]->name == name)
+    {
+      //return the potr to that entity
+      return ListOfEntities[i];
+    }
   }
+
+  //could not find entity in the list of entities
+  return nullptr;
+
 }
 
 void Scene::removeEntity(std::string name)
 {
-  //if the list is not empty
-  if (!ListOfEntities.empty())
+  //loop through the list
+  for (int i = 0; i < ListOfEntities.size(); ++i)
   {
-    //loop through the list
-    for (int i = 0; i < ListOfEntities.size(); ++i)
+    //look for the first specified entity
+    if (ListOfEntities[i]->name == name)
     {
-      //look for the first specified entity
-      if (ListOfEntities[i]->name == name)
-      {
-        //delete the entity at that location
-        delete ListOfEntities[i];
+      //delete the entity at that location
+      delete ListOfEntities[i];
 
-        //remove the entity at that point
-        ListOfEntities.erase(ListOfEntities.begin() + i);
+      //remove the entity at that point
+      ListOfEntities.erase(ListOfEntities.begin() + i);
 
-        //break out of the loop because you removed the entity
-        break;
-      }
+      //break out of the loop because you removed the entity
+      break;
     }
   }
 }

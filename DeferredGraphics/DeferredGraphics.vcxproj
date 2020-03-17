@@ -197,6 +197,8 @@
     <ClInclude Include="TemplateUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\ColorAndBright.frag" />
+    <None Include="Shaders\ColorAndBright.vert" />
     <None Include="Shaders\debugDraw.frag" />
     <None Include="Shaders\debugDraw.vert" />
     <None Include="Shaders\defferedLightingPass.frag" />
