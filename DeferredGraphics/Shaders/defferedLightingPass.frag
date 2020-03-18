@@ -69,17 +69,17 @@ vec3 Uncharted2Tonemap(vec3 x)
 
 void main()
 {
- //retrieve data from gbuffer
- vec3 world_position = texture(gPosition, texture_coordinates).rgb;
- vec3 normal_world_position = texture(gNormal, texture_coordinates).rgb;
- vec3 diffuse_color = texture(gAlbedoSpec, texture_coordinates).rgb;
- float specular_intensity = texture(gAlbedoSpec, texture_coordinates).a;
- 
- const float gamma = 2.2;
- vec3 lighting = diffuse_color * 0.7f; //(.7 here is the constant ambient value)
- vec3 normalized_normal_world_position = normalize(normal_world_position);
-
-   vec3 mapped = vec3(1.0f);
+  //retrieve data from gbuffer
+  vec3 world_position = texture(gPosition, texture_coordinates).rgb;
+  vec3 normal_world_position = texture(gNormal, texture_coordinates).rgb;
+  vec3 diffuse_color = texture(gAlbedoSpec, texture_coordinates).rgb;
+  float specular_intensity = texture(gAlbedoSpec, texture_coordinates).a;
+  
+  const float gamma = 2.2;
+  vec3 lighting = vec3(0.0f) * 0.6f; //(.6 here is the constant ambient value)
+  vec3 lighting_no_spec = vec3(0.0f) * 0.6f; //(.6 here is the constant ambient value)
+  vec3 normalized_normal_world_position = normalize(normal_world_position);
+  vec3 mapped = vec3(1.0f);
 
   //for all lights
   for(int i = 0; i <  numberOfLights; ++i)
@@ -102,7 +102,9 @@ void main()
     diffuse *= attenuation;
     specular *= attenuation;
     lighting += diffuse + specular;
+    lighting_no_spec += diffuse;
   }
+
 
   //doing the tone mapping and gamma correction after lighting calculations is interesting and correct
   //exposure tone mapping
@@ -124,11 +126,12 @@ void main()
   //this needs to be done somewhere else
   //bloom color extraction after lighting values
 
-  float brightness = dot(lighting, vec3(0.2126, 0.7152, 0.0722));
+  //0.2126, 0.7152, 0.0722
+  float brightness = dot(lighting_no_spec.rgb, vec3(0.2126, 0.7152, 0.0722));
   vec4 brightColor;
   if(brightness > 1.0)
   {
-    brightColor = vec4(lighting , 1.0);
+    brightColor = vec4(lighting_no_spec.rgb, 1.0);
   }
   else
   {
@@ -136,6 +139,7 @@ void main()
   }
 
   BrightColor = brightColor;
+
   color = vec4(lighting, 1.0) * vec4(mapped.xyz, 1.0f);
 }
 

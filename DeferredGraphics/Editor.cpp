@@ -38,11 +38,12 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
 
   //styling for the editor
   ImGuiStyle& style = ImGui::GetStyle();
-  style.FrameRounding = 0.0f;
-  style.ChildRounding = 0.0f;
-  style.ScrollbarRounding = 0.0f;
-  style.WindowRounding = 0.0f;
+  style.FrameRounding = 3.0f;
+  style.ChildRounding = 3.0f;
+  style.ScrollbarRounding = 3.0f;
+  style.WindowRounding = 3.0f;
   style.WindowTitleAlign.x = 0.5f;
+  style.WindowTitleAlign.y = 0.5f;
 
   ImGuiIO& io = ImGui::GetIO();
   //load fonts using "io.Fonts->AddFontFromFileTTF("your_font.ttf", size_pixels);"
@@ -344,6 +345,10 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       }
 
       if (ImGui::Checkbox("Split Screen", &Manager.renderer->splitScreen))
+      {
+      }
+
+      if (ImGui::Checkbox("Bright Buffer", &Manager.renderer->brightBuffer))
       {
       }
 

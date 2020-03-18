@@ -36,6 +36,10 @@ class RenderingSystem
   GLuint BrightBufferID;
   GLuint ColorBufferID;
 
+  //Bloom FBO ID
+  GLuint PingPongFBO[2];
+  GLuint PingPongColorBuffer[2];
+
   //depth buffer ID
   GLuint rboDepthID2;
 
@@ -48,6 +52,7 @@ public:
   bool gamma = true;
   bool exposure_tone_mapping = true;
   bool uncharted_tone_mapping = false;
+
 private:
 
   //depth buffer ID
@@ -85,6 +90,7 @@ private:
 public:        
   bool splitScreen = false;
   bool depthCopyToggle = true;
+  bool brightBuffer = false;
 
   RenderingSystem(int windowWidth, int windowHeight);
   ~RenderingSystem();

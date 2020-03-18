@@ -100,7 +100,7 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //generate the texture for BloomBuffer/ Bright Color values over 190
   glGenTextures(1, &ColorBufferID);
   glBindTexture(GL_TEXTURE_2D, ColorBufferID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
@@ -110,7 +110,7 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //generate the texture for BloomBuffer/ Bright Color values over 190
   glGenTextures(1, &BrightBufferID);
   glBindTexture(GL_TEXTURE_2D, BrightBufferID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
@@ -123,8 +123,26 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //draws all 3 buffers and the hdr buffer
   glDrawBuffers(2, attachment);
 
+  //generate the framebuffers needed for gaussian blurr horizontally and vertically
+  glGenFramebuffers(2, PingPongFBO);
+  glGenTextures(2, PingPongColorBuffer);
+  for (unsigned int i = 0; i < 2; i++)
+  {
+    glBindFramebuffer(GL_FRAMEBUFFER, PingPongFBO[i]);
+    glBindTexture(GL_TEXTURE_2D, PingPongColorBuffer[i]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, PingPongColorBuffer[i], 0);
+    // also check if framebuffers are complete (no need for depth buffer)
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      std::cout << "Framebuffer not complete!" << std::endl;
+  }
   // shader configuration
   // for deffered shader
+  // for bloom shader
   // --------------------
   defferedLightingShaderID->UseShader();
   defferedLightingShaderID->setInt("gPosition", 0);
@@ -152,10 +170,10 @@ RenderingSystem::~RenderingSystem()
 void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 {
   //gets all the current mesh components in th scene
-  std::vector<MeshComponentPtr> & meshes = scene.getMeshes();
+  std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
 
   //gets all the current mesh components in th scene
-  std::vector<LightComponentPtr> & lights = scene.getLights();
+  std::vector<LightComponentPtr>& lights = scene.getLights();
 
   //Geometry Pass
   //------------------------------------------------------------
@@ -165,6 +183,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //bind the g framebuffer
   glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBOID);
 
+  //use the shader that needs the information of the position, normals, and color/specular
   gBufferShaderID->UseShader();
 
   //clear color buffer bit and depth buffer info from the default framebuffer
@@ -173,10 +192,13 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 
   //draw deffered objects first well in this case draw only the geometry of the deffered objects
   //first ans save the lighting pass for the when we bind the lighting FBO
+  //write objects to the currently binded frame buffer and fills in the data of position, normals, and color/specular
+  //which can now be used for the next shader and draw calls
   std::for_each(meshes.begin(), iterator_to_forward_list, [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, true); });
 
   //set the active textures to be displayed on the quad with the geometry
   //so what is happening here is we are binding the textures we stored from the g buffer
+  //now this data can be used as uniform samplers for the deffered lighting shader
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, gPositionID);
   glActiveTexture(GL_TEXTURE1);
@@ -185,13 +207,13 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   glBindTexture(GL_TEXTURE_2D, gColorSpecID);
 
   //use the correct shader program in this case we do deffered drawing of items first
+  //since we binded the textures from above, they are now used as uniform samplers for the next
+  //draw call
   defferedLightingShaderID->UseShader();
   defferedLightingShaderID->setFloat("exposure", exposure);
   defferedLightingShaderID->setFloat("gamma_correction", gamma);
   defferedLightingShaderID->setFloat("exposure_tone_mapping", exposure_tone_mapping);
   defferedLightingShaderID->setFloat("uncharted_tone_mapping", uncharted_tone_mapping);
-
-  //get the eye position
   defferedLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
   //lighting Pass in the default framebuffer, everything is drawn to the quad plane 
@@ -203,26 +225,36 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  //ssbo loop thorugh lights for light mapping for deffered lights
-  int index = 0;
-  for (const auto& light : lights)
+  //lighting information for deffered objects
+  int index = 0; //index of the light in the shader sata struct
   {
-    shader_data.lights[index] = light->light;
-    ++index;
+    //ssbo loop thorugh lights for light mapping for deffered lights
+    for (const auto& light : lights)
+    {
+      shader_data.lights[index] = light->light;
+      ++index;
+    }
+
+    //bind the ssbo for each shader and memcpy the light data into the lights
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[0]);
+    GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+    shader_data.numberOfLights = index;
+    memcpy(p, &shader_data, sizeof(shader_data));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
   }
 
-  //bind the ssbo for each shader and memcpy the light data into the lights
-  glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[0]);
-  GLvoid* p = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-  shader_data.numberOfLights = index;
-  memcpy(p, &shader_data, sizeof(shader_data));
-  glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
+  //writing data to the currently bounded framebuffer, more importantly
+  //this draw call fills in the information of the color and bright buffer to be
+  //used for the next bounded shader and draw calls that are effected by that
+  //shader
   DrawQuad();
 
-  //set shader here
+  //since draw call was made, the two outs from the deffered shader were the color buffer 
+  //and bright buffer, thus allowing us to use those as uniform samplers in the next bounded
+  //shader which is the color and bright shader
   ColorAndBrightShaderID->UseShader();
 
+  //read the data that was written from drawing the quad and use it as uniforms for the shader
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, ColorBufferID);
   glActiveTexture(GL_TEXTURE1);
@@ -233,9 +265,9 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //screen, You must draw within the default framebuffer by first
   //setting the default framebuffer and then drawing the quad with the textures
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  
+
   //resetting the clear color, i might not need to do this here but its proper ettiquete to
-  //clear color and its flags at the start of th enew binded framebuffer
+  //clear color and its flags at the start of the new binded framebuffer
   glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -246,6 +278,11 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   if (splitScreen == true)
   {
     glViewport(windowWidth / 2, windowHeight / 2, windowWidth / 2, windowHeight / 2);
+    DrawQuad();
+  }
+  else if (brightBuffer == true)
+  {
+    glViewport(windowWidth / 2, 0, windowWidth / 2, windowHeight);
     DrawQuad();
   }
   else
@@ -269,13 +306,17 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
     //blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
     //the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
     //depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
-    if (splitScreen == false)
+    if (splitScreen == false && brightBuffer == false)
     {
       glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
     }
-    else
+    else if(splitScreen == true)
     {
       glBlitFramebuffer(0, 0, windowWidth, windowHeight, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    } 
+    else if (brightBuffer == true)
+    {
+      glBlitFramebuffer(0, 0, windowWidth, windowHeight, windowWidth / 2, 0, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -287,25 +328,22 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //------------------------------------------------------------
   forwardLightingShaderID->UseShader();
 
-  //bind the ssbo for each shader and memcpy the light data into the lights
-  glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[1]);
-  GLvoid* q = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-  shader_data.numberOfLights = index;
-  memcpy(q, &shader_data, sizeof(shader_data));
-  glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+  //lighting information for the forward objects
+  {
+    //bind the ssbo for each shader and memcpy the light data into the lights
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[1]);
+    GLvoid* q = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+    shader_data.numberOfLights = index;
+    memcpy(q, &shader_data, sizeof(shader_data));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+  }
 
   forwardLightingShaderID->setVec3("view_position", scene.getEyePosition());
-
-  //draw the binded texture
-  //DrawQuad();
-
-  //bind the default framebuffer after drawing to the previous frame buffer which was the lighting buffer
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   //draw forward objects next
   std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
 
-  //need to draw textures after the depth toggle for correct rendering
+  //need to draw textures after the depth toggle for correct rendering of the split screen
   if (splitScreen == true)
   {
     //bottom left
@@ -316,6 +354,11 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 
     //top left
     DrawTextures(gColorSpecID, 0, windowHeight / 2, windowWidth / 2, windowHeight / 2);
+  }
+
+  if (brightBuffer == true)
+  {
+    DrawTextures(BrightBufferID, 0, 0, windowWidth / 2, windowHeight);
   }
 
 }
