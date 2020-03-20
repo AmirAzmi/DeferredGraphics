@@ -376,7 +376,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         }
       }
 
-      if (ImGui::Checkbox("gamma", &Manager.renderer->gamma))
+      if (ImGui::Checkbox("bloom", &Manager.renderer->bloom))
       {
       }
       if (ImGui::Checkbox("uncharted tone mapping", &Manager.renderer->uncharted_tone_mapping))
@@ -385,14 +385,18 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       if (ImGui::Checkbox("tone mapping", &Manager.renderer->exposure_tone_mapping))
       {
       }
-
       if (Manager.renderer->exposure_tone_mapping == true)
       {
         ImGui::TextWrapped("Exposure only works for tone mapping");
-        if (ImGui::DragFloat("exposure", &Manager.renderer->exposure, .1f))
+        if (ImGui::DragFloat("exposure", &Manager.renderer->exposure, .05f))
         {
         }
       }
+
+      if (ImGui::Checkbox("gamma", &Manager.renderer->gamma))
+      {
+      }
+
 
     }
     ImGui::TreePop();

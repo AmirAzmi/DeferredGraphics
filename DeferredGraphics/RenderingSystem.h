@@ -49,6 +49,7 @@ class RenderingSystem
 
 public:
   float exposure = 1.0f;
+  bool bloom = false;
   bool gamma = true;
   bool exposure_tone_mapping = true;
   bool uncharted_tone_mapping = false;
@@ -69,11 +70,12 @@ private:
   GLuint splitscreenUVID;
   
   //shader handle for deffered pass and forward pas
-  ShaderHandle ColorAndBrightShaderID;
+  ShaderHandle colorAndBrightShaderID;
   ShaderHandle defferedLightingShaderID;
   ShaderHandle forwardLightingShaderID;
   ShaderHandle splitScreenShaderID;
   ShaderHandle gBufferShaderID;
+  ShaderHandle bloomFinalID;
 
   //lighting info ID
   GLuint ssboID[2];

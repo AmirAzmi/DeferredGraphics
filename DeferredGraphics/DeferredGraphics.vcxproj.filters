@@ -223,5 +223,11 @@
     <None Include="Shaders\ColorAndBright.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\FinalBloom.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\FinalBloom.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

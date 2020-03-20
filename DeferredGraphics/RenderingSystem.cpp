@@ -21,12 +21,11 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
 {
   //set the deffered lighting shader that should be used
   defferedLightingShaderID = std::make_shared<Shader>("Shaders/defferedLightingPass.vert", "Shaders/defferedLightingPass.frag", true);
-  forwardLightingShaderID = std::make_shared <Shader>("Shaders/forwardLightingPass.vert", "Shaders/forwardLightingPass.frag", false);
-  gBufferShaderID = std::make_shared<Shader>("Shaders/gBuffer.vert", "Shaders/gBuffer.frag", true);
-  ColorAndBrightShaderID = std::make_shared<Shader>("Shaders/ColorAndBright.vert", "Shaders/ColorAndBright.frag", true);
-
-  //set the shader for split screen
-  splitScreenShaderID = std::make_shared<Shader>("Shaders/gBufferViewer.vert", "Shaders/gBufferViewer.frag", false);
+  forwardLightingShaderID  = std::make_shared<Shader>("Shaders/forwardLightingPass.vert", "Shaders/forwardLightingPass.frag", false);
+  gBufferShaderID          = std::make_shared<Shader>("Shaders/gBuffer.vert", "Shaders/gBuffer.frag", true);
+  colorAndBrightShaderID   = std::make_shared<Shader>("Shaders/ColorAndBright.vert", "Shaders/ColorAndBright.frag", true);
+  bloomFinalID             = std::make_shared<Shader>("Shaders/FinalBloom.vert", "Shaders/FinalBloom.frag", true);
+  splitScreenShaderID      = std::make_shared<Shader>("Shaders/gBufferViewer.vert", "Shaders/gBufferViewer.frag", false);
 
   //generate the first ssbo
   glGenBuffers(2, &ssboID[0]);
@@ -149,9 +148,13 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   defferedLightingShaderID->setInt("gNormal", 1);
   defferedLightingShaderID->setInt("gAlbedoSpec", 2);
 
-  ColorAndBrightShaderID->UseShader();
-  ColorAndBrightShaderID->setInt("ucolor", 0);
-  ColorAndBrightShaderID->setInt("BrightColor", 1);
+  colorAndBrightShaderID->UseShader();
+  colorAndBrightShaderID->setInt("ucolor", 0);
+  colorAndBrightShaderID->setInt("BrightColor", 1);
+
+  bloomFinalID->UseShader();
+  bloomFinalID->setInt("ucolor", 0);
+  bloomFinalID->setInt("BrightColor", 1);
 }
 
 RenderingSystem::~RenderingSystem()
@@ -210,10 +213,6 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //since we binded the textures from above, they are now used as uniform samplers for the next
   //draw call
   defferedLightingShaderID->UseShader();
-  defferedLightingShaderID->setFloat("exposure", exposure);
-  defferedLightingShaderID->setFloat("gamma_correction", gamma);
-  defferedLightingShaderID->setFloat("exposure_tone_mapping", exposure_tone_mapping);
-  defferedLightingShaderID->setFloat("uncharted_tone_mapping", uncharted_tone_mapping);
   defferedLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
   //lighting Pass in the default framebuffer, everything is drawn to the quad plane 
@@ -252,7 +251,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //since draw call was made, the two outs from the deffered shader were the color buffer 
   //and bright buffer, thus allowing us to use those as uniform samplers in the next bounded
   //shader which is the color and bright shader
-  ColorAndBrightShaderID->UseShader();
+  colorAndBrightShaderID->UseShader();
 
   //read the data that was written from drawing the quad and use it as uniforms for the shader
   glActiveTexture(GL_TEXTURE0);
@@ -260,6 +259,21 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, BrightBufferID);
 
+
+  bool horizontal = true, first_iteration = true;
+  int amount = 10;
+  for (unsigned int i = 0; i < amount; i++)
+  {
+    glBindFramebuffer(GL_FRAMEBUFFER, PingPongFBO[horizontal]);
+    colorAndBrightShaderID->setInt("horizontal", horizontal);
+    glBindTexture(
+      GL_TEXTURE_2D, first_iteration ? BrightBufferID : PingPongColorBuffer[!horizontal]
+    );
+    DrawQuad();
+    horizontal = !horizontal;
+    if (first_iteration)
+      first_iteration = false;
+  }
 
   //The last texture now contains the true colors of the objects, to display the colors of the object on
   //screen, You must draw within the default framebuffer by first
@@ -271,6 +285,19 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   glClearColor(0.5f, 0.3f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  bloomFinalID->UseShader();
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, ColorBufferID);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, PingPongColorBuffer[!horizontal]);
+  bloomFinalID->setInt("bloom", bloom);
+  bloomFinalID->setFloat("exposure", exposure);
+  bloomFinalID->setFloat("gamma_correction", gamma);
+  bloomFinalID->setFloat("exposure_tone_mapping", exposure_tone_mapping);
+  bloomFinalID->setFloat("uncharted_tone_mapping", uncharted_tone_mapping);
+
+  //draw final output
   glDepthMask(GL_FALSE);
 
   //if split screen is true, top right should contain total image value using draw quads else we should draw the
@@ -321,7 +348,6 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
-
 
   //use the lighting shader and set its material also this is where we draw forward rendered objects
   //in the default framebuffer

@@ -22,11 +22,11 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
 
-uniform float exposure;
 uniform vec3 view_position;
+/*uniform float exposure;
 uniform bool gamma_correction;
 uniform bool exposure_tone_mapping;
-uniform bool uncharted_tone_mapping;
+uniform bool uncharted_tone_mapping;*/
 
 struct Light
 {
@@ -55,7 +55,7 @@ layout (std430, binding = 0) buffer shader_data
 
 
 //uncharted tone mapping function
-vec3 Uncharted2Tonemap(vec3 x)
+/*vec3 Uncharted2Tonemap(vec3 x)
 {
   float A = 0.15;
 	float B = 0.50;
@@ -65,7 +65,7 @@ vec3 Uncharted2Tonemap(vec3 x)
 	float F = 0.30;
 
     return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
-}
+}*/
 
 void main()
 {
@@ -108,7 +108,7 @@ void main()
 
   //doing the tone mapping and gamma correction after lighting calculations is interesting and correct
   //exposure tone mapping
-  if(exposure_tone_mapping)
+  /*if(exposure_tone_mapping)
   {
     mapped = vec3(1.0) - exp(-diffuse_color * exposure);
   }
@@ -121,7 +121,7 @@ void main()
   if(gamma_correction)
   {
     lighting = (pow(lighting * mapped, vec3(1.0/gamma)));
-  }
+  }*/
 
   //this needs to be done somewhere else
   //bloom color extraction after lighting values

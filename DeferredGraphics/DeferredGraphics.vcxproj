@@ -203,6 +203,8 @@
     <None Include="Shaders\debugDraw.vert" />
     <None Include="Shaders\defferedLightingPass.frag" />
     <None Include="Shaders\defferedLightingPass.vert" />
+    <None Include="Shaders\FinalBloom.frag" />
+    <None Include="Shaders\FinalBloom.vert" />
     <None Include="Shaders\forwardLightingPass.frag" />
     <None Include="Shaders\forwardLightingPass.vert" />
     <None Include="Shaders\gBuffer.frag" />
