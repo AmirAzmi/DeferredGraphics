@@ -21,6 +21,7 @@ Creation date: January 4th , 2020
 Scene::Scene(int windowWidth, int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(1000.0f), cameraSpeed(0.1f),
 eyePosition(glm::vec3(0.0f, 0.0f, 10.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, -1.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
 {
+  windowDimension = getWindowDimension(windowWidth, windowHeight);
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
   viewMatrix = glm::lookAt(eyePosition, cameraDirection, upDirection);
 }

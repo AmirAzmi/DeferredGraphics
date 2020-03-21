@@ -205,6 +205,8 @@
     <None Include="Shaders\defferedLightingPass.vert" />
     <None Include="Shaders\FinalBloom.frag" />
     <None Include="Shaders\FinalBloom.vert" />
+    <None Include="Shaders\FinalColorOut.frag" />
+    <None Include="Shaders\FinalColorOut.vert" />
     <None Include="Shaders\forwardLightingPass.frag" />
     <None Include="Shaders\forwardLightingPass.vert" />
     <None Include="Shaders\gBuffer.frag" />
@@ -213,6 +215,9 @@
     <None Include="Shaders\gBufferViewer.vert" />
     <None Include="Shaders\sphereDebugDraw.frag" />
     <None Include="Shaders\sphereDebugDraw.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Framebuffers.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

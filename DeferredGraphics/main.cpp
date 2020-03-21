@@ -21,6 +21,7 @@ Creation date: January 4th , 2020
 GLFWwindow* window;
 int windowWidth = 1024;
 int windowHeight = 768;
+
 const char* glsl_version = "#version 430";
 
 void processInput(GLFWwindow* window, Scene& scene);
@@ -42,13 +43,17 @@ int main()
     return -1;
   }
 
+  GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+  const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
   // Setting up OpenGL properties
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
   // Open a window and create its OpenGL context
-  window = glfwCreateWindow(windowWidth, windowHeight, "Amir Azmi CS350", nullptr, nullptr);
+  window = glfwCreateWindow(mode->width, mode->height, "Amir Azmi CS350", nullptr, nullptr);
   if (window == nullptr)
   {
     fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 4.0 compatible.\n");
@@ -69,7 +74,6 @@ int main()
 
   // Ensure we can capture the escape key being pressed below
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-
 
   //intialize the scene
   Scene* scene = new Scene(windowWidth, windowHeight);

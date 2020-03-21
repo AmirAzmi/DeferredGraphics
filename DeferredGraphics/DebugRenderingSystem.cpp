@@ -124,6 +124,8 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     //PORBABLY WANT TO REPLACE THIS WITH A POOL OR LINEAR ALLOCATOR I DROPPED 30 FUCKING FRAMES FROM THIS
     delete BVHTree;
   }
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
@@ -265,6 +267,7 @@ void DebugRenderingSystem::drawAABB(AABB bounds, Scene& scene)
   glLineWidth(2);
   glBindVertexArray(boundingBoxVAOID);
   glDrawElements(GL_LINES, cubeIndices.size(), GL_UNSIGNED_INT, 0);
+
 }
 
 void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type)

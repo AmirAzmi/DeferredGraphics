@@ -46,6 +46,7 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   style.WindowTitleAlign.y = 0.5f;
 
   ImGuiIO& io = ImGui::GetIO();
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   //load fonts using "io.Fonts->AddFontFromFileTTF("your_font.ttf", size_pixels);"
 
   //This next set of code is used to generate all mesh handles from the resources 
@@ -66,14 +67,14 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
     mesh_name.push_back(res + "/" + file.substr(iterator + 1));
   }
 
-   //contains the correct path names
+  //contains the correct path names
   for (int i = 0; i < mesh_name.size(); ++i)
   {
-    std::cout << mesh_name[i] <<std::endl;
+    std::cout << mesh_name[i] << std::endl;
     MeshHandle mesh = std::make_shared<Mesh>(mesh_name[i]);
     mesh_handles.push_back(mesh);
   }
-  
+
   //reuse this buffer 
   mesh_name.clear();
   for (auto& file : filenames)
@@ -94,9 +95,9 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
     std::size_t iterator = file.find_last_of("/\\");
     shader_name.push_back(shader_folder + "/" + file.substr(iterator + 1));
   }
-  
+
   //contains the correct path names for the shader
-  for (int i = 0; i < shader_name.size(); i+=2)
+  for (int i = 0; i < shader_name.size(); i += 2)
   {
     std::cout << shader_name[i] << std::endl;
     ShaderHandle shader = std::make_shared<Shader>(shader_name[i + 1], shader_name[i], true);
@@ -117,6 +118,55 @@ void Editor::preRender(std::string windowName)
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
+
+  static bool opt_fullscreen_persistant = true;
+  bool opt_fullscreen = opt_fullscreen_persistant;
+  static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+  // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+  // because it would be confusing to have two docking targets within each others.
+  ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
+  if (opt_fullscreen)
+  {
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->GetWorkPos());
+    ImGui::SetNextWindowSize(viewport->GetWorkSize());
+    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+  }
+
+  // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background 
+  // and handle the pass-thru hole, so we ask Begin() to not render a background.
+  if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+    window_flags |= ImGuiWindowFlags_NoBackground;
+
+  // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
+  // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
+  // all active windows docked into it will lose their parent and become undocked.
+  // We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
+  // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+  ImGui::Begin("DockSpace Demo", 0, window_flags);
+  ImGui::PopStyleVar();
+
+  if (opt_fullscreen)
+    ImGui::PopStyleVar(2);
+
+  // DockSpace
+  ImGuiIO& io = ImGui::GetIO();
+  if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+  {
+    ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+  }
+  else
+  {
+    //ShowDockingDisabledMessage();
+  }
+  ImGui::End();
 }
 
 void Editor::Render(Scene& scene, SystemManager& Manager)
@@ -128,7 +178,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
   //if you want to be able to move the window get rid of the flag in the ImGui::Begin();
   //Inspector Window, Entity List Window
-  ImGui::Begin("Inspector", 0, ImGuiWindowFlags_NoMove);
+  ImGui::Begin("Inspector");
 
   if (ImGui::Button("Add Entity"))
   {
@@ -234,7 +284,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
               {
                 if (v4.first == "diffuse_color")
                 {
-                  if (ImGui::ColorEdit3("diffuse_color", &v4.second.x))
+                  if (ImGui::ColorEdit3("Diffuse Color", &v4.second.x))
                   {
                   }
                 }
@@ -260,7 +310,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::Button("Add Mesh Component"))
         {
-          meshComponent = scene.getEntities()[i]->add<MeshComponent>();         
+          meshComponent = scene.getEntities()[i]->add<MeshComponent>();
           meshComponent->entity = scene.getEntities()[i];
           meshComponent->vertices = meshComponent->getVec4Vertices();
         }
@@ -328,7 +378,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::End();
 
   //Settings Window
-  ImGui::Begin("Settings", 0, ImGuiWindowFlags_NoMove);
+  ImGui::Begin("Settings");
   ImGui::TextWrapped("WASD moves the camera left, right, in, and out.");
   ImGui::Spacing();
   ImGui::TextWrapped("Q and E move up and down.");
@@ -376,24 +426,27 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         }
       }
 
-      if (ImGui::Checkbox("bloom", &Manager.renderer->bloom))
+      if (ImGui::Checkbox("Bloom", &Manager.renderer->bloom))
       {
       }
-      if (ImGui::Checkbox("uncharted tone mapping", &Manager.renderer->uncharted_tone_mapping))
+
+      if (ImGui::Checkbox("Uncharted Tone Mapping", &Manager.renderer->uncharted_tone_mapping))
       {
       }
-      if (ImGui::Checkbox("tone mapping", &Manager.renderer->exposure_tone_mapping))
+
+      if (ImGui::Checkbox("Tone Mapping", &Manager.renderer->exposure_tone_mapping))
       {
       }
+
       if (Manager.renderer->exposure_tone_mapping == true)
       {
         ImGui::TextWrapped("Exposure only works for tone mapping");
-        if (ImGui::DragFloat("exposure", &Manager.renderer->exposure, .05f))
+        if (ImGui::DragFloat("Exposure", &Manager.renderer->exposure, .05f))
         {
         }
       }
 
-      if (ImGui::Checkbox("gamma", &Manager.renderer->gamma))
+      if (ImGui::Checkbox("Gamma Correction", &Manager.renderer->gamma))
       {
       }
 
@@ -469,9 +522,17 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::End();
 
   //profiler settings
-  ImGui::Begin("Profiler", 0, ImGuiWindowFlags_NoMove);
+  ImGui::Begin("Profiler");
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
   ImGui::End();
+
+  //window settings
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+  ImGui::Begin("Scene");
+  ImGui::GetWindowSize();
+  ImGui::Image((void*)(intptr_t)(Manager.renderer->FinalColorBufferID), ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
+  ImGui::End();
+  ImGui::PopStyleVar();
 
 
   //height of main menu bar is 23 pixels just in case you were wonderings

@@ -1,12 +1,13 @@
 #version 330 core
-out vec4 FragColor;
+
+out vec4 color;
 
 in vec2 texture_coordinates;
 
 uniform sampler2D ucolor;
 uniform sampler2D BrightColor;
-uniform bool bloom;
 uniform float exposure;
+uniform bool bloom;
 uniform bool gamma_correction;
 uniform bool exposure_tone_mapping;
 uniform bool uncharted_tone_mapping;
@@ -21,7 +22,7 @@ vec3 Uncharted2Tonemap(vec3 x)
 	float E = 0.02;
 	float F = 0.30;
 
-    return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+  return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
 }
 
 void main()
@@ -46,15 +47,15 @@ void main()
     result = vec3(1.0) - exp(-hdrColor * exposure);
   }
 
-  if(gamma_correction)
-  {
-    result = pow(result, vec3(1.0/gamma));
-  }
-
   if(uncharted_tone_mapping)
   {
      result = Uncharted2Tonemap(hdrColor);
   }
 
-    FragColor = vec4(result, 1.0);
+  if(gamma_correction)
+  {
+    result = pow(result, vec3(1.0/gamma));
+  }
+
+    color = vec4(result, 1.0);
 }

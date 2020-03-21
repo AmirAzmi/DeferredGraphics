@@ -1,0 +1,59 @@
+----------------------------------------------------------------------------
+Bind gBufferFBOID
+
+Bind gBufferShader Shader
+
+Draw each objects geometry
+--->this draw fills data in for the textures of the gBufferShader layout locations
+
+                   ****Reallistically End of FBO****
+
+Bind Textures of the gBufferFBOID
+------>gPositionID
+------>gNormalID
+------>gColorSpecID
+
+Note: Now the next shader, defferedLightingShader can use the binded textures from above as unniforms
+----------------------------------------------------------------------------
+Bind LightingPassFBOID
+
+Bind defferedLightingShader Shader
+
+Draw each objects lighting information
+--->this draws fills data from the deffered shader, it has 2 outs which fills the data in for the color and bright buffer
+
+                   ****Reallistically End of FBO****
+
+Bind Textures of LightingPassFBOID
+------>ColorBufferID
+------>BrightBufferID
+----------------------------------------------------------------------------
+Bind colorAndBrightShader Shader
+
+Bind PingPoingFBO
+
+Bind Textures - BrightBufferID which was filled in the lightingPassFBO for the first time
+Note: The first binded texture had filled in data from LightingPassFBO
+------>BrightBufferID
+
+Draw the bloom onto the deffered objects
+
+                   ****Reallistically End of FBO****
+
+Bind Textures of the PingPongColorBuffer
+------>PingPongColorBuffer 0
+------>PingPongColorBuffer 1
+----------------------------------------------------------------------------
+Bind FinalFBOID
+
+Bind bloomFinalID Shader
+
+Bind Textures - ColorBufferID from the LightingPassFBO and PingPoingColorBuffer 0 from PingPoingFBO
+------>ColorBufferID
+------>PingPongColorBuffer 0
+
+Draw the resultant of the ColorBuffer and Bloom
+Note: There can be binds of textures here
+
+                   ****Reallistically End of FBO****
+----------------------------------------------------------------------------

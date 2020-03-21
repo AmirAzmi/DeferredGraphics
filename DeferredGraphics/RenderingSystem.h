@@ -34,16 +34,22 @@ class RenderingSystem
   //lighting Pass FBO ID
   GLuint LightingPassFBOID;
   GLuint BrightBufferID;
+  /**********/
+  //For Now (Note make it not private after)
+  public:
   GLuint ColorBufferID;
+  private:
+  /**********/
 
   //Bloom FBO ID
   GLuint PingPongFBO[2];
   GLuint PingPongColorBuffer[2];
 
-  //depth buffer ID
-  GLuint rboDepthID2;
-
-  //GLuint post-processing pass FBO ID
+  //Final Output FBO ID
+  GLuint FinalFBOID;
+public:
+  GLuint FinalColorBufferID;
+private:
   //GLuint PostProcessingFBOID;
   AABB bounds;
 
@@ -56,8 +62,11 @@ public:
 
 private:
 
-  //depth buffer ID
+  //depth buffer ID for the gBuffer
   GLuint rboDepthID;
+
+  //depth buffer ID for the FinalOutput Buffer
+  GLuint rboDepthID2;
 
   //quad data
   GLuint quadVAOID = 0;
@@ -76,6 +85,7 @@ private:
   ShaderHandle splitScreenShaderID;
   ShaderHandle gBufferShaderID;
   ShaderHandle bloomFinalID;
+  ShaderHandle finalColorID;
 
   //lighting info ID
   GLuint ssboID[2];

@@ -1,5 +1,3 @@
-﻿  Editor.cpp
-  LINK : C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe not found or not built by the last incremental link; performing full link
-     Creating library C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.lib and object C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exp
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  RenderingSystem.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\RenderingSystem.cpp(299,30): warning C4018: '<': signed/unsigned mismatch
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe

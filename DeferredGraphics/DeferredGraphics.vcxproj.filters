@@ -181,12 +181,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\sphereDebugDraw.frag">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="Shaders\sphereDebugDraw.vert">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="Shaders\debugDraw.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
@@ -229,5 +223,22 @@
     <None Include="Shaders\FinalBloom.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\FinalColorOut.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\FinalColorOut.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\sphereDebugDraw.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\sphereDebugDraw.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Framebuffers.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

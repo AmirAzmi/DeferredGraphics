@@ -28,6 +28,7 @@ public:
   glm::mat4 viewMatrix;
   glm::vec3 eyePosition; //camera position
   glm::vec3 cameraDirection;
+  glm::vec2 windowDimension;
 
   float cameraSpeed;
   glm::vec3 upDirection;
@@ -60,5 +61,11 @@ public:
   EntityPtr addEntity(std::string name);
   EntityPtr findEntity(std::string name);
   void removeEntity(std::string name);
+
+  glm::vec2 getWindowDimension(int windowWidth, int WindowHeight)
+  {
+    return glm::vec2(windowWidth, WindowHeight);
+  }
+
 };
 
