@@ -172,6 +172,17 @@ void Scene::removeEntity(std::string name)
     //look for the first specified entity
     if (ListOfEntities[i]->name == name)
     {
+
+      if (ListOfEntities[i]->get<MeshComponent>() != nullptr)
+      {
+        ListOfEntities[i]->remove<MeshComponent>();
+      }
+
+      if (ListOfEntities[i]->get<LightComponent>() != nullptr)
+      {
+        ListOfEntities[i]->remove<LightComponent>();
+      }
+
       //delete the entity at that location
       delete ListOfEntities[i];
 
