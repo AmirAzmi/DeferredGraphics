@@ -13,12 +13,12 @@ Creation date: January 4th , 2020
 
 #version 430 core
 
-out vec3 color;
+out vec4 color;
 in vec2 texture_coordinates;
 
 uniform sampler2D texture;
 
 void main()
 {
-  color = texture2D(texture, texture_coordinates).xyz;
+  color = vec4(texture2D(texture, texture_coordinates).xyz,1.0f);
 }

@@ -1,15 +1,9 @@
-﻿  DebugRenderingSystem.cpp
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(208,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(269,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(744,68): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(786,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  RenderingSystem.cpp
+﻿  RenderingSystem.cpp
 C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\RenderingSystem.cpp(311,30): warning C4018: '<': signed/unsigned mismatch
-  main.cpp
      Creating library C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.lib and object C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.exp
   Generating code
-  5 of 4078 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+  1 of 4078 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    84 functions had inline decision re-evaluated but remain unchanged
+    86 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Release\DeferredGraphics.exe

@@ -33,8 +33,10 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   colors[ImGuiCol_FrameBgActive] = ImVec4(0.28f, 0.60f, 0.98f, 0.67f);
   colors[ImGuiCol_TitleBg] = ImVec4(0.17f, 0.37f, 0.69f, 1.00f);
   colors[ImGuiCol_TitleBgActive] = ImVec4(0.28f, 0.48f, 0.77f, 1.00f);
-  colors[ImGuiCol_Separator] = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
   colors[ImGuiCol_PopupBg] = ImVec4(0.11f, 0.45f, 0.71f, 0.94f);
+  colors[ImGuiCol_Separator] = ImVec4(1.00f, 1.00f, 1.00f, 0.11f);
+
+
 
   //styling for the editor
   ImGuiStyle& style = ImGui::GetStyle();
@@ -162,10 +164,7 @@ void Editor::preRender(std::string windowName)
     ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
   }
-  else
-  {
-    //ShowDockingDisabledMessage();
-  }
+
   ImGui::End();
 }
 
@@ -529,8 +528,10 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //window settings
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
   ImGui::Begin("Scene");
-  ImGui::GetWindowSize();
+
+  //takes in a texture, window size, and uvs
   ImGui::Image((void*)(intptr_t)(Manager.renderer->FinalColorBufferID), ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
+
   ImGui::End();
   ImGui::PopStyleVar();
 

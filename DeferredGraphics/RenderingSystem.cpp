@@ -57,7 +57,7 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //generate the textures for the position data
   glGenTextures(1, &gPositionID);
   glBindTexture(GL_TEXTURE_2D, gPositionID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPositionID, 0);
@@ -65,7 +65,7 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //generate the textures for the normals
   glGenTextures(1, &gNormalID);
   glBindTexture(GL_TEXTURE_2D, gNormalID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGBA, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormalID, 0);
@@ -112,7 +112,7 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
   //generate the texture for BloomBuffer/ Bright Color values over 190
   glGenTextures(1, &BrightBufferID);
   glBindTexture(GL_TEXTURE_2D, BrightBufferID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
@@ -388,7 +388,7 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
     if (splitScreen == false && brightBuffer == false)
     {
       glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-    }
+    }   
     else if (splitScreen == true)
     {
       glBlitFramebuffer(0, 0, windowWidth, windowHeight, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
@@ -548,6 +548,7 @@ void RenderingSystem::DrawQuad()
 
 void RenderingSystem::DrawTextures(GLuint textureID, unsigned posX, unsigned posY, unsigned windowWidth, unsigned windowHeight)
 {
+  
   glDisable(GL_DEPTH_TEST);
 
   //set the viewport

@@ -27,19 +27,18 @@ class RenderingSystem
 
   //gBuffer ID and FBO ID
   GLuint gBufferFBOID;
+public:
   GLuint gPositionID;
   GLuint gNormalID;
   GLuint gColorSpecID;
+private:
 
   //lighting Pass FBO ID
   GLuint LightingPassFBOID;
+public:
   GLuint BrightBufferID;
-  /**********/
-  //For Now (Note make it not private after)
-  public:
   GLuint ColorBufferID;
-  private:
-  /**********/
+private:
 
   //Bloom FBO ID
   GLuint PingPongFBO[2];
