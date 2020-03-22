@@ -34,6 +34,12 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{7f36a452-468d-4143-88da-2f93b892af9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Debug">
+      <UniqueIdentifier>{fbe23809-6336-43b7-9ec5-95b37d3904ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Debug">
+      <UniqueIdentifier>{df5cf783-827b-45a4-977c-7a05759dd287}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -87,17 +93,17 @@
     <ClCompile Include="DebugRenderingSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RotationBehavior.cpp">
       <Filter>Source Files\Behavior</Filter>
     </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>Source Files\Debug</Filter>
+    </ClCompile>
     <ClCompile Include="BoundingSphere.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="BoundingVolumeHierarchy.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,17 +173,17 @@
     <ClInclude Include="DebugRenderingSystem.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RotationBehavior.h">
       <Filter>Header Files\Behavior</Filter>
     </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="BoundingSphere.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Debug</Filter>
     </ClInclude>
     <ClInclude Include="BoundingVolumeHierarchy.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

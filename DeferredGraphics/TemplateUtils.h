@@ -127,7 +127,7 @@ public:
 
 template<typename... Args>
 using VectorTuple = ContainerTuple<std::vector, Args...>; //make a vector for each of the types
-using ComponentLists = ComponentTypeList::apply<VectorTuple>; //create the component vectors
+using ComponentLists = ComponentTypeList::apply<VectorTuple>; //applies the vector tuple to each template component type
 
 
 //struct that contains the singular type of the pointer

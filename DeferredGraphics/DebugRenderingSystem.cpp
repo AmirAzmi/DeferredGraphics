@@ -105,6 +105,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
     //Breadth first search to draw the AABBs
     //maybe recursive draw call????
+    //to make it more efficient, break out when a node has <2 meshes in it
     int level = 0;
     while (left_tree != nullptr && right_tree != nullptr && level < numberOfLevels)
     {
@@ -797,6 +798,5 @@ void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy * BVH, std::vec
 
 void DebugRenderingSystem::createBVHTreeBottomUp(BoundingVolumeHierarchy* BVH, std::vector<MeshComponentPtr> meshes, int level)
 {
-
 }
 
