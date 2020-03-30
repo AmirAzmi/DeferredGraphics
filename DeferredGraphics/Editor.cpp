@@ -218,8 +218,8 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::TreeNode("Mesh Component"))
         {
-          //add changing of mesh here
-          if (ImGui::BeginCombo("Mesh List", " + Mesh"))
+          //second parameter can be the mesh name if i had a mesh name id 
+          if (ImGui::BeginCombo("Mesh List", mesh_name[i].c_str()))
           {
             for (int i = 0; i < mesh_name.size(); ++i)
             {
@@ -466,14 +466,32 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       {
       }
 
-      if (ImGui::Checkbox("Bounding Volume Hierarchy", &Manager.debugRenderer->isBVHOn))
+      if (ImGui::Checkbox("Square AABB", &Manager.debugRenderer->isSquareAABBOn))
+      {
+      }
+
+      if (ImGui::Checkbox("SubObject AABB", &Manager.debugRenderer->isSubObjectDrawOn))
+      {
+      }
+
+      if (ImGui::Checkbox("Bounding Volume Hierarchy Top Down", &Manager.debugRenderer->isBVHOn))
       {
         Manager.debugRenderer->isAABBOn = true;
       }
 
       if (Manager.debugRenderer->isBVHOn)
       {
-        ImGui::SliderInt("Levels", &Manager.debugRenderer->numberOfLevels, 0, 7);
+        ImGui::SliderInt("Levels: Top Down", &Manager.debugRenderer->numberOfLevels, 0, 7);
+      }
+
+      if (ImGui::Checkbox("Bounding Volume Hierarchy Bottom Up", &Manager.debugRenderer->isBVHBottomUpOn))
+      {
+        Manager.debugRenderer->isAABBOn = true;
+      }
+
+      if (Manager.debugRenderer->isBVHBottomUpOn)
+      {
+        ImGui::SliderInt("Levels: Bottom Up", &Manager.debugRenderer->numberOfLevelsBUOn, 0, 7);
       }
 
       if (ImGui::TreeNode("Bounding Sphere Calculation Types"))

@@ -89,6 +89,16 @@ public:
     }
     return vertices;
   }
+
+  std::vector<glm::vec4> getVec4SubVertices(std::vector<glm::vec3> points)
+  {
+    //convert vertices to vec4
+    for (int i = 0; i < points.size(); ++i)
+    {
+      vertices.push_back(glm::vec4(points[i].x, points[i].y, points[i].z, 1.0f));
+    }
+    return vertices;
+  }
 };
 
 using MeshComponentPtr = MeshComponent*;

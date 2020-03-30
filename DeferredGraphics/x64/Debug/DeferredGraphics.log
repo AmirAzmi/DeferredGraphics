@@ -1,2 +1,6 @@
-﻿  Scene.cpp
+﻿  DebugRenderingSystem.cpp
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(234,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(295,66): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(770,68): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\amira\Documents\GitHub\DeferredGraphics\DeferredGraphics\DebugRenderingSystem.cpp(812,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   DeferredGraphics.vcxproj -> C:\Users\amira\Documents\GitHub\DeferredGraphics\x64\Debug\DeferredGraphics.exe

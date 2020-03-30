@@ -105,6 +105,9 @@
     <ClCompile Include="BoundingVolumeHierarchy.cpp">
       <Filter>Source Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="Octree.cpp">
+      <Filter>Source Files\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h">
@@ -183,6 +186,9 @@
       <Filter>Header Files\Debug</Filter>
     </ClInclude>
     <ClInclude Include="BoundingVolumeHierarchy.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Octree.h">
       <Filter>Header Files\Debug</Filter>
     </ClInclude>
   </ItemGroup>

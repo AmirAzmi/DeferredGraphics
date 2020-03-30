@@ -161,6 +161,7 @@
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Octree.cpp" />
     <ClCompile Include="RotationBehavior.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="Octree.h" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="RotationBehavior.h" />
     <ClInclude Include="Shader.h" />

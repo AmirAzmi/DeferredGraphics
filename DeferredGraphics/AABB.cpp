@@ -13,6 +13,7 @@ glm::vec3 AABB::getCenter()
   return (min + max) / 2.0f;
 }
 
+//dimension
 glm::vec3 AABB::getSize()
 {
   return max - min;
@@ -25,7 +26,50 @@ glm::vec3 AABB::getRadius()
 
 AABB AABB::getBounds()
 {
-  return AABB(min,max);
+  return AABB(min, max);
+}
+
+std::vector<glm::vec3> AABB::isContained(std::vector<glm::vec3> points)
+{
+  std::vector<glm::vec3> contained_points;
+
+  for (auto & point : points)
+  {
+    if (point.x >= min.x && point.x <= max.x)
+    {
+      if (point.y >= min.y && point.y <= max.y)
+      {
+        if (point.z >= min.z && point.z <= max.z)
+        {
+          contained_points.push_back(point);
+        }
+      }
+    }
+  }
+
+  return contained_points;
+}
+
+AABB AABB::getSquareBounds()
+{
+  AABB bounds;
+
+  //get longest side
+  glm::vec3 LongestAxis(max - min);
+
+  //pick a side and get its half vector value
+  float LongestAxisRadius = LongestAxis.x / 2.0f;
+
+  //center + Longest Axis Radius
+  bounds.min.x = getCenter().x - LongestAxisRadius;
+  bounds.min.y = getCenter().y - LongestAxisRadius;
+  bounds.min.z = getCenter().z - LongestAxisRadius;
+
+  bounds.max.x = getCenter().x + LongestAxisRadius;
+  bounds.max.y = getCenter().y + LongestAxisRadius;
+  bounds.max.z = getCenter().z + LongestAxisRadius;
+
+  return bounds;
 }
 
 AABB AABB::combineBounds(AABB a, AABB b)

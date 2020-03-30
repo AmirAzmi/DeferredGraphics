@@ -42,7 +42,10 @@ private:
 
   //Bloom FBO ID
   GLuint PingPongFBO[2];
+
+public:
   GLuint PingPongColorBuffer[2];
+private:
 
   //Final Output FBO ID
   GLuint FinalFBOID;
@@ -51,15 +54,6 @@ public:
 private:
   //GLuint PostProcessingFBOID;
   AABB bounds;
-
-public:
-  float exposure = 1.0f;
-  bool bloom = false;
-  bool gamma = true;
-  bool exposure_tone_mapping = true;
-  bool uncharted_tone_mapping = false;
-
-private:
 
   //depth buffer ID for the gBuffer
   GLuint rboDepthID;
@@ -98,7 +92,12 @@ private:
   } shader_data;
 
 
-public:        
+public:    
+  float exposure = 1.0f;
+  bool bloom = false;
+  bool gamma = true;
+  bool exposure_tone_mapping = true;
+  bool uncharted_tone_mapping = false;
   bool splitScreen = false;
   bool depthCopyToggle = true;
   bool brightBuffer = false;

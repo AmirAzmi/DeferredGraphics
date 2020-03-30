@@ -3,6 +3,7 @@
 #include "AABB.h"
 #include "BoundingSphere.h"
 #include "BoundingVolumeHierarchy.h"
+#include "Octree.h"
 
 
 class DebugRenderingSystem
@@ -2345,6 +2346,10 @@ class DebugRenderingSystem
   BoundingVolumeHierarchy * BVHTree;
   BoundingVolumeHierarchy * BVHTreeBottomUp;
 
+  //octree info
+  Octree* OctreeForAllObjects;
+  Octree* OctreePerObject;
+
   //shader used for rendering the lines
   ShaderHandle debugDrawID;
   ShaderHandle sphereDebugDrawID;
@@ -2357,20 +2362,47 @@ class DebugRenderingSystem
   //check for AABB
   bool isAABBOn = false;
 
+  //check for square AABB
+  bool isSquareAABBOn = false;
+
+  //draw AABB of part of an object
+  bool isSubObjectDrawOn = false;
+  std::vector<glm::vec3> points = { 
+  glm::vec3{.1f,.1f,.1f},
+  glm::vec3{2.0f,2.0f,2.0f},
+  glm::vec3{-2.0f,-2.0f,-2.0f} };
+
   //draw the OBJ Vertices once
   bool isBSOn = false;
 
   //draw BVH
   bool isBVHOn = false;
-  bool isBVHBottomUpOn = false;
   int numberOfLevels = 0;
+  bool isBVHBottomUpOn = false;
+  int numberOfLevelsBUOn = 0;
+
+  //draw Octree for all objects
+  bool isOctreeOnForAllObjects = false;
+  int levelForAllObjects = 0;
+  bool isOctreeOnForSingularObject = false;
+  int levelForOneObject = 0;
 
   BoundingSphere::BoundingSphereCalculationType sphereType = BoundingSphere::BoundingSphereCalculationType::Centroid;
 
-  void drawAABB(MeshComponentPtr mesh, Scene& scene);
+  struct BVH_Dist 
+  {
+    BoundingVolumeHierarchy* parent;
+    float distance;
+  };
+
+  void drawAABB(MeshComponentPtr mesh, Scene& scene, bool isSquareAABB);
+  void drawAABB(std::vector<glm::vec3> points, Scene& scene, bool isSquareAABB);
   void drawAABB(AABB bounds, Scene& scene);
   void drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
   void createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
-  void createBVHTreeBottomUp(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
+  void createOctree(Octree * octree, std::vector<MeshComponentPtr> meshes, int level);
+  void createOctree(Octree * octree, std::vector<glm::vec3> pointsForOneMesh, int level);
+  BoundingVolumeHierarchy* createBVHTreeBottomUp(std::vector<MeshComponentPtr> meshes, int level);
+  BVH_Dist getClosestPair(std::vector<MeshComponentPtr> meshes);
 
 };

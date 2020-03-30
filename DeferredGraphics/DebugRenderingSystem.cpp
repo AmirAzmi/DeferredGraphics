@@ -33,7 +33,26 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
   if (isAABBOn == true)
   {
     debugDrawID->UseShader();
-    std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawAABB(mesh, scene); });
+    std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawAABB(mesh, scene, false); });
+  }
+
+  if (isSquareAABBOn == true)
+  {
+    debugDrawID->UseShader();
+    std::for_each(meshes.begin(), meshes.end(), [&scene, this](MeshComponentPtr mesh) {drawAABB(mesh, scene, true); });
+  }
+
+  if (isSubObjectDrawOn == true)
+  {
+    debugDrawID->UseShader();
+
+    std::vector<glm::vec3> points =
+    {
+      glm::vec3(1,1,1),
+      glm::vec3(0,0,0),
+    };
+
+    drawAABB(points, scene, true);
   }
 
   if (isBSOn == true)
@@ -84,6 +103,8 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
   if (isBVHOn == true)
   {
+    debugDrawID->UseShader();
+
     //create root node Note: REPLACE WITH POOL OR LINEAR ALLOCATOR
     BVHTree = new BoundingVolumeHierarchy(meshes);
 
@@ -96,9 +117,9 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     //creates the BVH tree so right now the root nodes
     createBVHTree(BVHTree, BVHTree->meshes, numberOfLevels);
 
-    //storing the children of the left and rgiht trees
-    BoundingVolumeHierarchy * left_tree = BVHTree->left_child;
-    BoundingVolumeHierarchy * right_tree = BVHTree->right_child;
+    //storing the children of the left and right trees
+    BoundingVolumeHierarchy* left_tree = BVHTree->left_child;
+    BoundingVolumeHierarchy* right_tree = BVHTree->right_child;
 
     //draw bvh root node
     drawAABB(BVHTree->boundingVolume, scene);
@@ -126,12 +147,40 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     delete BVHTree;
   }
 
+  if (isBVHBottomUpOn == true)
+  {
+    debugDrawID->UseShader();
+
+    int level = 7;
+    BoundingVolumeHierarchy* root = createBVHTreeBottomUp(meshes, level);
+
+    //storing the children of the left and rgiht trees
+    BoundingVolumeHierarchy* left_tree = root->left_child;
+    BoundingVolumeHierarchy* right_tree = root->right_child;
+    drawAABB(root->boundingVolume, scene);
+
+    while (left_tree != nullptr && right_tree != nullptr && level < numberOfLevels)
+    {
+      //draw all the left children
+      drawAABB(left_tree->boundingVolume, scene);
+      left_tree = left_tree->left_child;
+
+      //draw all the right children
+      drawAABB(right_tree->boundingVolume, scene);
+      right_tree = right_tree->right_child;
+
+      //increment level counter
+      level--;
+
+    }
+  }
+
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
+void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene, bool isSquareAABB)
 {
-  AABB bounds = mesh->getMeshBounds();
+  AABB bounds;
   bounds.Empty();
 
   std::vector<glm::vec4> ObjectToWorldVertices;
@@ -148,7 +197,88 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene)
     bounds.Add(glm::vec3(ObjectToWorldVertices[i].x, ObjectToWorldVertices[i].y, ObjectToWorldVertices[i].z));
   }
 
-  mesh->bounds = bounds;
+  if (isSquareAABBOn == false)
+  {
+    mesh->bounds = bounds;
+  }
+  else
+  {
+    mesh->bounds = bounds.getSquareBounds();
+  }
+
+  //get min and max
+  glm::vec3 min = mesh->bounds.min;
+  glm::vec3 max = mesh->bounds.max;
+
+  float cubeVertices[] =
+  {
+     max.x, max.y, min.z, //back top right
+     min.x, max.y, min.z, //back top left
+     min.x, min.y, min.z, //back bottom left
+     max.x, min.y, min.z, //back bottom right
+     max.x, max.y, max.z, //front top right
+     min.x, max.y, max.z, //front top left
+     min.x, min.y, max.z, //front bottom left
+     max.x, min.y, max.z  //front bottom right
+  };
+
+  if (boundingBoxVAOID == 0)
+  {
+    //generate the vao for the cube
+    glGenVertexArrays(1, &boundingBoxVAOID);
+
+    //generate the vertex and index buffers for the quad
+    glGenBuffers(1, &boundingBoxVBOID);
+    glGenBuffers(1, &boundingBoxIBOID);
+
+    //bind the VAO for transferring of data to the GPU
+    glBindVertexArray(boundingBoxVAOID);
+
+    //enable position data that will be transferred to the GPU from the quad vertices
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, boundingBoxVBOID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    //enable Index buffer object data that will be transferred to the GPU from the quad vertices
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boundingBoxIBOID);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, cubeIndices.size() * sizeof(glm::uint), cubeIndices.data(), GL_STATIC_DRAW);
+  }
+
+  //bind the buffers the object needs to be used for drawing the cube
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boundingBoxIBOID);
+  glBindBuffer(GL_ARRAY_BUFFER, boundingBoxVBOID);
+
+  //to update the buffer when it is live
+  glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(cubeVertices), &cubeVertices);
+
+  //send the variables "perspective_matrix" and "view matrix" onto the GPU
+  projectionMatrixID = glGetUniformLocation(debugDrawID->getProgramID(), "perspective_matrix");
+  viewMatrixID = glGetUniformLocation(debugDrawID->getProgramID(), "view_matrix");
+
+  //get the projection and view matrix from the scene set it as a variables for the GPU
+  glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
+  glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
+
+  glLineWidth(2);
+  glBindVertexArray(boundingBoxVAOID);
+  glDrawElements(GL_LINES, cubeIndices.size(), GL_UNSIGNED_INT, 0);
+}
+
+void DebugRenderingSystem::drawAABB(std::vector<glm::vec3> points, Scene& scene, bool isSquareAABB)
+{
+  AABB bounds;
+  bounds.Empty();
+
+  for (int i = 0; i < points.size(); ++i)
+  {
+    bounds.Add(points[i]);
+  }
+
+  if (isSquareAABBOn != false)
+  {
+    bounds = bounds.getSquareBounds();
+  }
 
   //get min and max
   glm::vec3 min = bounds.min;
@@ -745,7 +875,7 @@ void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingS
   glDrawElements(GL_LINES, sphereIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
-void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level)
+void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy* BVH, std::vector<MeshComponentPtr> meshes, int level)
 {
   //base case
   if (level < 0)
@@ -796,7 +926,142 @@ void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy * BVH, std::vec
   }
 }
 
-void DebugRenderingSystem::createBVHTreeBottomUp(BoundingVolumeHierarchy* BVH, std::vector<MeshComponentPtr> meshes, int level)
+void DebugRenderingSystem::createOctree(Octree* octree, std::vector<MeshComponentPtr> meshes, int level)
 {
+  //base case
+  if (level < 0)
+  {
+    return;
+  }
+  else
+  {
+    //divide space into 8 children
+
+  }
+}
+
+void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> pointsForOneMesh, int level)
+{
+
+  //base case
+  if (level < 0 || points.size() < 2)
+  {
+    return;
+  }
+  else
+  {
+    glm::vec3 half_vector = octree->boundingVolume.getSize() / 2.0f;
+    glm::vec3 center = octree->boundingVolume.min + half_vector;
+
+    //divide space into 8 children
+    std::array<AABB, 8> boundingBoxes;
+
+    //bottom back left
+    boundingBoxes[0].min = octree->boundingVolume.min;
+    boundingBoxes[0].max = center;
+    octree->children[0]->boundingVolume = boundingBoxes[0];
+
+    //bottom back right
+    boundingBoxes[1].min = glm::vec3(center.x, octree->boundingVolume.min.y , octree->boundingVolume.min.z);
+    boundingBoxes[1].max = glm::vec3(octree->boundingVolume.max.x, center.y, center.z);
+    octree->children[1]->boundingVolume = boundingBoxes[1];
+
+    //bottom front right
+    boundingBoxes[2].min = glm::vec3(center.x, octree->boundingVolume.min.y, center.z);
+    boundingBoxes[2].max = glm::vec3(octree->boundingVolume.max.x, center.y, octree->boundingVolume.max.z);
+    octree->children[2]->boundingVolume = boundingBoxes[2];
+
+    //bottom front left
+    boundingBoxes[3].min = glm::vec3(octree->boundingVolume.min.x, octree->boundingVolume.min.y, center.z);
+    boundingBoxes[3].max = glm::vec3(center.x, center.y, octree->boundingVolume.max.z);
+    octree->children[3]->boundingVolume = boundingBoxes[3];
+
+    //top back left
+    boundingBoxes[4].min = glm::vec3(octree->boundingVolume.min.x, center.y, octree->boundingVolume.min.z);
+    boundingBoxes[4].max = glm::vec3(center.x, octree->boundingVolume.max.y, center.z);
+    octree->children[4]->boundingVolume = boundingBoxes[4];
+
+    //top back right
+    boundingBoxes[5].min = glm::vec3(center.x, center.y, octree->boundingVolume.min.z);
+    boundingBoxes[5].max = glm::vec3(octree->boundingVolume.max.x, octree->boundingVolume.max.y, center.z);
+    octree->children[5]->boundingVolume = boundingBoxes[5];
+
+    //top front right
+    boundingBoxes[6].min = center;
+    boundingBoxes[6].max = octree->boundingVolume.max;
+    octree->children[6]->boundingVolume = boundingBoxes[6];
+
+    //top front left
+    boundingBoxes[7].min = glm::vec3(octree->boundingVolume.min.x, center.y, center.z);
+    boundingBoxes[7].max = glm::vec3(center.x, octree->boundingVolume.max.y, octree->boundingVolume.max.y);
+    octree->children[7]->boundingVolume = boundingBoxes[7];
+
+    //checks if # of points are within the bounds of each child and if they are
+    
+
+    //create the octree of that child else dont draw the octree
+
+  }
+
+}
+
+BoundingVolumeHierarchy* DebugRenderingSystem::createBVHTreeBottomUp(std::vector<MeshComponentPtr> meshes, int level)
+{
+
+  BVH_Dist closest_pair;
+
+  closest_pair = getClosestPair(meshes);
+
+  return closest_pair.parent;
+  //for each level
+    //find the closest neighbor pairs
+    //create a parent from the neighbor pair
+    //remove neighbor from mesh list
+
+  //return root node
+}
+
+DebugRenderingSystem::BVH_Dist DebugRenderingSystem::getClosestPair(std::vector<MeshComponentPtr> meshes)
+{
+  float const epsilon = 0.00016f;
+  float min_distance_from_pair_j_k = INFINITY;
+  std::vector<MeshComponentPtr> mesh_j; //left
+  std::vector<MeshComponentPtr> mesh_k; //right
+
+  //get closest pair
+  for (int j = 0; j < meshes.size(); ++j)
+  {
+    for (int k = 1; k < meshes.size(); ++k)
+    {
+      //dsitance from object 0 to k objects
+      //can do distance squared but you know lets get it to work first
+      float distance = glm::distance(meshes[j]->entity->position, meshes[k]->entity->position);
+
+      if (j != k)
+      {
+        //allow for multiple pairs
+        if (min_distance_from_pair_j_k > distance + epsilon)
+        {
+          min_distance_from_pair_j_k = distance;
+          mesh_j.clear();
+          mesh_k.clear();
+          mesh_j.push_back(meshes[j]);
+          mesh_k.push_back(meshes[k]);
+        }
+      }
+    }
+  }
+
+  std::vector<MeshComponentPtr> meshes_for_parent;
+  meshes_for_parent.push_back(mesh_j[0]);
+  meshes_for_parent.push_back(mesh_k[0]);
+
+  //create parent from closest negihbor
+  BoundingVolumeHierarchy* sub_parent = new BoundingVolumeHierarchy(meshes_for_parent);
+  sub_parent->left_child = sub_parent->left_child->createNode(mesh_j);
+  sub_parent->right_child = sub_parent->right_child->createNode(mesh_k);
+  sub_parent->boundingVolume = sub_parent->calculateBoundingVolume(meshes_for_parent);
+
+  return BVH_Dist{ sub_parent, min_distance_from_pair_j_k };
 }
 

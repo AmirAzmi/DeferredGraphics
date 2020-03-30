@@ -15,12 +15,18 @@ class AABB
   AABB(glm::vec3 min, glm::vec3 max): min(min), max(max)
   {
   }
+
   void Add(const glm::vec3 &point);
   void Empty();
   glm::vec3 getCenter();
   glm::vec3 getSize();
   glm::vec3 getRadius();
   AABB getBounds();
+  std::vector<glm::vec3> isContained(std::vector<glm::vec3> points);
+  AABB getSquareBounds();
+  AABB combineSquareBounds(AABB a, AABB b);
+  AABB combineSquareBounds(std::vector<AABB> bounds);
+
   AABB combineBounds(AABB a, AABB b);
   AABB combineBounds(std::vector<AABB> bounds);
 };

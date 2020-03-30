@@ -1,9 +1,12 @@
 #include "BoundingVolumeHierarchy.h"
 
-BoundingVolumeHierarchy::BoundingVolumeHierarchy(std::vector<MeshComponentPtr> meshes)
+BoundingVolumeHierarchy::BoundingVolumeHierarchy(std::vector<MeshComponentPtr> mesh_lisr)
 {
+  parent = this;
   left_child = nullptr;
   right_child = nullptr;
+  boundingVolume = calculateBoundingVolume(meshes);
+  meshes = mesh_lisr;
 }
 
 AABB BoundingVolumeHierarchy::calculateBoundingVolume(std::vector<MeshComponentPtr> meshes)
@@ -23,8 +26,7 @@ AABB BoundingVolumeHierarchy::calculateBoundingVolume(std::vector<MeshComponentP
 BoundingVolumeHierarchy * BoundingVolumeHierarchy::createNode(std::vector<MeshComponentPtr> meshes)
 {
   BoundingVolumeHierarchy * BVHNode = new BoundingVolumeHierarchy(meshes);
-  BVHNode->left_child = nullptr;
-  BVHNode->right_child = nullptr;
+  BVHNode->parent = BVHNode;
   BVHNode->boundingVolume = BVHNode->calculateBoundingVolume(meshes);
   BVHNode->meshes = meshes;
   return BVHNode;

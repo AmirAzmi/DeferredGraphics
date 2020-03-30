@@ -172,7 +172,7 @@ void Scene::removeEntity(std::string name)
     //look for the first specified entity
     if (ListOfEntities[i]->name == name)
     {
-
+      //ask shareef
       if (ListOfEntities[i]->get<MeshComponent>() != nullptr)
       {
         ListOfEntities[i]->remove<MeshComponent>();

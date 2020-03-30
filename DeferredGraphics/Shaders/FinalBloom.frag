@@ -5,7 +5,7 @@ out vec4 color;
 in vec2 texture_coordinates;
 
 uniform sampler2D ucolor;
-uniform sampler2D BrightColor;
+uniform sampler2D BloomColor;
 uniform float exposure;
 uniform bool bloom;
 uniform bool gamma_correction;
@@ -29,7 +29,7 @@ void main()
 {             
 
   vec3 hdrColor = texture(ucolor, texture_coordinates).rgb;      
-  vec3 bloomColor = texture(BrightColor, texture_coordinates).rgb;
+  vec3 bloomColor = texture(BloomColor, texture_coordinates).rgb;
 
   const float gamma = 2.2f;
   vec3 result = hdrColor;

@@ -1,10 +1,11 @@
 ----------------------------------------------------------------------------
 Bind gBufferFBOID
 
-Bind gBufferShader Shader
+Bind gBufferShader Shader - 3 outputs
 
-Draw each objects geometry
---->this draw fills data in for the textures of the gBufferShader layout locations
+Draw each objects geometry with three outputs
+--->this draw fills data in for the textures of the 
+gBufferShader layout locations
 
                    ****Reallistically End of FBO****
 
@@ -13,14 +14,16 @@ Bind Textures of the gBufferFBOID
 ------>gNormalID
 ------>gColorSpecID
 
-Note: Now the next shader, defferedLightingShader can use the binded textures from above as unniforms
+Note: Now the next shader, defferedLightingShader can 
+use the binded textures from above as unniforms
 ----------------------------------------------------------------------------
 Bind LightingPassFBOID
 
-Bind defferedLightingShader Shader
+Bind defferedLightingShader Shader - 2 outputs
 
-Draw each objects lighting information
---->this draws fills data from the deffered shader, it has 2 outs which fills the data in for the color and bright buffer
+Draw each objects lighting information with two outputs
+--->this draws fills data from the deffered shader, it has 2 
+outs which fills the data in for the color and bright buffer
 
                    ****Reallistically End of FBO****
 
@@ -28,32 +31,71 @@ Bind Textures of LightingPassFBOID
 ------>ColorBufferID
 ------>BrightBufferID
 ----------------------------------------------------------------------------
-Bind colorAndBrightShader Shader
+Bind colorAndBrightShader Shader - 1 output for each FBO
+Note: biding the shader her and not below the FBO is due to 
+the fact that there is a for loop and we are binding two FBOs
+and not one that need to use that shader
 
 Bind PingPoingFBO
 
-Bind Textures - BrightBufferID which was filled in the lightingPassFBO for the first time
-Note: The first binded texture had filled in data from LightingPassFBO
+Bind Textures - BrightBufferID which was filled in the 
+lightingPassFBO for the first time
+Note: The first binded texture had filled in data from
+LightingPassFBO then it is DRAWN which fills in the data
+for the PingPongColorBufferID[0] for framebuffer 1
+then for framebuffer 0, the data for PingPongColorBufferID[1]
+is filled in
 ------>BrightBufferID
 
-Draw the bloom onto the deffered objects
 
-                   ****Reallistically End of FBO****
+Draw the bloom onto the deffered objects with one output
+for each framebuffer therefore both ping pong buffers are
+filled in for the next shaders use
 
 Bind Textures of the PingPongColorBuffer
 ------>PingPongColorBuffer 0
 ------>PingPongColorBuffer 1
+
+                   ****Reallistically End of FBO****
+
 ----------------------------------------------------------------------------
 Bind FinalFBOID
 
-Bind bloomFinalID Shader
+Bind bloomFinalID Shader - 1 output
 
-Bind Textures - ColorBufferID from the LightingPassFBO and PingPoingColorBuffer 0 from PingPoingFBO
+Bind Textures - ColorBufferID from the LightingPassFBO and 
+PingPoingColorBuffer 0 from PingPoingFBO which are used in 
+the final bloom shader for the final texture output
 ------>ColorBufferID
 ------>PingPongColorBuffer 0
 
 Draw the resultant of the ColorBuffer and Bloom
+
+Note:These contents are now stored in the color buffer of the FinalFBOID
+and can now be used as a texture ouput for another shader
+
+Example Code for wanting to use the final output for
+another framebuffer below
+
+//Bind the shader with the filled in data from the draw
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_2D, FinalColorBufferID);
+
+Note: If I want to use the final output for the framebuffer
+I need to use the FBO
+
 Note: There can be binds of textures here
 
                    ****Reallistically End of FBO****
+----------------------------------------------------------------------------
+//create new FBO
+
+//Bind Shader
+
+//Bind Textures needed for Shader
+
+//Draw objects
+
+                   ****Reallistically End of FBO****
+//Bind resultant texture for next FBO uae
 ----------------------------------------------------------------------------

@@ -195,10 +195,7 @@ RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionM
 
   bloomFinalID->UseShader();
   bloomFinalID->setInt("ucolor", 0);
-  bloomFinalID->setInt("BrightColor", 1);
-
-  finalColorID->UseShader();
-  finalColorID->setInt("ucolor", 0);
+  bloomFinalID->setInt("BloomColor", 1);
 }
 
 RenderingSystem::~RenderingSystem()
@@ -298,6 +295,8 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //read the data that was written from drawing the quad and use it as uniforms for the shader
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, ColorBufferID);
+
+  //this binds the bright color values that need to be bloomed
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, BrightBufferID);
 
@@ -347,6 +346,8 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
   //the draw call above filled in the data for the color buffer and the final ping pong buffer
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, ColorBufferID);
+
+  //this binds the bloomed color values
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, PingPongColorBuffer[!horizontal]);
 
@@ -371,6 +372,8 @@ void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
     //that was binded, in this case 3 textures were binded and the last fbo binded was the lighting
     //pass fbo
     glViewport(0, 0, windowWidth, windowHeight);
+
+    //this draw quad and the ones above it contain the collective final image of the bloomed and color textures combined
     DrawQuad();
   }
 
