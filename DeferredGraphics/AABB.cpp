@@ -1,5 +1,26 @@
 #include "AABB.h"
 
+std::vector<glm::vec3> AABB::isContained(const glm::vec3 * points, size_t size, const AABB& boundingVolume)
+{
+  std::vector<glm::vec3> contained_points;
+
+  for (int i = 0; i < size; ++i)
+  {
+    if (points[i].x >= boundingVolume.min.x && points[i].x <= boundingVolume.max.x)
+    {
+      if (points[i].y >= boundingVolume.min.y && points[i].y <= boundingVolume.max.y)
+      {
+        if (points[i].z >= boundingVolume.min.z && points[i].z <= boundingVolume.max.z)
+        {
+          contained_points.push_back(points[i]);
+        }
+      }
+    }
+  }
+
+  return contained_points;
+}
+
 void AABB::Empty()
 {
   //set the min and max to its extreme values and also reset and previous values

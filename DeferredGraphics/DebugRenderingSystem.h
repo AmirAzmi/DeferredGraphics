@@ -2389,7 +2389,7 @@ class DebugRenderingSystem
 
   BoundingSphere::BoundingSphereCalculationType sphereType = BoundingSphere::BoundingSphereCalculationType::Centroid;
 
-  struct BVH_Dist 
+  struct BVHDist 
   {
     BoundingVolumeHierarchy* parent;
     float distance;
@@ -2402,8 +2402,8 @@ class DebugRenderingSystem
   void drawOctree(Octree * root, int level, Scene & scene);
   void createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
   void createOctree(Octree * octree, std::vector<MeshComponentPtr> meshes, int level);
-  void createOctree(Octree * octree, std::vector<glm::vec3> pointsForOneMesh, int level);
+  void createOctree(Octree* octree, const glm::vec3* pointsForOneMesh, size_t size, int level);
   BoundingVolumeHierarchy* createBVHTreeBottomUp(std::vector<MeshComponentPtr> meshes, int level);
-  BVH_Dist getClosestPair(std::vector<MeshComponentPtr> meshes);
+  BVHDist getClosestPair(std::vector<MeshComponentPtr> meshes);
 
 };

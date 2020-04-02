@@ -154,7 +154,8 @@ Mesh::Mesh(std::string filePath)
   }
   else
   {
-  exit(1);
+    std::cout << " failed to load" << filePath << "\n";
+    exit(1);
   }
 
   std::vector<glm::vec2> uploadedUVs;

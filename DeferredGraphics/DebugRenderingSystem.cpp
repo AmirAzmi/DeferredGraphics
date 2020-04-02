@@ -3,32 +3,11 @@
 #include "MeshComponent.h"
 #include "Entity.h"
 
-//This manipulates the total points passed in as well return the set of points of that bounding box
-static std::vector<glm::vec3> isContained(const std::vector<glm::vec3>& points, AABB& boundingVolume)
-{
-  std::vector<glm::vec3> contained_points;
-
-  for (int i = 0; i < points.size(); ++i)
-  {
-    if (points[i].x >= boundingVolume.min.x && points[i].x <= boundingVolume.max.x)
-    {
-      if (points[i].y >= boundingVolume.min.y && points[i].y <= boundingVolume.max.y)
-      {
-        if (points[i].z >= boundingVolume.min.z && points[i].z <= boundingVolume.max.z)
-        {
-          contained_points.push_back(points[i]);
-        }
-      }
-    }
-  }
-
-  return contained_points;
-}
 
 DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
 {
-  debugDrawID = std::make_shared <Shader>("Shaders/debugDraw.vert", "Shaders/debugDraw.frag", false);
-  sphereDebugDrawID = std::make_shared <Shader>("Shaders/sphereDebugDraw.vert", "Shaders/sphereDebugDraw.frag", false);
+  debugDrawID = std::make_shared <Shader>("Resources/Shaders/debugDraw.vert", "Resources/Shaders/debugDraw.frag", false);
+  sphereDebugDrawID = std::make_shared <Shader>("Resources/Shaders/sphereDebugDraw.vert", "Resources/Shaders/sphereDebugDraw.frag", false);
 
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
@@ -67,7 +46,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
     OctreePerObject = new Octree(meshes[0]->getMesh()->getVertices());
     OctreePerObject->boundingVolume = meshes[0]->bounds;
-    createOctree(OctreePerObject, OctreePerObject->points, levelForOneObject);
+    createOctree(OctreePerObject, OctreePerObject->points.data(), OctreePerObject->points.size(), levelForOneObject);
 
     //draw octree bv for one object
     drawOctree(OctreePerObject, levelForOneObject, scene);
@@ -980,10 +959,10 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<MeshComponen
   }
 }
 
-void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> pointsForOneMesh, int level)
+void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3 * pointsForOneMesh, size_t size, int level)
 {
   //base case
-  if (level < 0)
+  if (level < 0 || size < 2)
   {
     return;
   }
@@ -1009,7 +988,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[0].min = octree->boundingVolume.min;
     boundingBoxes[0].max = center;
     AABB boundingVolume0 = boundingBoxes[0];
-    std::vector<glm::vec3> points0 = isContained(pointsForOneMesh, boundingVolume0);
+    std::vector<glm::vec3> points0 = AABB::isContained(pointsForOneMesh, size, boundingVolume0);
 
     //create the node for the first child
     if (points.size() < 2)
@@ -1026,7 +1005,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[1].min = glm::vec3(center.x, octree->boundingVolume.min.y, octree->boundingVolume.min.z);
     boundingBoxes[1].max = glm::vec3(octree->boundingVolume.max.x, center.y, center.z);
     AABB boundingVolume1 = boundingBoxes[1];
-    std::vector<glm::vec3> points1 = isContained(pointsForOneMesh, boundingVolume1);
+    std::vector<glm::vec3> points1 = AABB::isContained(pointsForOneMesh, size, boundingVolume1);
     if (points1.size() < 2)
     {
       octree->children[1] = nullptr;
@@ -1042,7 +1021,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[2].min = glm::vec3(center.x, octree->boundingVolume.min.y, center.z);
     boundingBoxes[2].max = glm::vec3(octree->boundingVolume.max.x, center.y, octree->boundingVolume.max.z);
     AABB boundingVolume2 = boundingBoxes[2];
-    std::vector<glm::vec3> points2 = isContained(pointsForOneMesh, boundingVolume2);
+    std::vector<glm::vec3> points2 = AABB::isContained(pointsForOneMesh, size, boundingVolume2);
     if (points2.size() < 2)
     {
       octree->children[2] = nullptr;
@@ -1058,7 +1037,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[3].min = glm::vec3(octree->boundingVolume.min.x, octree->boundingVolume.min.y, center.z);
     boundingBoxes[3].max = glm::vec3(center.x, center.y, octree->boundingVolume.max.z);
     AABB boundingVolume3 = boundingBoxes[3];
-    std::vector<glm::vec3> points3 = isContained(pointsForOneMesh, boundingVolume3);
+    std::vector<glm::vec3> points3 = AABB::isContained(pointsForOneMesh, size, boundingVolume3);
     if (points3.size() < 2)
     {
       octree->children[3] = nullptr;
@@ -1074,7 +1053,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[4].min = glm::vec3(octree->boundingVolume.min.x, center.y, octree->boundingVolume.min.z);
     boundingBoxes[4].max = glm::vec3(center.x, octree->boundingVolume.max.y, center.z);
     AABB boundingVolume4 = boundingBoxes[4];
-    std::vector<glm::vec3> points4 = isContained(pointsForOneMesh, boundingVolume4);
+    std::vector<glm::vec3> points4 = AABB::isContained(pointsForOneMesh, size, boundingVolume4);
     if (points4.size() < 2)
     {
       octree->children[4] = nullptr;
@@ -1090,7 +1069,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[5].min = glm::vec3(center.x, center.y, octree->boundingVolume.min.z);
     boundingBoxes[5].max = glm::vec3(octree->boundingVolume.max.x, octree->boundingVolume.max.y, center.z);
     AABB boundingVolume5 = boundingBoxes[5];
-    std::vector<glm::vec3> points5 = isContained(pointsForOneMesh, boundingVolume5);
+    std::vector<glm::vec3> points5 = AABB::isContained(pointsForOneMesh, size, boundingVolume5);
     if (points5.size() < 2)
     {
       octree->children[5] = nullptr;
@@ -1106,7 +1085,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[6].min = center;
     boundingBoxes[6].max = octree->boundingVolume.max;
     AABB boundingVolume6 = boundingBoxes[6];
-    std::vector<glm::vec3> points6 = isContained(pointsForOneMesh, boundingVolume6);
+    std::vector<glm::vec3> points6 = AABB::isContained(pointsForOneMesh, size, boundingVolume6);
     if (points6.size() < 2)
     {
       octree->children[6] = nullptr;
@@ -1122,7 +1101,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[7].min = glm::vec3(octree->boundingVolume.min.x, center.y, center.z);
     boundingBoxes[7].max = glm::vec3(center.x, octree->boundingVolume.max.y, octree->boundingVolume.max.z);
     AABB boundingVolume7 = boundingBoxes[7];
-    std::vector<glm::vec3> points7 = isContained(pointsForOneMesh, boundingVolume7);
+    std::vector<glm::vec3> points7 = AABB::isContained(pointsForOneMesh, size, boundingVolume7);
     if (points7.size() < 2)
     {
       octree->children[7] = nullptr;
@@ -1141,10 +1120,9 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     {
       if (octree->children[i] != nullptr)
       {
-        createOctree(octree->children[i], octree->children[i]->points, level - 1);
+        createOctree(octree->children[i], octree->children[i]->points.data(), octree->children[i]->points.size(), level - 1);
       }
     }
-
   }
 
 }
@@ -1152,7 +1130,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
 BoundingVolumeHierarchy* DebugRenderingSystem::createBVHTreeBottomUp(std::vector<MeshComponentPtr> meshes, int level)
 {
 
-  BVH_Dist closest_pair;
+  BVHDist closest_pair;
 
   closest_pair = getClosestPair(meshes);
 
@@ -1165,7 +1143,7 @@ BoundingVolumeHierarchy* DebugRenderingSystem::createBVHTreeBottomUp(std::vector
   //return root node
 }
 
-DebugRenderingSystem::BVH_Dist DebugRenderingSystem::getClosestPair(std::vector<MeshComponentPtr> meshes)
+DebugRenderingSystem::BVHDist DebugRenderingSystem::getClosestPair(std::vector<MeshComponentPtr> meshes)
 {
   float const epsilon = 0.00016f;
   float min_distance_from_pair_j_k = INFINITY;
@@ -1206,7 +1184,7 @@ DebugRenderingSystem::BVH_Dist DebugRenderingSystem::getClosestPair(std::vector<
   sub_parent->right_child = sub_parent->right_child->createNode(mesh_k);
   sub_parent->boundingVolume = sub_parent->calculateBoundingVolume(meshes_for_parent);
 
-  return BVH_Dist{ sub_parent, min_distance_from_pair_j_k };
+  return BVHDist{ sub_parent, min_distance_from_pair_j_k };
 }
 
 

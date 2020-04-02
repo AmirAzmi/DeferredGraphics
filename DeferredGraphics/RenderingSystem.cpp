@@ -20,13 +20,13 @@ Creation date: January 4th , 2020
 RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionMatrixID(-1), viewMatrixID(-1)
 {
   //set the deffered lighting shader that should be used
-  defferedLightingShaderID = std::make_shared<Shader>("Shaders/defferedLightingPass.vert", "Shaders/defferedLightingPass.frag", true);
-  forwardLightingShaderID = std::make_shared<Shader>("Shaders/forwardLightingPass.vert", "Shaders/forwardLightingPass.frag", false);
-  gBufferShaderID = std::make_shared<Shader>("Shaders/gBuffer.vert", "Shaders/gBuffer.frag", true);
-  colorAndBrightShaderID = std::make_shared<Shader>("Shaders/ColorAndBright.vert", "Shaders/ColorAndBright.frag", true);
-  bloomFinalID = std::make_shared<Shader>("Shaders/FinalBloom.vert", "Shaders/FinalBloom.frag", true);
-  splitScreenShaderID = std::make_shared<Shader>("Shaders/gBufferViewer.vert", "Shaders/gBufferViewer.frag", false);
-  finalColorID = std::make_shared<Shader>("Shaders/FinalColorOut.vert", "Shaders/FinalColorOut.frag", false);
+  defferedLightingShaderID = std::make_shared<Shader>("Resources/Shaders/defferedLightingPass.vert", "Resources/Shaders/defferedLightingPass.frag", true);
+  forwardLightingShaderID = std::make_shared<Shader>("Resources/Shaders/forwardLightingPass.vert", "Resources/Shaders/forwardLightingPass.frag", false);
+  gBufferShaderID = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
+  colorAndBrightShaderID = std::make_shared<Shader>("Resources/Shaders/ColorAndBright.vert", "Resources/Shaders/ColorAndBright.frag", true);
+  bloomFinalID = std::make_shared<Shader>("Resources/Shaders/FinalBloom.vert", "Resources/Shaders/FinalBloom.frag", true);
+  splitScreenShaderID = std::make_shared<Shader>("Resources/Shaders/gBufferViewer.vert", "Resources/Shaders/gBufferViewer.frag", false);
+  finalColorID = std::make_shared<Shader>("Resources/Shaders/FinalColorOut.vert", "Resources/Shaders/FinalColorOut.frag", false);
 
   //generate the first ssbo
   glGenBuffers(2, &ssboID[0]);

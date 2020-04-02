@@ -54,9 +54,9 @@ void Scene::Init()
   MeshHandle sphere = std::make_shared<Mesh>("Resources/sphere.obj");
   MeshHandle pitch = std::make_shared<Mesh>("Resources/pitch.obj");
 
-  //declare the shaders that will be used for this scene
-  ShaderHandle gBuffer = std::make_shared<Shader>("Shaders/gBuffer.vert", "Shaders/gBuffer.frag", true);
-  ShaderHandle forwardRenderer = std::make_shared<Shader>("Shaders/forwardLightingPass.vert", "Shaders/forwardLightingPass.frag", false);
+  //declare the Resources/Shaders that will be used for this scene
+  ShaderHandle gBuffer = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
+  ShaderHandle forwardRenderer = std::make_shared<Shader>("Resources/Shaders/forwardLightingPass.vert", "Resources/Shaders/forwardLightingPass.frag", false);
 
   //add a material(s) to the component
   MaterialHandle material = std::make_shared<Material>(gBuffer);

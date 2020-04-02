@@ -16,7 +16,7 @@ public:
   //or a cubic box??? -> we goin for the cubic box
   Octree(AABB boundingBox, std::vector<MeshComponentPtr> meshes);
   Octree(std::vector<glm::vec3> mesh_points);
-  Octree* createOctreeNode(AABB bv, std::vector<glm::vec3> points, Octree * parent);
+  static Octree* createOctreeNode(AABB bv, const std::vector<glm::vec3> & points, Octree * parent);
   ~Octree();
 };
 

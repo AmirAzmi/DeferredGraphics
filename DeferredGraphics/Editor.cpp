@@ -54,12 +54,15 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   //This next set of code is used to generate all mesh handles from the resources 
   //folder for swapping mehes in realtimechecks current path folder which contains the obj files
   std::string res = "Resources";
-  std::string shader_folder = "Shaders";
+  std::string shader_folder = "Resources/Shaders";
 
   //search through the current path within resources
   for (const auto& entry : fs::directory_iterator(res))
   {
-    filenames.push_back(entry.path().string());
+    if (entry.is_regular_file())
+    {
+      filenames.push_back(entry.path().string());
+    }
   }
 
   //gets the file from the filename and stores it into the mesh_names

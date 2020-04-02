@@ -25,4 +25,8 @@ class AABB
   AABB getSquareBounds();
   AABB combineBounds(AABB a, AABB b);
   AABB combineBounds(std::vector<AABB> & bounds);
+
+  //This manipulates the total points passed in as well return the set of points of that bounding box
+  static std::vector<glm::vec3> isContained(const glm::vec3* points, size_t size, const AABB& boundingVolume);
+
 };
