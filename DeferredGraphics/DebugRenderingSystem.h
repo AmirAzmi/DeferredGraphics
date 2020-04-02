@@ -2379,7 +2379,7 @@ class DebugRenderingSystem
   bool isBVHOn = false;
   int numberOfLevels = 0;
   bool isBVHBottomUpOn = false;
-  int numberOfLevelsBUOn = 0;
+  int numberOfLevelsBUOn = 7;
 
   //draw Octree for all objects
   bool isOctreeOnForAllObjects = false;
@@ -2399,6 +2399,7 @@ class DebugRenderingSystem
   void drawAABB(std::vector<glm::vec3> points, Scene& scene, bool isSquareAABB);
   void drawAABB(AABB bounds, Scene& scene);
   void drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
+  void drawOctree(Octree * root, int level, Scene & scene);
   void createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
   void createOctree(Octree * octree, std::vector<MeshComponentPtr> meshes, int level);
   void createOctree(Octree * octree, std::vector<glm::vec3> pointsForOneMesh, int level);

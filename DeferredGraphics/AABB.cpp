@@ -29,19 +29,20 @@ AABB AABB::getBounds()
   return AABB(min, max);
 }
 
-std::vector<glm::vec3> AABB::isContained(std::vector<glm::vec3> points)
+//This manipulates the total points passed in as well return the set of points of that bounding box
+std::vector<glm::vec3> AABB::isContained(std::vector<glm::vec3> & points, AABB boundingVolume)
 {
   std::vector<glm::vec3> contained_points;
 
-  for (auto & point : points)
+  for (int i = 0; i < points.size(); ++i )
   {
-    if (point.x >= min.x && point.x <= max.x)
+    if (points[i].x >= boundingVolume.min.x && points[i].x <= boundingVolume.max.x)
     {
-      if (point.y >= min.y && point.y <= max.y)
+      if (points[i].y >= boundingVolume.min.y && points[i].y <= boundingVolume.max.y)
       {
-        if (point.z >= min.z && point.z <= max.z)
+        if (points[i].z >= boundingVolume.min.z && points[i].z <= boundingVolume.max.z)
         {
-          contained_points.push_back(point);
+          contained_points.push_back(points[i]);
         }
       }
     }

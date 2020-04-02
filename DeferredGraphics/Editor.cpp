@@ -191,6 +191,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     ImGui::PushID(i);
     if (ImGui::CollapsingHeader(scene.getEntities()[i]->name.c_str()))
     {
+      ImGui::Indent();
       if (ImGui::TreeNode("Transform"))
       {
         if (ImGui::DragFloat3("Position:", &scene.getEntities()[i]->position.x, .1f))
@@ -368,12 +369,10 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       {
         scene.removeEntity(scene.getEntities()[i]->name);
       }
-
+      ImGui::Unindent();
     }
-
     ImGui::PopID();
   }
-
   ImGui::End();
 
   //Settings Window
@@ -386,7 +385,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //render settings
   if (ImGui::CollapsingHeader("Renderer Settings"))
   {
-    ImGui::TreePush();
+    ImGui::Indent();
     if (Manager.renderer != nullptr)
     {
       if (ImGui::Checkbox("Depth Toggle", &Manager.renderer->depthCopyToggle))
@@ -451,7 +450,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
 
     }
-    ImGui::TreePop();
+    ImGui::Unindent();
   }
   ImGui::TextWrapped("Split Screen will show you what objects are using deffered rendering versus which objects are not.");
   ImGui::Spacing();
@@ -459,7 +458,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //debug settings
   if (ImGui::CollapsingHeader("Debug Settings"))
   {
-    ImGui::TreePush();
+    ImGui::Indent();
     if (Manager.debugRenderer != nullptr)
     {
       if (ImGui::Checkbox("AABB", &Manager.debugRenderer->isAABBOn))
@@ -470,9 +469,16 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       {
       }
 
-      if (ImGui::Checkbox("SubObject AABB", &Manager.debugRenderer->isSubObjectDrawOn))
+      if (ImGui::Checkbox("Octree For One Object", &Manager.debugRenderer->isSubObjectDrawOn))
       {
+        Manager.debugRenderer->isAABBOn = true;
       }
+
+      if (Manager.debugRenderer->isSubObjectDrawOn)
+      {
+        ImGui::SliderInt("Octree Levels", &Manager.debugRenderer->levelForOneObject, 0, 7);
+      }
+
 
       if (ImGui::Checkbox("Bounding Volume Hierarchy Top Down", &Manager.debugRenderer->isBVHOn))
       {
@@ -532,8 +538,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         Manager.debugRenderer->isBSOn = false;
       }
     }
-
-    ImGui::TreePop();
+    ImGui::Unindent();
   }
 
   ImGui::End();

@@ -15,12 +15,13 @@ public:
   std::vector<MeshComponentPtr> meshes; //each contains its enclosed list of objects
   std::vector<glm::vec3> points;        //specifically for a singular object
   AABB boundingVolume;                  //bouding volume of enclosed meshes
-  std::byte active_children;            //checking which children are "active" aka valid nodes with thier own children
+  unsigned int active_children = 0;     //checking which children are "active" aka valid nodes with thier own children
 
   //takes in a boundingVolume calculate by the meshes total AABB????
   //or a cubic box??? -> we goin for the cubic box
   Octree(AABB boundingBox, std::vector<MeshComponentPtr> meshes);
   Octree(std::vector<glm::vec3> mesh_points);
+  Octree* createOctreeNode(AABB bv, std::vector<glm::vec3> points, Octree * parent);
 };
 
 /*

@@ -25,6 +25,7 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
   {
     //calculate the center
     glm::vec3 center = glm::vec3(0.0f);
+
     for (auto& vertex : vertices)
     {
       center += vertex;
@@ -34,13 +35,16 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
     center = glm::vec3(center.x / size, center.y / size, center.z / size);
 
     //calculate radius
-    for (auto& vertex : vertices)
+    for (int i = 0; i < vertices.size(); ++i)
     {
-      float dist = glm::distance(vertex, center); //calcualte distance between each point
-
-      if (dist > maxmimum_distance_radius)
+      for (int j = 1; j < vertices.size(); ++j)
       {
-        maxmimum_distance_radius = dist;
+        float dist = glm::distance(vertices[i], vertices[j]); //calcualte distance between each point
+
+        if (dist > maxmimum_distance_radius)
+        {
+          maxmimum_distance_radius = dist;
+        }
       }
     }
 
@@ -48,7 +52,7 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
     info.center = center;
 
     //set the radius (note: I only do one sqrt at the very end instead of doing the sqrt in the loop so it isnt to bad here)
-    info.radius = maxmimum_distance_radius;
+    info.radius = maxmimum_distance_radius / 2.0f;
 
     //return the calculated center and radius
     return info;

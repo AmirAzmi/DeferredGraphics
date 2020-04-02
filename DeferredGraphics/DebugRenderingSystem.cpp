@@ -46,13 +46,12 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
   {
     debugDrawID->UseShader();
 
-    std::vector<glm::vec3> points =
-    {
-      glm::vec3(1,1,1),
-      glm::vec3(0,0,0),
-    };
+    OctreePerObject = new Octree(meshes[0]->getMesh()->getVertices());
+    OctreePerObject->boundingVolume = meshes[0]->bounds;
+    createOctree(OctreePerObject, OctreePerObject->points, levelForOneObject);
 
-    drawAABB(points, scene, true);
+    //draw octree bv for one object
+    drawOctree(OctreePerObject, levelForOneObject, scene);
   }
 
   if (isBSOn == true)
@@ -796,7 +795,7 @@ void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingS
       glm::vec3(-0.501543, 0.501543, -0.498457)
     };
 
-    glm::vec3 max(std::numeric_limits<float>::min());//min point
+    /*glm::vec3 max(-INFINITY);//min point
     glm::vec3 min(std::numeric_limits<float>::max());//max point
     glm::vec3 averagePosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
@@ -828,7 +827,7 @@ void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingS
     {
       vert -= averagePosition;
       vert /= rangemax;
-    }
+    }    */
 
     //generate the vao for the cube
     glGenVertexArrays(1, &boundingSphereVAOID);
@@ -852,7 +851,11 @@ void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingS
   }
 
   sphere.info = sphere.calculateBS(type, mesh->getMesh()->getVertices());
-  glm::mat4 ObjectToWorld = glm::translate(sphere.info.center + mesh->getEntityPtr()->position) * glm::scale(glm::vec3(sphere.info.radius) * mesh->getEntityPtr()->scale * 2.15f);
+
+  glm::mat4 ObjectToWorld =
+    glm::translate(sphere.info.center + mesh->getEntityPtr()->position) *
+    glm::scale(glm::vec3(sphere.info.radius) *
+      mesh->getEntityPtr()->scale * 1.0f);
 
   //object to world matrix for a bounding box using the bounding boxes center and size
   SphereObjectToWorld = glGetUniformLocation(sphereDebugDrawID->getProgramID(), "SphereObjectToWorld");
@@ -873,6 +876,24 @@ void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingS
   glLineWidth(2);
   glBindVertexArray(boundingSphereVAOID);
   glDrawElements(GL_LINES, sphereIndices.size(), GL_UNSIGNED_INT, 0);
+}
+
+void DebugRenderingSystem::drawOctree(Octree* child, int level, Scene & scene)
+{
+  if (level < 0)
+  {
+    return;
+  }
+
+  drawAABB(child->boundingVolume, scene);
+
+  for (int i = 0; i < child->children.size(); ++i)
+  {
+    if (child->children[i] != nullptr)
+    {
+      drawOctree(child->children[i], level - 1, scene);
+    }
+  }
 }
 
 void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy* BVH, std::vector<MeshComponentPtr> meshes, int level)
@@ -942,64 +963,168 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<MeshComponen
 
 void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> pointsForOneMesh, int level)
 {
-
   //base case
-  if (level < 0 || points.size() < 2)
+  if (level < 0)
   {
     return;
   }
   else
   {
+    //generate the bounding volume
     glm::vec3 half_vector = octree->boundingVolume.getSize() / 2.0f;
     glm::vec3 center = octree->boundingVolume.min + half_vector;
 
     //divide space into 8 children
     std::array<AABB, 8> boundingBoxes;
 
+
+    //What is set for each children
+    //bounding volume
+    //number of points within bounding volume
+    //constructor of new octree
+    //active children
+    //octree parent
+    //-----------------------------------------------//
+
     //bottom back left
     boundingBoxes[0].min = octree->boundingVolume.min;
     boundingBoxes[0].max = center;
-    octree->children[0]->boundingVolume = boundingBoxes[0];
+    AABB boundingVolume0 = boundingBoxes[0];
+    std::vector<glm::vec3> points0 = octree->children[0]->boundingVolume.isContained(pointsForOneMesh, boundingVolume0);
+
+    //create the node for the first child
+    if (points.size() < 2)
+    {
+      octree->children[0] = nullptr;
+    }
+    else
+    {
+      octree->active_children |= (1 << 0);
+      octree->children[0] = octree->children[0]->createOctreeNode(boundingVolume0, points0, octree);
+    }
 
     //bottom back right
-    boundingBoxes[1].min = glm::vec3(center.x, octree->boundingVolume.min.y , octree->boundingVolume.min.z);
+    boundingBoxes[1].min = glm::vec3(center.x, octree->boundingVolume.min.y, octree->boundingVolume.min.z);
     boundingBoxes[1].max = glm::vec3(octree->boundingVolume.max.x, center.y, center.z);
-    octree->children[1]->boundingVolume = boundingBoxes[1];
+    AABB boundingVolume1 = boundingBoxes[1];
+    std::vector<glm::vec3> points1 = octree->children[1]->boundingVolume.isContained(pointsForOneMesh, boundingVolume1);
+    if (points1.size() < 2)
+    {
+      octree->children[1] = nullptr;
+    }
+    else
+    {
+      octree->active_children |= (1 << 1);
+      //create the node for the second child
+      octree->children[1] = octree->children[1]->createOctreeNode(boundingVolume1, points1, octree);
+    }
 
     //bottom front right
     boundingBoxes[2].min = glm::vec3(center.x, octree->boundingVolume.min.y, center.z);
     boundingBoxes[2].max = glm::vec3(octree->boundingVolume.max.x, center.y, octree->boundingVolume.max.z);
-    octree->children[2]->boundingVolume = boundingBoxes[2];
+    AABB boundingVolume2 = boundingBoxes[2];
+    std::vector<glm::vec3> points2 = octree->children[2]->boundingVolume.isContained(pointsForOneMesh, boundingVolume2);
+    if (points2.size() < 2)
+    {
+      octree->children[2] = nullptr;
+    }
+    else
+    {
+      octree->active_children |= (1 << 2);
+      //create the node for the second child
+      octree->children[2] = octree->children[2]->createOctreeNode(boundingVolume2, points2, octree);
+    }
 
     //bottom front left
     boundingBoxes[3].min = glm::vec3(octree->boundingVolume.min.x, octree->boundingVolume.min.y, center.z);
     boundingBoxes[3].max = glm::vec3(center.x, center.y, octree->boundingVolume.max.z);
-    octree->children[3]->boundingVolume = boundingBoxes[3];
+    AABB boundingVolume3 = boundingBoxes[3];
+    std::vector<glm::vec3> points3 = octree->children[3]->boundingVolume.isContained(pointsForOneMesh, boundingVolume3);
+    if (points3.size() < 2)
+    {
+      octree->children[3] = nullptr;
+    }
+    else
+    {
+      octree->active_children |= (1 << 3);
+      //create the node for the second child
+      octree->children[3] = octree->children[3]->createOctreeNode(boundingVolume3, points3, octree);
+    }
 
     //top back left
     boundingBoxes[4].min = glm::vec3(octree->boundingVolume.min.x, center.y, octree->boundingVolume.min.z);
     boundingBoxes[4].max = glm::vec3(center.x, octree->boundingVolume.max.y, center.z);
-    octree->children[4]->boundingVolume = boundingBoxes[4];
+    AABB boundingVolume4 = boundingBoxes[4];
+    std::vector<glm::vec3> points4 = octree->children[4]->boundingVolume.isContained(pointsForOneMesh, boundingVolume4);
+    if (points4.size() < 2)
+    {
+      octree->children[4] = nullptr;
+    }
+    else
+    {
+      octree->active_children |= (1 << 4);
+      //create the node for the second child
+      octree->children[4] = octree->children[4]->createOctreeNode(boundingVolume4, points4, octree);
+    }
 
     //top back right
     boundingBoxes[5].min = glm::vec3(center.x, center.y, octree->boundingVolume.min.z);
     boundingBoxes[5].max = glm::vec3(octree->boundingVolume.max.x, octree->boundingVolume.max.y, center.z);
-    octree->children[5]->boundingVolume = boundingBoxes[5];
+    AABB boundingVolume5 = boundingBoxes[5];
+    std::vector<glm::vec3> points5 = octree->children[5]->boundingVolume.isContained(pointsForOneMesh, boundingVolume5);
+    if (points5.size() < 2)
+    {
+      octree->children[5] = nullptr;
+    }
+    else
+    {
+      octree->active_children |= (1 << 5);
+      //create the node for the second child
+      octree->children[5] = octree->children[5]->createOctreeNode(boundingVolume5, points5, octree);
+    }
 
     //top front right
     boundingBoxes[6].min = center;
     boundingBoxes[6].max = octree->boundingVolume.max;
-    octree->children[6]->boundingVolume = boundingBoxes[6];
+    AABB boundingVolume6 = boundingBoxes[6];
+    std::vector<glm::vec3> points6 = octree->children[6]->boundingVolume.isContained(pointsForOneMesh, boundingVolume6);
+    if (points6.size() < 2)
+    {
+      octree->children[6] = nullptr;
+    }
+    else
+    {
+      octree->active_children |= (1 << 6);
+      //create the node for the second child
+      octree->children[6] = octree->children[6]->createOctreeNode(boundingVolume6, points6, octree);
+    }
 
     //top front left
     boundingBoxes[7].min = glm::vec3(octree->boundingVolume.min.x, center.y, center.z);
-    boundingBoxes[7].max = glm::vec3(center.x, octree->boundingVolume.max.y, octree->boundingVolume.max.y);
-    octree->children[7]->boundingVolume = boundingBoxes[7];
+    boundingBoxes[7].max = glm::vec3(center.x, octree->boundingVolume.max.y, octree->boundingVolume.max.z);
+    AABB boundingVolume7 = boundingBoxes[7];
+    std::vector<glm::vec3> points7 = octree->children[7]->boundingVolume.isContained(pointsForOneMesh, boundingVolume7);
+    if (points7.size() < 2)
+    {
+      octree->children[7] = nullptr;
+    }
+    else
+    {
+      octree->active_children |= (1 << 7);
+      //create the node for the second child
+      octree->children[7] = octree->children[7]->createOctreeNode(boundingVolume7, points7, octree);
+    }
 
     //checks if # of points are within the bounds of each child and if they are
-    
-
+    //create the node for each child
     //create the octree of that child else dont draw the octree
+    for (int i = 0; i < octree->children.size(); ++i)
+    {
+      if (octree->children[i] != nullptr)
+      {
+        createOctree(octree->children[i], octree->children[i]->points, level - 1);
+      }
+    }
 
   }
 
@@ -1064,4 +1189,6 @@ DebugRenderingSystem::BVH_Dist DebugRenderingSystem::getClosestPair(std::vector<
 
   return BVH_Dist{ sub_parent, min_distance_from_pair_j_k };
 }
+
+
 

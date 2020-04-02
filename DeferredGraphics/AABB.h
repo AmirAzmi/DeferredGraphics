@@ -22,7 +22,7 @@ class AABB
   glm::vec3 getSize();
   glm::vec3 getRadius();
   AABB getBounds();
-  std::vector<glm::vec3> isContained(std::vector<glm::vec3> points);
+  [[nodiscard]] std::vector<glm::vec3> isContained(std::vector<glm::vec3> & points, AABB boundingVolume);
   AABB getSquareBounds();
   AABB combineSquareBounds(AABB a, AABB b);
   AABB combineSquareBounds(std::vector<AABB> bounds);
