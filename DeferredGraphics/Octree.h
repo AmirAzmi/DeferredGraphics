@@ -4,11 +4,6 @@
 #include "MeshComponent.h"
 class Octree
 {
-  enum class Dir
-  {
-
-  };
-
 public:
   Octree* parent;                       //refrence to the parent
   std::array<Octree *, 8> children;     //numbe of children for each node of the octree node
@@ -22,6 +17,7 @@ public:
   Octree(AABB boundingBox, std::vector<MeshComponentPtr> meshes);
   Octree(std::vector<glm::vec3> mesh_points);
   Octree* createOctreeNode(AABB bv, std::vector<glm::vec3> points, Octree * parent);
+  ~Octree();
 };
 
 /*

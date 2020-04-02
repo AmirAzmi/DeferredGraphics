@@ -29,3 +29,11 @@ Octree* Octree::createOctreeNode(AABB bv, std::vector<glm::vec3> points, Octree*
   return octree;
 }
 
+Octree::~Octree()
+{
+  for (int i = 0; i < children.size(); ++i)
+  {
+    delete children[i];
+  }
+}
+

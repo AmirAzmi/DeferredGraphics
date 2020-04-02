@@ -3,6 +3,28 @@
 #include "MeshComponent.h"
 #include "Entity.h"
 
+//This manipulates the total points passed in as well return the set of points of that bounding box
+static std::vector<glm::vec3> isContained(const std::vector<glm::vec3>& points, AABB& boundingVolume)
+{
+  std::vector<glm::vec3> contained_points;
+
+  for (int i = 0; i < points.size(); ++i)
+  {
+    if (points[i].x >= boundingVolume.min.x && points[i].x <= boundingVolume.max.x)
+    {
+      if (points[i].y >= boundingVolume.min.y && points[i].y <= boundingVolume.max.y)
+      {
+        if (points[i].z >= boundingVolume.min.z && points[i].z <= boundingVolume.max.z)
+        {
+          contained_points.push_back(points[i]);
+        }
+      }
+    }
+  }
+
+  return contained_points;
+}
+
 DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
 {
   debugDrawID = std::make_shared <Shader>("Shaders/debugDraw.vert", "Shaders/debugDraw.frag", false);
@@ -25,9 +47,6 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 {
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
-
-  //for each mesh component make it wireframed
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   //aabb Check
   if (isAABBOn == true)
@@ -52,6 +71,8 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
     //draw octree bv for one object
     drawOctree(OctreePerObject, levelForOneObject, scene);
+
+    delete OctreePerObject;
   }
 
   if (isBSOn == true)
@@ -97,8 +118,6 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     }
     }
   }
-
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   if (isBVHOn == true)
   {
@@ -990,7 +1009,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[0].min = octree->boundingVolume.min;
     boundingBoxes[0].max = center;
     AABB boundingVolume0 = boundingBoxes[0];
-    std::vector<glm::vec3> points0 = octree->children[0]->boundingVolume.isContained(pointsForOneMesh, boundingVolume0);
+    std::vector<glm::vec3> points0 = isContained(pointsForOneMesh, boundingVolume0);
 
     //create the node for the first child
     if (points.size() < 2)
@@ -1007,7 +1026,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[1].min = glm::vec3(center.x, octree->boundingVolume.min.y, octree->boundingVolume.min.z);
     boundingBoxes[1].max = glm::vec3(octree->boundingVolume.max.x, center.y, center.z);
     AABB boundingVolume1 = boundingBoxes[1];
-    std::vector<glm::vec3> points1 = octree->children[1]->boundingVolume.isContained(pointsForOneMesh, boundingVolume1);
+    std::vector<glm::vec3> points1 = isContained(pointsForOneMesh, boundingVolume1);
     if (points1.size() < 2)
     {
       octree->children[1] = nullptr;
@@ -1023,7 +1042,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[2].min = glm::vec3(center.x, octree->boundingVolume.min.y, center.z);
     boundingBoxes[2].max = glm::vec3(octree->boundingVolume.max.x, center.y, octree->boundingVolume.max.z);
     AABB boundingVolume2 = boundingBoxes[2];
-    std::vector<glm::vec3> points2 = octree->children[2]->boundingVolume.isContained(pointsForOneMesh, boundingVolume2);
+    std::vector<glm::vec3> points2 = isContained(pointsForOneMesh, boundingVolume2);
     if (points2.size() < 2)
     {
       octree->children[2] = nullptr;
@@ -1039,7 +1058,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[3].min = glm::vec3(octree->boundingVolume.min.x, octree->boundingVolume.min.y, center.z);
     boundingBoxes[3].max = glm::vec3(center.x, center.y, octree->boundingVolume.max.z);
     AABB boundingVolume3 = boundingBoxes[3];
-    std::vector<glm::vec3> points3 = octree->children[3]->boundingVolume.isContained(pointsForOneMesh, boundingVolume3);
+    std::vector<glm::vec3> points3 = isContained(pointsForOneMesh, boundingVolume3);
     if (points3.size() < 2)
     {
       octree->children[3] = nullptr;
@@ -1055,7 +1074,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[4].min = glm::vec3(octree->boundingVolume.min.x, center.y, octree->boundingVolume.min.z);
     boundingBoxes[4].max = glm::vec3(center.x, octree->boundingVolume.max.y, center.z);
     AABB boundingVolume4 = boundingBoxes[4];
-    std::vector<glm::vec3> points4 = octree->children[4]->boundingVolume.isContained(pointsForOneMesh, boundingVolume4);
+    std::vector<glm::vec3> points4 = isContained(pointsForOneMesh, boundingVolume4);
     if (points4.size() < 2)
     {
       octree->children[4] = nullptr;
@@ -1071,7 +1090,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[5].min = glm::vec3(center.x, center.y, octree->boundingVolume.min.z);
     boundingBoxes[5].max = glm::vec3(octree->boundingVolume.max.x, octree->boundingVolume.max.y, center.z);
     AABB boundingVolume5 = boundingBoxes[5];
-    std::vector<glm::vec3> points5 = octree->children[5]->boundingVolume.isContained(pointsForOneMesh, boundingVolume5);
+    std::vector<glm::vec3> points5 = isContained(pointsForOneMesh, boundingVolume5);
     if (points5.size() < 2)
     {
       octree->children[5] = nullptr;
@@ -1087,7 +1106,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[6].min = center;
     boundingBoxes[6].max = octree->boundingVolume.max;
     AABB boundingVolume6 = boundingBoxes[6];
-    std::vector<glm::vec3> points6 = octree->children[6]->boundingVolume.isContained(pointsForOneMesh, boundingVolume6);
+    std::vector<glm::vec3> points6 = isContained(pointsForOneMesh, boundingVolume6);
     if (points6.size() < 2)
     {
       octree->children[6] = nullptr;
@@ -1103,7 +1122,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<glm::vec3> p
     boundingBoxes[7].min = glm::vec3(octree->boundingVolume.min.x, center.y, center.z);
     boundingBoxes[7].max = glm::vec3(center.x, octree->boundingVolume.max.y, octree->boundingVolume.max.z);
     AABB boundingVolume7 = boundingBoxes[7];
-    std::vector<glm::vec3> points7 = octree->children[7]->boundingVolume.isContained(pointsForOneMesh, boundingVolume7);
+    std::vector<glm::vec3> points7 = isContained(pointsForOneMesh, boundingVolume7);
     if (points7.size() < 2)
     {
       octree->children[7] = nullptr;

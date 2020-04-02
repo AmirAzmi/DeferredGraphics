@@ -7,7 +7,6 @@ class BoundingVolumeHierarchy
 public:
   BoundingVolumeHierarchy * left_child;
   BoundingVolumeHierarchy * right_child;
-  BoundingVolumeHierarchy * parent;
   std::vector<MeshComponentPtr> meshes;
   AABB boundingVolume;
 

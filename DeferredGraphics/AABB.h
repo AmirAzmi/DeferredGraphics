@@ -21,12 +21,8 @@ class AABB
   glm::vec3 getCenter();
   glm::vec3 getSize();
   glm::vec3 getRadius();
-  AABB getBounds();
-  [[nodiscard]] std::vector<glm::vec3> isContained(std::vector<glm::vec3> & points, AABB boundingVolume);
-  AABB getSquareBounds();
-  AABB combineSquareBounds(AABB a, AABB b);
-  AABB combineSquareBounds(std::vector<AABB> bounds);
 
+  AABB getSquareBounds();
   AABB combineBounds(AABB a, AABB b);
-  AABB combineBounds(std::vector<AABB> bounds);
+  AABB combineBounds(std::vector<AABB> & bounds);
 };
