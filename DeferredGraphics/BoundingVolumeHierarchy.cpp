@@ -1,6 +1,6 @@
 #include "BoundingVolumeHierarchy.h"
 
-static AABB combineBounds(std::vector<AABB>& bounds)
+static AABB combineBounds(const std::vector<AABB>& bounds)
 {
   AABB totalBounds;
   totalBounds.Empty();

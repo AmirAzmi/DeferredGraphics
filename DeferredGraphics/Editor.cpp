@@ -229,7 +229,8 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
             {
               if (ImGui::Selectable(mesh_name[i].c_str()))
               {
-                meshComponent->mesh = mesh_handles[i];            
+                meshComponent->mesh = mesh_handles[i];               
+                meshComponent->vertices = meshComponent->getVec4Vertices();
               }
             }
 

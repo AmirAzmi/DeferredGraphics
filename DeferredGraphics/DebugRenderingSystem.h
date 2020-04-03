@@ -2396,7 +2396,6 @@ class DebugRenderingSystem
   };
 
   void drawAABB(MeshComponentPtr mesh, Scene& scene, bool isSquareAABB);
-  void drawAABB(std::vector<glm::vec3> points, Scene& scene, bool isSquareAABB);
   void drawAABB(AABB bounds, Scene& scene);
   void drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
   void drawOctree(Octree * root, int level, Scene & scene);

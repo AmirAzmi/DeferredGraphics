@@ -1,6 +1,7 @@
 #include "AABB.h"
+#include <algorithm>
 
-std::vector<glm::vec3> AABB::isContained(const glm::vec3 * points, size_t size, const AABB& boundingVolume)
+std::vector<glm::vec3> AABB::isContained(const glm::vec3* points, size_t size, const AABB& boundingVolume)
 {
   std::vector<glm::vec3> contained_points;
 
@@ -53,16 +54,16 @@ AABB AABB::getSquareBounds()
   glm::vec3 LongestAxis(max - min);
 
   //pick a side and get its half vector value
-  float LongestAxisRadius = LongestAxis.x * .5f;
+  float LongestAxisHalf = std::max(std::max(LongestAxis.x, LongestAxis.y), LongestAxis.z) * .5f;
 
   //center + Longest Axis Radius
-  bounds.min.x = getCenter().x - LongestAxisRadius;
-  bounds.min.y = getCenter().y - LongestAxisRadius;
-  bounds.min.z = getCenter().z - LongestAxisRadius;
-
-  bounds.max.x = getCenter().x + LongestAxisRadius;
-  bounds.max.y = getCenter().y + LongestAxisRadius;
-  bounds.max.z = getCenter().z + LongestAxisRadius;
+  bounds.min.x = getCenter().x - LongestAxisHalf;
+  bounds.min.y = getCenter().y - LongestAxisHalf;
+  bounds.min.z = getCenter().z - LongestAxisHalf;
+                                 
+  bounds.max.x = getCenter().x + LongestAxisHalf;
+  bounds.max.y = getCenter().y + LongestAxisHalf;
+  bounds.max.z = getCenter().z + LongestAxisHalf;
 
   return bounds;
 }
@@ -95,3 +96,6 @@ void AABB::Add(const glm::vec3& point)
     max.z = point.z;
   }
 }
+
+
+

@@ -82,6 +82,7 @@ public:
 
   std::vector<glm::vec4> getVec4Vertices()
   {
+    vertices.clear();
     //convert vertices to vec4
     for (int i = 0; i < this->getMesh()->getVertices().size(); ++i)
     {
