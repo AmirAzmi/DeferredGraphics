@@ -186,7 +186,6 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene, bool is
   glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
 
   //get the world vertices and create an AABB on the go
- // mesh->vertices.resize(mesh->getMesh()->getVertices().size());
   for (int i = 0; i < mesh->vertices.size(); ++i)
   {
     //get vec4 vertices from the mesh component and multiply them by object to woerk to get object to world verices
@@ -194,6 +193,7 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene, bool is
     bounds.Add(glm::vec3(ObjectToWorldVertices[i].x, ObjectToWorldVertices[i].y, ObjectToWorldVertices[i].z));
   }
 
+  //regular aabb
   if (isSquareAABBOn == false)
   {
     mesh->bounds = bounds;
@@ -876,7 +876,7 @@ void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingS
   glDrawElements(GL_LINES, sphereIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
-void DebugRenderingSystem::drawOctree(Octree* child, int level, Scene & scene)
+void DebugRenderingSystem::drawOctree(Octree* child, int level, Scene& scene)
 {
   if (level < 0)
   {
@@ -959,7 +959,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<MeshComponen
   }
 }
 
-void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3 * pointsForOneMesh, size_t size, int level)
+void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsForOneMesh, size_t size, int level)
 {
   //base case
   if (level < 0 || size < 2)

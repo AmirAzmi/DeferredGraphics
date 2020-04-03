@@ -33,8 +33,8 @@ public:
 
   MeshComponent()
   {
-    mesh = std::make_shared<Mesh>("Resources//sphere.obj");
-    shader = std::make_shared<Shader>("Shaders/gBuffer.vert", "Shaders/gBuffer.frag", true);
+    mesh = std::make_shared<Mesh>("Resources/sphere.obj");
+    shader = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
     material = std::make_shared<Material>(shader);
     material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
     material->setFloat("specular_intensity", 1.0f);
@@ -87,16 +87,7 @@ public:
     {
       vertices.push_back(glm::vec4(getMesh()->getVertices()[i].x, getMesh()->getVertices()[i].y, getMesh()->getVertices()[i].z, 1.0f));
     }
-    return vertices;
-  }
 
-  std::vector<glm::vec4> getVec4SubVertices(std::vector<glm::vec3> points)
-  {
-    //convert vertices to vec4
-    for (int i = 0; i < points.size(); ++i)
-    {
-      vertices.push_back(glm::vec4(points[i].x, points[i].y, points[i].z, 1.0f));
-    }
     return vertices;
   }
 };

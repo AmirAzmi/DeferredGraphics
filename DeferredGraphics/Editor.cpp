@@ -223,13 +223,13 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         if (ImGui::TreeNode("Mesh Component"))
         {
           //second parameter can be the mesh name if i had a mesh name id 
-          if (ImGui::BeginCombo("Mesh List", mesh_name[i].c_str()))
+          if (ImGui::BeginCombo("Mesh List", " + Mesh"))
           {
             for (int i = 0; i < mesh_name.size(); ++i)
             {
               if (ImGui::Selectable(mesh_name[i].c_str()))
               {
-                meshComponent->mesh = mesh_handles[i];
+                meshComponent->mesh = mesh_handles[i];            
               }
             }
 
