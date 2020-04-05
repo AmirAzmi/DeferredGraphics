@@ -42,8 +42,11 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
   if (isSubObjectDrawOn == true)
   {
+    //set the shader to use for coloring the octree
     debugDrawID->UseShader();
+    debugDrawID->setBool("octree", isSubObjectDrawOn);
 
+    //create octree for the center object, currently hard coded, planned to be for any object
     OctreePerObject = new Octree(meshes[0]->getMesh()->getVertices());
     OctreePerObject->boundingVolume = meshes[0]->bounds;
     createOctree(OctreePerObject, OctreePerObject->points.data(), OctreePerObject->points.size(), levelForOneObject);
@@ -804,11 +807,13 @@ void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingS
 
 void DebugRenderingSystem::drawOctree(Octree* child, int level, Scene& scene)
 {
+
   if (level < 0)
   {
     return;
   }
 
+  debugDrawID->setFloat("level", level);
   drawAABB(child->boundingVolume, scene);
 
   for (int i = 0; i < child->children.size(); ++i)
@@ -917,7 +922,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     std::vector<glm::vec3> points0 = AABB::isContained(pointsForOneMesh, size, boundingVolume0);
 
     //create the node for the first child
-    if (points.size() < 2)
+    if (points0.size() < 2)
     {
       octree->children[0] = nullptr;
     }

@@ -154,6 +154,7 @@
     <ClCompile Include="Behavior.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
+    <ClCompile Include="BSP.cpp" />
     <ClCompile Include="DebugRenderingSystem.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="BoundingVolumeHierarchy.h" />
+    <ClInclude Include="BSP.h" />
     <ClInclude Include="DebugRenderingSystem.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EngineTypes.h" />
@@ -203,27 +205,27 @@
     <ClInclude Include="TemplateUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\ColorAndBright.frag" />
-    <None Include="Shaders\ColorAndBright.vert" />
-    <None Include="Shaders\debugDraw.frag" />
-    <None Include="Shaders\debugDraw.vert" />
-    <None Include="Shaders\defferedLightingPass.frag" />
-    <None Include="Shaders\defferedLightingPass.vert" />
-    <None Include="Shaders\FinalBloom.frag" />
-    <None Include="Shaders\FinalBloom.vert" />
-    <None Include="Shaders\FinalColorOut.frag" />
-    <None Include="Shaders\FinalColorOut.vert" />
-    <None Include="Shaders\forwardLightingPass.frag" />
-    <None Include="Shaders\forwardLightingPass.vert" />
-    <None Include="Shaders\gBuffer.frag" />
-    <None Include="Shaders\gBuffer.vert" />
-    <None Include="Shaders\gBufferViewer.frag" />
-    <None Include="Shaders\gBufferViewer.vert" />
-    <None Include="Shaders\sphereDebugDraw.frag" />
-    <None Include="Shaders\sphereDebugDraw.vert" />
+    <Text Include="Framebuffers.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Framebuffers.txt" />
+    <None Include="..\Resources\Shaders\ColorAndBright.frag" />
+    <None Include="..\Resources\Shaders\ColorAndBright.vert" />
+    <None Include="..\Resources\Shaders\debugDraw.frag" />
+    <None Include="..\Resources\Shaders\debugDraw.vert" />
+    <None Include="..\Resources\Shaders\defferedLightingPass.frag" />
+    <None Include="..\Resources\Shaders\defferedLightingPass.vert" />
+    <None Include="..\Resources\Shaders\FinalBloom.frag" />
+    <None Include="..\Resources\Shaders\FinalBloom.vert" />
+    <None Include="..\Resources\Shaders\FinalColorOut.frag" />
+    <None Include="..\Resources\Shaders\FinalColorOut.vert" />
+    <None Include="..\Resources\Shaders\forwardLightingPass.frag" />
+    <None Include="..\Resources\Shaders\forwardLightingPass.vert" />
+    <None Include="..\Resources\Shaders\gBuffer.frag" />
+    <None Include="..\Resources\Shaders\gBuffer.vert" />
+    <None Include="..\Resources\Shaders\gBufferViewer.frag" />
+    <None Include="..\Resources\Shaders\gBufferViewer.vert" />
+    <None Include="..\Resources\Shaders\sphereDebugDraw.frag" />
+    <None Include="..\Resources\Shaders\sphereDebugDraw.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

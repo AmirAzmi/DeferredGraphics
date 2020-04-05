@@ -13,8 +13,59 @@ Creation date: January 4th , 2020
 #version 440 core
 
 out vec4 color;
+uniform float level;
+uniform bool octree;
+
+vec4 setColor(float color_value)
+{
+  if(color_value == 0)
+  {
+    return vec4(0.0, 0.0, 0.0, 1.0);
+  }
+
+   if(color_value == 1)
+  {
+    return vec4(1.0, 1.0, 1.0, 1.0);
+  }
+
+  if(color_value == 2)
+  {
+     return vec4(1.0, 0.0, 0.0, 1.0);
+  }
+
+  if(color_value == 3)
+  {
+     return vec4(0.0, 1.0, 0.0, 1.0);
+  }
+
+  if(color_value == 4)
+  {
+     return vec4(0.0, 0.0, 1.0, 1.0);
+  }
+
+  if(color_value == 5)
+  {
+     return vec4(1.0, 1.0, 0.0, 1.0);
+  }
+
+  if(color_value == 6)
+  {
+     return vec4(1.0, 0.0, 1.0, 1.0);
+  }
+
+  if(color_value == 7)
+  {
+     return vec4(0.0, 0.0, 1.0, 1.0);
+  }
+}
 
 void main()
 {
-  color = vec4(0.0, 0.0, 0.0, 1.0); 
+  if(octree == true)
+  {
+    color = setColor(level); 
+  }else
+  {
+    color = vec4(0.0f,0.0f,0.0f,1.0f);
+  }
 }

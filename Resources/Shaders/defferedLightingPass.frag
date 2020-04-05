@@ -23,10 +23,6 @@ uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
 
 uniform vec3 view_position;
-/*uniform float exposure;
-uniform bool gamma_correction;
-uniform bool exposure_tone_mapping;
-uniform bool uncharted_tone_mapping;*/
 
 struct Light
 {

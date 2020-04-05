@@ -8,15 +8,15 @@ public:
   Octree* parent;                       //refrence to the parent
   std::array<Octree *, 8> children;     //numbe of children for each node of the octree node
   std::vector<MeshComponentPtr> meshes; //each contains its enclosed list of objects
-  std::vector<glm::vec3> points;        //specifically for a singular object
+  std::vector<glm::vec3> points;        //specifically for a singular object -> extent + size
   AABB boundingVolume;                  //bouding volume of enclosed meshes
   unsigned int active_children = 0;     //checking which children are "active" aka valid nodes with thier own children
 
   //takes in a boundingVolume calculate by the meshes total AABB????
   //or a cubic box??? -> we goin for the cubic box
-  Octree(AABB boundingBox, std::vector<MeshComponentPtr> meshes);
-  Octree(std::vector<glm::vec3> mesh_points);
-  static Octree* createOctreeNode(AABB bv, const std::vector<glm::vec3> & points, Octree * parent);
+  Octree(const AABB boundingBox, const std::vector<MeshComponentPtr> meshes);
+  Octree(const std::vector<glm::vec3> mesh_points); //switch to pointer + extent
+  static Octree* createOctreeNode(const AABB bv, const std::vector<glm::vec3> & points, Octree * parent);
   ~Octree();
 };
 
@@ -35,8 +35,8 @@ or create some cube of the octree
 answer for this project: I am thinking we can use the total AABB space of all objects in the scene as the octree size
 
 How do we want to create the enclosing region for our octree?
-Do we want to use a preset dimension, such as a 200x400x200 (X,Y,Z) rectangle? 
-Or do we want to use a cubic dimension which is a power of 2? 
+Do we want to use a preset dimension, such as a 200x400x200 (X,Y,Z) rectangle? I guess the preset is the bounds itself but currently no static cpreset
+Or do we want to use a cubic dimension which is a power of 2?  I also did this
 
 //I don't know
 What should be the smallest allowable enclosing region which cannot be subdivided?

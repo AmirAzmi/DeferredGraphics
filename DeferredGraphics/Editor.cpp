@@ -473,7 +473,8 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       {
       }
 
-      if (ImGui::Checkbox("Octree For One Object", &Manager.debugRenderer->isSubObjectDrawOn))
+      ImGui::TextWrapped("Levels are color coded where the deepest level is always the level color. Lowest level color is: Black");
+      if (ImGui::Checkbox("Octree For Center Object", &Manager.debugRenderer->isSubObjectDrawOn))
       {
         Manager.debugRenderer->isAABBOn = true;
       }

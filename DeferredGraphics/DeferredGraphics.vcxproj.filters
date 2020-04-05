@@ -28,9 +28,6 @@
     <Filter Include="Source Files\Behavior">
       <UniqueIdentifier>{94a839df-c26b-4763-8828-2de5931541b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Shaders">
-      <UniqueIdentifier>{7f36a452-468d-4143-88da-2f93b892af9f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Debug">
       <UniqueIdentifier>{fbe23809-6336-43b7-9ec5-95b37d3904ed}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,9 @@
     </Filter>
     <Filter Include="Source Files\ImGui">
       <UniqueIdentifier>{9195f1e4-3560-4bf2-866d-6d63b382b69c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{84545b5e-f2bd-4e1e-aa56-a080bd43b9ac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="External\Imgui\imgui_widgets.cpp">
       <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="BSP.cpp">
+      <Filter>Source Files\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -191,66 +194,69 @@
     <ClInclude Include="External\Imgui\imstb_truetype.h">
       <Filter>Source Files\ImGui</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\debugDraw.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\debugDraw.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\forwardLightingPass.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\forwardLightingPass.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\gBuffer.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\gBuffer.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\gBufferViewer.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\gBufferViewer.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\defferedLightingPass.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\defferedLightingPass.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\ColorAndBright.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\ColorAndBright.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\FinalBloom.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\FinalBloom.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\FinalColorOut.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\FinalColorOut.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\sphereDebugDraw.frag">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\sphereDebugDraw.vert">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
+    <ClInclude Include="BSP.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Framebuffers.txt">
       <Filter>Source Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\Shaders\ColorAndBright.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\ColorAndBright.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\debugDraw.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\debugDraw.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\defferedLightingPass.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\defferedLightingPass.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\FinalBloom.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\FinalBloom.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\FinalColorOut.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\FinalColorOut.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\forwardLightingPass.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\forwardLightingPass.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\gBuffer.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\gBuffer.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\gBufferViewer.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\gBufferViewer.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\sphereDebugDraw.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\sphereDebugDraw.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #include "BoundingSphere.h"
 #include "BoundingVolumeHierarchy.h"
 #include "Octree.h"
+#include "BSP.h"
 
 
 class DebugRenderingSystem
@@ -2350,6 +2351,9 @@ class DebugRenderingSystem
   Octree* OctreeForAllObjects;
   Octree* OctreePerObject;
 
+  //create BSP
+  BSP* BSPTree;
+
   //shader used for rendering the lines
   ShaderHandle debugDrawID;
   ShaderHandle sphereDebugDrawID;
@@ -2367,10 +2371,6 @@ class DebugRenderingSystem
 
   //draw AABB of part of an object
   bool isSubObjectDrawOn = false;
-  std::vector<glm::vec3> points = { 
-  glm::vec3{.1f,.1f,.1f},
-  glm::vec3{2.0f,2.0f,2.0f},
-  glm::vec3{-2.0f,-2.0f,-2.0f} };
 
   //draw the OBJ Vertices once
   bool isBSOn = false;
@@ -2386,6 +2386,10 @@ class DebugRenderingSystem
   int levelForAllObjects = 0;
   bool isOctreeOnForSingularObject = false;
   int levelForOneObject = 0;
+
+  //draw BSP
+  bool isBSPOn = false;
+  int levelForBSP = 0;
 
   BoundingSphere::BoundingSphereCalculationType sphereType = BoundingSphere::BoundingSphereCalculationType::Centroid;
 
