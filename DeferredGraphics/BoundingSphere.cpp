@@ -189,7 +189,7 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
 
   case BoundingSphereCalculationType::PCA:
   {
-
+    assert(0 && "Unimplemented");
     return info;
   }
 

@@ -44,13 +44,13 @@ public:
 private:
   Mesh();
 
-  glm::vec3 getValuesInBetweenWhiteSpacesVec3(std::string line);
-  glm::vec2 getValuesInBetweenWhiteSpacesVec2(std::string line);
-  Face getFaceData(std::string line);
+  static glm::vec3 getValuesInBetweenWhiteSpacesVec3(const std::string line);
+  static glm::vec2 getValuesInBetweenWhiteSpacesVec2(const std::string line);
+  static Face getFaceData(const std::string line);
 
 public:
 
-  Mesh(std::string filePath);
+  Mesh(const std::string filePath);
   Mesh(float radius, int latitudeSlices, int longitudeSlices);
   GLuint getPosVBO();
   GLuint getNormsVBO();
@@ -58,9 +58,9 @@ public:
   GLuint getVAO();
   GLuint getUVBO();
 
-  std::vector<GLuint> getIndices();
-  std::vector<glm::vec3> getVertices();
-  std::vector<glm::vec3> getNormals();
+ const std::vector<GLuint> getIndices();
+ const std::vector<glm::vec3> getVertices();
+ const std::vector<glm::vec3> getNormals();
 
 };
 

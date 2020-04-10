@@ -30,23 +30,23 @@ void AABB::Empty()
 }
 
 //gets the center of the AABB
-glm::vec3 AABB::getCenter()
+const glm::vec3 AABB::getCenter()
 {
   return (min + max) * .5f;
 }
 
 //dimension
-glm::vec3 AABB::getSize()
+const glm::vec3 AABB::getSize()
 {
   return max - min;
 }
 
-glm::vec3 AABB::getRadius()
+const glm::vec3 AABB::getRadius()
 {
   return max - getCenter();
 }
 
-AABB AABB::getSquareBounds()
+const AABB AABB::getSquareBounds()
 {
   AABB bounds;
 

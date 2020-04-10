@@ -17,7 +17,7 @@ Creation date: January 4th , 2020
 #include "EngineTypes.h"
 #include "Entity.h"
 
-RenderingSystem::RenderingSystem(int windowWidth, int windowHeight) :projectionMatrixID(-1), viewMatrixID(-1)
+RenderingSystem::RenderingSystem(const int windowWidth, const int windowHeight) :projectionMatrixID(-1), viewMatrixID(-1)
 {
   //set the deffered lighting shader that should be used
   defferedLightingShaderID = std::make_shared<Shader>("Resources/Shaders/defferedLightingPass.vert", "Resources/Shaders/defferedLightingPass.frag", true);
@@ -211,7 +211,7 @@ RenderingSystem::~RenderingSystem()
 }
 
 //update the mesh components of the entities
-void RenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
+void RenderingSystem::Update(Scene& scene, const int windowWidth, const int windowHeight)
 {
   glDepthFunc(GL_LEQUAL);
   //gets all the current mesh components in th scene
@@ -493,7 +493,7 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
     glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
 
     //draw the objects with the mesh components
-    glDrawElements(mesh->getDrawMode(), (GLsizei)mesh->getMesh()->getIndices().size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, (GLsizei)mesh->getMesh()->getIndices().size(), GL_UNSIGNED_INT, 0);
   }
 }
 
@@ -549,7 +549,7 @@ void RenderingSystem::DrawQuad()
   glBindVertexArray(0);
 }
 
-void RenderingSystem::DrawTextures(GLuint textureID, unsigned posX, unsigned posY, unsigned windowWidth, unsigned windowHeight)
+void RenderingSystem::DrawTextures(GLuint textureID, const unsigned posX, const unsigned posY, const unsigned windowWidth, const unsigned windowHeight)
 {
   
   glDisable(GL_DEPTH_TEST);

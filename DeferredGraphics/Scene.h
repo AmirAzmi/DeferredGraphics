@@ -41,14 +41,14 @@ public:
   float positionUpdate = 0.0f;
 
   Scene(int windowWidth, int windowHeight);
-  glm::mat4 getProjectionMatrix();
-  glm::mat4 getViewMatrix();
-  glm::vec3 getEyePosition();
-  glm::vec3 getCameraDirection();
-  glm::vec3 getUpDirection();
-  float getNearDistance();
-  float getFarDistance();
-  float getFOV();
+  const glm::mat4 getProjectionMatrix();
+  const glm::mat4 getViewMatrix();
+  const glm::vec3 getEyePosition();
+  const glm::vec3 getCameraDirection();
+  const glm::vec3 getUpDirection();
+  const float getNearDistance();
+  const float getFarDistance();
+  const float getFOV();
   std::vector<EntityPtr>& getEntities();
   std::vector<MeshComponentPtr>& getMeshes();
   std::vector<LightComponentPtr>& getLights();

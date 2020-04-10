@@ -65,7 +65,7 @@ private:
 template<typename T, typename ...Ts>
 inline T* Entity::add(Ts&&... args)
 {
-  //allocate the component
+  //allocate the component with the arguments necessary from std::forward
   T* component = new T(std::forward<Ts>(args)...);
 
   //adds componentptr to list of component pointers by getting the component pointer from the component

@@ -33,6 +33,7 @@ public:
   std::vector<MeshHandle> mesh_handles;
   std::vector<std::string> shader_name;
   std::vector<ShaderHandle> shader_handles;
+
   void init(GLFWwindow* window, const char* glslVersion);
   void preRender(std::string windowName);
   void Render(Scene & scene, SystemManager& Manager);

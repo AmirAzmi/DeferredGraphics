@@ -195,42 +195,42 @@ void Scene::removeEntity(std::string name)
   }
 }
 
-glm::mat4 Scene::getProjectionMatrix()
+const glm::mat4 Scene::getProjectionMatrix()
 {
   return projectionMatrix;
 }
 
-glm::mat4 Scene::getViewMatrix()
+const glm::mat4 Scene::getViewMatrix()
 {
   return viewMatrix;
 }
 
-glm::vec3 Scene::getEyePosition()
+const glm::vec3 Scene::getEyePosition()
 {
   return eyePosition;
 }
 
-glm::vec3 Scene::getCameraDirection()
+const glm::vec3 Scene::getCameraDirection()
 {
   return cameraDirection;
 }
 
-glm::vec3 Scene::getUpDirection()
+const glm::vec3 Scene::getUpDirection()
 {
   return upDirection;
 }
 
-float Scene::getNearDistance()
+const float Scene::getNearDistance()
 {
   return nearDistance;
 }
 
-float Scene::getFarDistance()
+const float Scene::getFarDistance()
 {
   return farDistance;
 }
 
-float Scene::getFOV()
+const float Scene::getFOV()
 {
   return fov;
 }

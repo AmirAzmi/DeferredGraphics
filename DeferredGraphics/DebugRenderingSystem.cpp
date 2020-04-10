@@ -178,7 +178,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene, bool isSquareAABB)
+void DebugRenderingSystem::drawAABB(const MeshComponentPtr mesh, Scene& scene, bool isSquareAABB)
 {
   AABB bounds;
   bounds.Empty();
@@ -265,7 +265,7 @@ void DebugRenderingSystem::drawAABB(MeshComponentPtr mesh, Scene& scene, bool is
   glDrawElements(GL_LINES, cubeIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
-void DebugRenderingSystem::drawAABB(AABB bounds, Scene& scene)
+void DebugRenderingSystem::drawAABB(const AABB bounds, Scene& scene)
 {
   //get min and max
   glm::vec3 min = bounds.min;
@@ -327,7 +327,7 @@ void DebugRenderingSystem::drawAABB(AABB bounds, Scene& scene)
 
 }
 
-void DebugRenderingSystem::drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type)
+void DebugRenderingSystem::drawBS(const MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type)
 {
   BoundingSphere sphere;
 
@@ -890,7 +890,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, std::vector<MeshComponen
   }
 }
 
-void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsForOneMesh, size_t size, int level)
+void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsForOneMesh, const size_t size, int level)
 {
   //base case
   if (level < 0 || size < 2)

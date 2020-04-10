@@ -19,11 +19,12 @@ class AABB
   void Add(const glm::vec3 &point);
   
   void Empty();
-  glm::vec3 getCenter();
-  glm::vec3 getSize();
-  glm::vec3 getRadius();
+  const glm::vec3 getCenter();
+  const glm::vec3 getSize();
+  const glm::vec3 getRadius();
 
-  AABB getSquareBounds();
+  const AABB getSquareBounds();
+
   //This manipulates the total points passed in as well return the set of points of that bounding box
   static std::vector<glm::vec3> isContained(const glm::vec3* points, size_t size, const AABB& boundingVolume);
 

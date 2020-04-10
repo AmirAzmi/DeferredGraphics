@@ -102,10 +102,10 @@ public:
   bool depthCopyToggle = true;
   bool brightBuffer = false;
 
-  RenderingSystem(int windowWidth, int windowHeight);
+  RenderingSystem(const int windowWidth, const int windowHeight);
   ~RenderingSystem();
-  void Update(Scene& scene, int windowWidth, int windowHeight);
+  void Update(Scene& scene, const int windowWidth, const int windowHeight);
   void Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered);
   void DrawQuad();
-  void DrawTextures(GLuint textureID, unsigned posX, unsigned posY, unsigned windowWidth, unsigned windowHeight);
+  void DrawTextures(GLuint textureID, const unsigned posX, const unsigned posY, const unsigned windowWidth, const unsigned windowHeight);
 };

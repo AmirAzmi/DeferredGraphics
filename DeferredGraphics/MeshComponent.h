@@ -47,7 +47,6 @@ public:
 
   //find a way to not do this pls
   std::vector<glm::vec4> vertices;
-  GLuint DrawMode = GL_TRIANGLES;
 
   EntityPtr getEntityPtr()
   {
@@ -67,11 +66,6 @@ public:
   ShaderHandle getShader()
   {
     return shader;
-  }
-
-  GLuint getDrawMode()
-  {
-    return DrawMode;
   }
 
   AABB getMeshBounds()

@@ -2399,14 +2399,14 @@ class DebugRenderingSystem
     float distance;
   };
 
-  void drawAABB(MeshComponentPtr mesh, Scene& scene, bool isSquareAABB);
-  void drawAABB(AABB bounds, Scene& scene);
-  void drawBS(MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
+  void drawAABB(const MeshComponentPtr mesh,Scene& scene, bool isSquareAABB);
+  void drawAABB(const AABB bounds, Scene& scene);
+  void drawBS(const MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
   void drawOctree(Octree * root, int level, Scene & scene);
   void createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
   void createOctree(Octree * octree, std::vector<MeshComponentPtr> meshes, int level);
-  void createOctree(Octree* octree, const glm::vec3* pointsForOneMesh, size_t size, int level);
-  BoundingVolumeHierarchy* createBVHTreeBottomUp(std::vector<MeshComponentPtr> meshes, int level);
-  BVHDist getClosestPair(std::vector<MeshComponentPtr> meshes);
+  void createOctree(Octree* octree, const glm::vec3* pointsForOneMesh, const size_t size, int level);
+  BoundingVolumeHierarchy* createBVHTreeBottomUp(const std::vector<MeshComponentPtr> meshes, int level);
+  BVHDist getClosestPair(const std::vector<MeshComponentPtr> meshes);
 
 };

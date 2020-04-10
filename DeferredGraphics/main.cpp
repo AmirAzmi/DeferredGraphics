@@ -19,8 +19,8 @@ Creation date: January 4th , 2020
 #include "SystemManager.h"
 
 GLFWwindow* window;
-int windowWidth = 1024;
-int windowHeight = 768;
+const int windowWidth = 1024;
+const int windowHeight = 768;
 
 const char* glsl_version = "#version 430";
 

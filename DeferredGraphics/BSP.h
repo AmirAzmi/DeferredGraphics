@@ -8,7 +8,5 @@ public:
   std::vector<glm::vec3> pointsInPolygon; //does this contains all the points in the scene???
   BSP* Back;
   BSP* Front;
-
-
 };
 

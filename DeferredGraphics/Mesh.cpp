@@ -16,7 +16,7 @@ Creation date: January 4th , 2020
 #include <regex>
 #include <map>
 
-Mesh::Mesh(std::string filePath)
+Mesh::Mesh(const std::string filePath)
 {
   std::ifstream file(filePath);//read in the file
   std::string text_file_string;//stores all the text into string
@@ -265,22 +265,22 @@ GLuint Mesh::getUVBO()
   return uvVBO;
 }
 
-std::vector<GLuint> Mesh::getIndices()
+const std::vector<GLuint> Mesh::getIndices()
 {
   return indices;
 }
 
-std::vector<glm::vec3> Mesh::getVertices()
+const std::vector<glm::vec3> Mesh::getVertices()
 {
   return vertices;
 }
 
-std::vector<glm::vec3> Mesh::getNormals()
+const std::vector<glm::vec3> Mesh::getNormals()
 {
   return normals;
 }
 
-glm::vec3 Mesh::getValuesInBetweenWhiteSpacesVec3(std::string line)
+glm::vec3 Mesh::getValuesInBetweenWhiteSpacesVec3(const std::string line)
 {
   size_t iterator = line.find(' '); //find the first space
   glm::vec3 positionVertex = glm::vec3(0, 0, 0); //initialize the returned position vertex
@@ -321,7 +321,7 @@ glm::vec3 Mesh::getValuesInBetweenWhiteSpacesVec3(std::string line)
   return positionVertex;
 }
 
-glm::vec2 Mesh::getValuesInBetweenWhiteSpacesVec2(std::string line)
+glm::vec2 Mesh::getValuesInBetweenWhiteSpacesVec2(const std::string line)
 {
   size_t iterator = line.find(' '); //find the first space
   glm::vec2 positionVertex = glm::vec2(0, 0); //initialize the returned position vertex
@@ -357,7 +357,7 @@ glm::vec2 Mesh::getValuesInBetweenWhiteSpacesVec2(std::string line)
   return positionVertex;
 }
 
-Mesh::Face Mesh::getFaceData(std::string line)
+Mesh::Face Mesh::getFaceData(const std::string line)
 {
   Face face;
   face.vertex_normal_indices = glm::vec3();
