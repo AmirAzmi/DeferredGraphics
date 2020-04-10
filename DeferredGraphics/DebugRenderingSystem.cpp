@@ -899,36 +899,26 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
   }
   else
   {
+    std::array<AABB, 8> boundingBoxes;
+
+    //bottom back left
     //generate the bounding volume
     glm::vec3 half_vector = octree->boundingVolume.getSize() / 2.0f;
     glm::vec3 center = octree->boundingVolume.min + half_vector;
-
-    //divide space into 8 children
-    std::array<AABB, 8> boundingBoxes;
-
-
-    //What is set for each children
-    //bounding volume
-    //number of points within bounding volume
-    //constructor of new octree
-    //active children
-    //octree parent
-    //-----------------------------------------------//
-
-    //bottom back left
     boundingBoxes[0].min = octree->boundingVolume.min;
     boundingBoxes[0].max = center;
     AABB boundingVolume0 = boundingBoxes[0];
     std::vector<glm::vec3> points0 = AABB::isContained(pointsForOneMesh, size, boundingVolume0);
-
-    //create the node for the first child
     if (points0.size() < 2)
     {
       octree->children[0] = nullptr;
     }
     else
     {
+      //set th active child
       octree->active_children |= (1 << 0);
+
+      //create the node for the octree
       octree->children[0] = octree->children[0]->createOctreeNode(boundingVolume0, points0, octree);
     }
 
@@ -944,7 +934,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     else
     {
       octree->active_children |= (1 << 1);
-      //create the node for the second child
+      //create the node for the first child
       octree->children[1] = octree->children[1]->createOctreeNode(boundingVolume1, points1, octree);
     }
 
@@ -976,7 +966,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     else
     {
       octree->active_children |= (1 << 3);
-      //create the node for the second child
+      //create the node for the 3rd child
       octree->children[3] = octree->children[3]->createOctreeNode(boundingVolume3, points3, octree);
     }
 
@@ -992,7 +982,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     else
     {
       octree->active_children |= (1 << 4);
-      //create the node for the second child
+      //create the node for the 4th child
       octree->children[4] = octree->children[4]->createOctreeNode(boundingVolume4, points4, octree);
     }
 
@@ -1008,7 +998,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     else
     {
       octree->active_children |= (1 << 5);
-      //create the node for the second child
+      //create the node for the 5th child
       octree->children[5] = octree->children[5]->createOctreeNode(boundingVolume5, points5, octree);
     }
 
@@ -1024,7 +1014,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     else
     {
       octree->active_children |= (1 << 6);
-      //create the node for the second child
+      //create the node for the 6th child
       octree->children[6] = octree->children[6]->createOctreeNode(boundingVolume6, points6, octree);
     }
 
@@ -1040,12 +1030,10 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     else
     {
       octree->active_children |= (1 << 7);
-      //create the node for the second child
+      //create the node for the last child
       octree->children[7] = octree->children[7]->createOctreeNode(boundingVolume7, points7, octree);
     }
 
-    //checks if # of points are within the bounds of each child and if they are
-    //create the node for each child
     //create the octree of that child else dont draw the octree
     for (int i = 0; i < octree->children.size(); ++i)
     {

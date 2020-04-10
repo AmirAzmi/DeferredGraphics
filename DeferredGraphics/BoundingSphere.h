@@ -33,6 +33,6 @@ public:
   {
   }
 
-  BSInfo calculateBS(BoundingSphereCalculationType type, std::vector<glm::vec3> vertices);
+  BSInfo calculateBS(BoundingSphereCalculationType type, const std::vector<glm::vec3> vertices);
 };
 

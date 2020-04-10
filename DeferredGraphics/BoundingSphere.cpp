@@ -6,13 +6,87 @@ struct extremalPoints
   glm::vec3 max;
 };
 
-extremalPoints FindExtremalPoints(std::vector<glm::vec3> points, std::vector<glm::vec3> norms);
-float distanceSquaredVec3(glm::vec3 a, glm::vec3 b);
-float distanceSquaredFloat(float a, float b);
-bool isVec3LessThan(glm::vec3& a, glm::vec3& b);
+static const float distanceSquaredVec3(const glm::vec3 a, const glm::vec3 b)
+{
+  float distance = (b.x - a.x) * (b.x - a.x) +
+    (b.y - a.y) * (b.y - a.y) +
+    (b.z - a.z) * (b.z - a.z);
+
+  return distance;
+}
+
+static const float distanceSquaredFloat(const float a, const float b)
+{
+  float distance = (b - a) * (b - a);
+
+  return distance;
+}
+
+bool isVec3LessThan(const glm::vec3& a, const glm::vec3& b)
+{
+  if (a.x <= b.x && a.y <= b.y && a.z <= b.z)
+  {
+    return true;
+  }
+
+  return false;
+}
+
+static extremalPoints FindExtremalPoints(std::vector<glm::vec3> points, std::vector<glm::vec3> norms)
+{
+  extremalPoints current_points = { glm::vec3(0), glm::vec3(0) };
+
+  //for all normals
+  for (int j = 0; j < norms.size(); ++j)
+  {
+    extremalPoints temp_points;
+    bool once = false;
+
+    //for all points
+    for (int i = 0; i < points.size(); ++i)
+    {
+      //project vector onto another vector in this case: project point onto the normal
+      float dot_scalar = glm::dot(points[i], norms[j]);
+      //float length = glm::length(norms[j]); //-->
+      float correct_length =
+        sqrtf(norms[j].x * norms[j].x *
+          norms[j].y * norms[j].y *
+          norms[j].z * norms[j].z);
+
+      //calculated projected point onto the normal
+      glm::vec3 current_extreme_point = (norms[j] * dot_scalar) / correct_length;
+
+      //initally set the temp min and max
+      if (once == false)
+      {
+        temp_points.min = temp_points.max = current_extreme_point;
+        once = true;
+      }
+
+      //check for next points to set the min and max extrema if current extreme point is less than the temp points
+      if (isVec3LessThan(current_extreme_point, temp_points.min) == true)
+      {
+        temp_points.min = current_extreme_point;
+      }
+      else
+      {
+        temp_points.max = current_extreme_point;
+      }
+    }
+
+    //after getting the min and max extreme points calculate the distance between them and the current extreme points
+    //if they are bigger then set the current points to temp points
+    if (glm::distance(temp_points.min, temp_points.max) > glm::distance(current_points.min, current_points.max))
+    {
+      current_points = temp_points;
+    }
+  }
+
+  return current_points;
+}
 
 //mode is the type of calculation we are gonn do on the set of vertices passed in
-BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType mode, std::vector<glm::vec3> vertices)
+BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType mode, const std::vector<glm::vec3> vertices)
 {
   //doing this because I current dont know, I will change it to mode once I know for sure it works
   BoundingSphereCalculationType myType = mode;
@@ -200,85 +274,4 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
   }
   }
 }
-
-float distanceSquaredVec3(glm::vec3 a, glm::vec3 b)
-{
-  float distance = (b.x - a.x) * (b.x - a.x) +
-    (b.y - a.y) * (b.y - a.y) +
-    (b.z - a.z) * (b.z - a.z);
-
-  return distance;
-}
-
-float distanceSquaredFloat(float a, float b)
-{
-  float distance = (b - a) * (b - a);
-
-  return distance;
-}
-
-extremalPoints FindExtremalPoints(std::vector<glm::vec3> points, std::vector<glm::vec3> norms)
-{
-  extremalPoints current_points = { glm::vec3(0), glm::vec3(0) };
-
-  //for all normals
-  for (int j = 0; j < norms.size(); ++j)
-  {
-    extremalPoints temp_points;
-    bool once = false;
-
-    //for all points
-    for (int i = 0; i < points.size(); ++i)
-    {
-      //project vector onto another vector in this case: project point onto the normal
-      float dot_scalar = glm::dot(points[i], norms[j]);
-      //float length = glm::length(norms[j]); //-->
-      float correct_length =
-        sqrtf(norms[j].x * norms[j].x *
-          norms[j].y * norms[j].y *
-          norms[j].z * norms[j].z);
-
-      //calculated projected point onto the normal
-      glm::vec3 current_extreme_point = (norms[j] * dot_scalar) / correct_length;
-
-      //initally set the temp min and max
-      if (once == false)
-      {
-        temp_points.min = temp_points.max = current_extreme_point;
-        once = true;
-      }
-
-      //check for next points to set the min and max extrema if current extreme point is less than the temp points
-      if (isVec3LessThan(current_extreme_point, temp_points.min) == true)
-      {
-        temp_points.min = current_extreme_point;
-      }
-      else
-      {
-        temp_points.max = current_extreme_point;
-      }
-    }
-
-    //after getting the min and max extreme points calculate the distance between them and the current extreme points
-    //if they are bigger then set the current points to temp points
-    if (glm::distance(temp_points.min, temp_points.max) > glm::distance(current_points.min, current_points.max))
-    {
-      current_points = temp_points;
-    }
-  }
-
-  return current_points;
-}
-
-bool isVec3LessThan(glm::vec3& a, glm::vec3& b)
-{
-  if (a.x <= b.x && a.y <= b.y && a.z <= b.z)
-  {
-    return true;
-  }
-
-  return false;
-}
-
-
 
