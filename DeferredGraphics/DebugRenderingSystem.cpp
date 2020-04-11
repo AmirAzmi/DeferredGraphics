@@ -3,7 +3,6 @@
 #include "DebugRenderingSystem.h"
 #include "MeshComponent.h"
 #include "Entity.h"
-#include "Memory.h"
 
 static int height(BoundingVolumeHierarchy * root)
 {
@@ -71,14 +70,16 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     debugDrawID->setBool("octree", isSubObjectDrawOn);
 
     //create octree for the center object, currently hard coded, planned to be for any object
-    OctreePerObject = new Octree(meshes[0]->getMesh()->getVertices());
+
+    LinearAllocatorScope scope(linearAllocator);
+    OctreePerObject = linearAllocator.TAllocate<Octree>(meshes[0]->getMesh()->getVertices());
     OctreePerObject->boundingVolume = meshes[0]->bounds;
     createOctree(OctreePerObject, OctreePerObject->points.data(), OctreePerObject->points.size(), levelForOneObject);
 
     //draw octree bv for one object
     drawOctree(OctreePerObject, levelForOneObject, scene);
 
-    delete OctreePerObject;
+    linearAllocator.TDeallocate<Octree>(OctreePerObject);
   }
 
   if (isBSOn == true)
@@ -130,7 +131,9 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     debugDrawID->UseShader();
 
     //create root node Note: REPLACE WITH POOL OR LINEAR ALLOCATOR
-    BVHTree = new BoundingVolumeHierarchy(meshes);
+    //placement new -> calling a constructor on an already created block of memory
+    LinearAllocatorScope scope(linearAllocator);
+    BVHTree = linearAllocator.TAllocate<BoundingVolumeHierarchy>(meshes);
 
     //list of meshes in the root node
     BVHTree->meshes = meshes;
@@ -146,7 +149,8 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     //this is also considered breadth first search
     printLevelOrderAABB(BVHTree, scene);
 
-    delete BVHTree;
+    //manually call the destructor because I used placement new to use my own memory
+    linearAllocator.TDeallocate<BoundingVolumeHierarchy>(BVHTree);
   }
 
   if (isBVHBottomUpOn == true)

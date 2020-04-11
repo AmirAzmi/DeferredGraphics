@@ -1,5 +1,5 @@
 #include "Octree.h"
-
+#include "Memory.h"
 Octree::Octree(const AABB boundingBox, const std::vector<MeshComponentPtr> meshes) :boundingVolume(boundingBox), meshes(meshes), parent(nullptr)
 {
   //points is empty
@@ -25,7 +25,8 @@ Octree* Octree::createOctreeNode(const AABB bv, const std::vector<glm::vec3>& po
 {
   if (points.size() > 2)
   {
-    Octree* octree = new Octree(points); //sets children to null and points
+    Octree * octree = linearAllocator.TAllocate<Octree>(points);
+
     octree->parent = parent; //sets the parent
     octree->boundingVolume = bv; //sets the bounding volume
     return octree;
@@ -41,7 +42,7 @@ Octree::~Octree()
 {
   for (int i = 0; i < children.size(); ++i)
   {
-    delete children[i];
+    linearAllocator.TDeallocate<Octree>(children[i]);
   }
 }
 

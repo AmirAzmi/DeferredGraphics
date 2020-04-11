@@ -12,6 +12,7 @@ char* LinearAllocator::Allocate(int size)
   if (size > memory_size)
   {
     assert(!"The amount you were trying to allocate is greater than the main memory size.");
+    return nullptr;
   }
 
   //temp pointer given out which is temp_main_mem + size of allocated chunk
@@ -26,7 +27,7 @@ char* LinearAllocator::Allocate(int size)
 
   //cant allocate more than the total given size after multiple allocations
   assert(!"Current Memory Size was greater than Main Memory Size after the total Allocations.");
-
+  return nullptr;
 }
 
 void LinearAllocator::Clear()

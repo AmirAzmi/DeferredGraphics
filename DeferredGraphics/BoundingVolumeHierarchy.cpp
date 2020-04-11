@@ -1,5 +1,5 @@
 #include "BoundingVolumeHierarchy.h"
-
+#include "Memory.h"
 static AABB combineBounds(const std::vector<AABB>& bounds)
 {
   AABB totalBounds;
@@ -65,7 +65,9 @@ AABB BoundingVolumeHierarchy::calculateBoundingVolume(std::vector<MeshComponentP
 
 BoundingVolumeHierarchy * BoundingVolumeHierarchy::createNode(std::vector<MeshComponentPtr> meshes)
 {
-  BoundingVolumeHierarchy * BVHNode = new BoundingVolumeHierarchy(meshes);
+  //using linear allocator to allocate nodes
+  BoundingVolumeHierarchy* BVHNode = linearAllocator.TAllocate<BoundingVolumeHierarchy>(meshes);
+
   BVHNode->boundingVolume = BVHNode->calculateBoundingVolume(meshes);
   BVHNode->meshes = meshes;
   return BVHNode;
@@ -74,8 +76,8 @@ BoundingVolumeHierarchy * BoundingVolumeHierarchy::createNode(std::vector<MeshCo
 
 BoundingVolumeHierarchy::~BoundingVolumeHierarchy()
 {
-  delete left_child;
-  delete right_child;
+  linearAllocator.TDeallocate<BoundingVolumeHierarchy>(left_child);
+  linearAllocator.TDeallocate<BoundingVolumeHierarchy>(right_child);
 }
 
 bool BoundingVolumeHierarchy::isLeaf()

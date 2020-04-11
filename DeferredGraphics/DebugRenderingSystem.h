@@ -5,7 +5,7 @@
 #include "BoundingVolumeHierarchy.h"
 #include "Octree.h"
 #include "BSP.h"
-
+#include "Memory.h"
 
 class DebugRenderingSystem
 {

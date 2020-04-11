@@ -1,4 +1,5 @@
 #pragma once
+#include <type_traits>
 class LinearAllocator
 {
 public:
@@ -10,6 +11,16 @@ public:
   char* Allocate(int size);
   void Clear(); //reset the offset to 0
   ~LinearAllocator();
+  template <typename T, typename ...S>
+  T * TAllocate(S&&...args);
+
+  template <typename T>
+  void TDeallocate(T*);
+
+  LinearAllocator& operator=(LinearAllocator&&) = delete;
+  LinearAllocator(LinearAllocator&&) = delete;
+  LinearAllocator& operator=(const LinearAllocator&) = delete;
+  LinearAllocator(const LinearAllocator&) = delete;
 };
 
 
@@ -21,8 +32,31 @@ class LinearAllocatorScope
 {
   LinearAllocator& allocator;
   char* current_memory_offset;
+public:
 
   LinearAllocatorScope(LinearAllocator& allocator);
   ~LinearAllocatorScope();
 
+ LinearAllocatorScope& operator=(LinearAllocatorScope&&) = delete;
+ LinearAllocatorScope(LinearAllocatorScope&&) = delete;
+ LinearAllocatorScope& operator=(const LinearAllocatorScope&) = delete;
+ LinearAllocatorScope(const LinearAllocatorScope&) = delete;
+
 };
+
+template<typename T, typename ...S>
+inline T * LinearAllocator::TAllocate(S&& ...args)
+{
+  return new (Allocate(sizeof(T))) T(std::forward<S>(args)...);
+  //return new T(std::forward<S>(args)...);
+}
+
+template<typename T>
+inline void LinearAllocator::TDeallocate(T* arg)
+{
+  if (arg != nullptr)
+  {
+    arg->~T();
+  }
+  //delete arg;
+}
