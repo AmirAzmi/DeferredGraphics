@@ -8,6 +8,12 @@ LinearAllocator::LinearAllocator(const int size) :memory_size(size)
 
 char* LinearAllocator::Allocate(int size)
 {
+  //cant allocate more than the total given size
+  if (size > memory_size)
+  {
+    assert(!"The amount you were trying to allocate is greater than the main memory size.");
+  }
+
   //temp pointer given out which is temp_main_mem + size of allocated chunk
   char* given_out_memory = current_main_memory;
 
@@ -18,8 +24,8 @@ char* LinearAllocator::Allocate(int size)
     return given_out_memory;
   }
 
-  //cant allocate more than the total given size
-  assert(!"current memory was greater than total memory");
+  //cant allocate more than the total given size after multiple allocations
+  assert(!"Current Memory Size was greater than Main Memory Size after the total Allocations.");
 
 }
 

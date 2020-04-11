@@ -1,8 +1,32 @@
 #include <algorithm>
+#include <list>
 #include "DebugRenderingSystem.h"
 #include "MeshComponent.h"
 #include "Entity.h"
+#include "Memory.h"
 
+static int height(BoundingVolumeHierarchy * root)
+{
+  if (root == nullptr)
+  {
+    return 0;
+  }
+
+  else
+  {
+    int left_height = height(root->left_child);
+    int right_height = height(root->right_child);
+
+    if (left_height > right_height)
+    {
+      return left_height + 1;
+    }
+    else
+    {
+      return right_height + 1;
+    }
+  }
+}
 
 DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
 {
@@ -15,7 +39,7 @@ DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int wi
   for (auto mesh : meshes)
   {
     mesh->vertices = mesh->getVec4Vertices();
-  }
+  } 
 }
 
 DebugRenderingSystem::~DebugRenderingSystem()
@@ -115,35 +139,13 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     BVHTree->boundingVolume = BVHTree->calculateBoundingVolume(BVHTree->meshes);
 
     //creates the BVH tree so right now the root nodes
-    createBVHTree(BVHTree, BVHTree->meshes, numberOfLevels);
+    createBVHTree(BVHTree, BVHTree->meshes, numberOfLevels - 1);
 
-    //storing the children of the left and right trees
-    BoundingVolumeHierarchy* left_tree = BVHTree->left_child;
-    BoundingVolumeHierarchy* right_tree = BVHTree->right_child;
+    //draw level order aabb tree Note: this is O(N^2) Drawing method so you can draw each level
+    //there is O(N) method using a queue
+    //this is also considered breadth first search
+    printLevelOrderAABB(BVHTree, scene);
 
-    //draw bvh root node
-    drawAABB(BVHTree->boundingVolume, scene);
-
-    //Breadth first search to draw the AABBs
-    //maybe recursive draw call????
-    //to make it more efficient, break out when a node has <2 meshes in it
-    int level = 0;
-    while (left_tree != nullptr && right_tree != nullptr && level < numberOfLevels)
-    {
-      //draw all the left children
-      drawAABB(left_tree->boundingVolume, scene);
-      left_tree = left_tree->left_child;
-
-      //draw all the right children
-      drawAABB(right_tree->boundingVolume, scene);
-      right_tree = right_tree->right_child;
-
-      //increment level counter
-      level++;
-
-    }
-
-    //PORBABLY WANT TO REPLACE THIS WITH A POOL OR LINEAR ALLOCATOR I DROPPED 30 FUCKING FRAMES FROM THIS
     delete BVHTree;
   }
 
@@ -822,6 +824,34 @@ void DebugRenderingSystem::drawOctree(Octree* child, int level, Scene& scene)
     {
       drawOctree(child->children[i], level - 1, scene);
     }
+  }
+}
+
+void DebugRenderingSystem::drawLevelOrderAABB(BoundingVolumeHierarchy* root, int level, Scene& scene)
+{
+  if (root == nullptr)
+  {
+    return;
+  }
+
+  if (level == 1)
+  {
+    drawAABB(root->boundingVolume, scene);
+  }
+  else if (level > 1)
+  {
+    drawLevelOrderAABB(root->left_child, level - 1, scene);
+    drawLevelOrderAABB(root->right_child, level - 1, scene);
+  }
+}
+
+void DebugRenderingSystem::printLevelOrderAABB(BoundingVolumeHierarchy* root, Scene& scene)
+{
+  int h = height(root);
+
+  for (int i = 1; i <= h; ++i)
+  {
+    drawLevelOrderAABB(root, i, scene);
   }
 }
 

@@ -18,6 +18,8 @@ Creation date: January 4th , 2020
 #include "Editor.h"
 #include "SystemManager.h"
 
+
+//window information
 GLFWwindow* window;
 const int windowWidth = 1024;
 const int windowHeight = 768;
