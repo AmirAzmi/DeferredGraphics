@@ -13,7 +13,7 @@ Creation date: January 4th , 2020
 
 #include "Mesh.h"
 #include <iostream>
-#include <regex>
+#include <algorithm>
 #include <map>
 
 Mesh::Mesh(const std::string filePath)

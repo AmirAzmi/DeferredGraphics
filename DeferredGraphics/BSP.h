@@ -1,12 +1,27 @@
 #pragma once
 #include <glm/glm/glm.hpp>
 #include <vector>
+#include "MeshComponent.h"
+#include "Memory.h"
+
 class BSP
 {
+
 public:
-  BSP* parent;
-  std::vector<glm::vec3> pointsInPolygon; //does this contains all the points in the scene???
+  struct Polygon
+  {
+    glm::vec3 point1;
+    glm::vec3 point2;
+    glm::vec3 point3;
+  };
+
+  std::vector<Polygon> ListofPolygons; //every 3 indices is a polygon
   BSP* Back;
   BSP* Front;
+
+  BSP(const std::vector<Polygon> polygonList);
+  BSP * BSPcreateNode(const std::vector<Polygon> polygonList);
+  std::vector<Polygon> createPolygonList(std::vector<MeshComponentPtr> meshes);
+  ~BSP();
 };
 

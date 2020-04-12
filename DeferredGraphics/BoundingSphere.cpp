@@ -22,7 +22,7 @@ static const float distanceSquaredFloat(const float a, const float b)
   return distance;
 }
 
-bool isVec3LessThan(const glm::vec3& a, const glm::vec3& b)
+static bool isVec3LessThan(const glm::vec3& a, const glm::vec3& b)
 {
   if (a.x <= b.x && a.y <= b.y && a.z <= b.z)
   {

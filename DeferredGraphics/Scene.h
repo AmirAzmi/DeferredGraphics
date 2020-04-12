@@ -40,7 +40,7 @@ public:
 
   float positionUpdate = 0.0f;
 
-  Scene(int windowWidth, int windowHeight);
+  Scene(const int windowWidth, const int windowHeight);
   const glm::mat4 getProjectionMatrix();
   const glm::mat4 getViewMatrix();
   const glm::vec3 getEyePosition();

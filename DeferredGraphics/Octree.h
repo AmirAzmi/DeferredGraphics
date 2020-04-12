@@ -10,7 +10,7 @@ public:
   std::vector<MeshComponentPtr> meshes; //each contains its enclosed list of objects
   std::vector<glm::vec3> points;        //specifically for a singular object -> extent + size
   AABB boundingVolume;                  //bouding volume of enclosed meshes
-  unsigned int active_children = 0;     //checking which children are "active" aka valid nodes with thier own children
+  //unsigned int active_children = 0;     //checking which children are "active" aka valid nodes with thier own children
 
   //takes in a boundingVolume calculate by the meshes total AABB????
   //or a cubic box??? -> we goin for the cubic box

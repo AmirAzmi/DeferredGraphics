@@ -58,9 +58,9 @@ public:
   GLuint getVAO();
   GLuint getUVBO();
 
- const std::vector<GLuint> getIndices();
- const std::vector<glm::vec3> getVertices();
- const std::vector<glm::vec3> getNormals();
+  const std::vector<GLuint> getIndices();
+  const std::vector<glm::vec3> getVertices();
+  const std::vector<glm::vec3> getNormals();
 
 };
 

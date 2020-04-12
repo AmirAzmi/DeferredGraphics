@@ -49,6 +49,9 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 {
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
+  memory_usage_from_octree = 0;
+  memory_usage_from_BVHTopeDown = 0;
+  memory_usage_from_BSP = 0;
 
   //aabb Check
   if (isAABBOn == true)
@@ -70,7 +73,6 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     debugDrawID->setBool("octree", isSubObjectDrawOn);
 
     //create octree for the center object, currently hard coded, planned to be for any object
-
     LinearAllocatorScope scope(linearAllocator);
     OctreePerObject = linearAllocator.TAllocate<Octree>(meshes[0]->getMesh()->getVertices());
     OctreePerObject->boundingVolume = meshes[0]->bounds;
@@ -80,6 +82,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     drawOctree(OctreePerObject, levelForOneObject, scene);
 
     linearAllocator.TDeallocate<Octree>(OctreePerObject);
+    memory_usage_from_octree = linearAllocator.current_main_memory - linearAllocator.main_memory;
   }
 
   if (isBSOn == true)
@@ -151,6 +154,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
     //manually call the destructor because I used placement new to use my own memory
     linearAllocator.TDeallocate<BoundingVolumeHierarchy>(BVHTree);
+    memory_usage_from_BVHTopeDown = linearAllocator.current_main_memory - linearAllocator.main_memory;
   }
 
   if (isBVHBottomUpOn == true)
@@ -910,6 +914,25 @@ void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy* BVH, std::vect
   }
 }
 
+void DebugRenderingSystem::createBSPTree(BSP* BSP, std::vector<BSP::Polygon> listOfPolygons, int level)
+{
+  if (level < 0)
+  {
+    return;
+  }
+  else
+  {
+
+    //create split plane
+
+    //create front and back list
+    std::vector<BSP::Polygon> FrontList;
+    std::vector<BSP::Polygon> BackList;
+
+    //classify polygons within the plane to see if they are in the front or back list
+  }
+}
+
 void DebugRenderingSystem::createOctree(Octree* octree, std::vector<MeshComponentPtr> meshes, int level)
 {
   //base case
@@ -950,7 +973,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     else
     {
       //set th active child
-      octree->active_children |= (1 << 0);
+     // octree->active_children |= (1 << 0);
 
       //create the node for the octree
       octree->children[0] = octree->children[0]->createOctreeNode(boundingVolume0, points0, octree);
@@ -967,7 +990,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-      octree->active_children |= (1 << 1);
+     // octree->active_children |= (1 << 1);
       //create the node for the first child
       octree->children[1] = octree->children[1]->createOctreeNode(boundingVolume1, points1, octree);
     }
@@ -983,7 +1006,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-      octree->active_children |= (1 << 2);
+     // octree->active_children |= (1 << 2);
       //create the node for the second child
       octree->children[2] = octree->children[2]->createOctreeNode(boundingVolume2, points2, octree);
     }
@@ -999,7 +1022,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-      octree->active_children |= (1 << 3);
+     // octree->active_children |= (1 << 3);
       //create the node for the 3rd child
       octree->children[3] = octree->children[3]->createOctreeNode(boundingVolume3, points3, octree);
     }
@@ -1015,7 +1038,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-      octree->active_children |= (1 << 4);
+     // octree->active_children |= (1 << 4);
       //create the node for the 4th child
       octree->children[4] = octree->children[4]->createOctreeNode(boundingVolume4, points4, octree);
     }
@@ -1031,7 +1054,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-      octree->active_children |= (1 << 5);
+    //  octree->active_children |= (1 << 5);
       //create the node for the 5th child
       octree->children[5] = octree->children[5]->createOctreeNode(boundingVolume5, points5, octree);
     }
@@ -1047,7 +1070,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-      octree->active_children |= (1 << 6);
+     // octree->active_children |= (1 << 6);
       //create the node for the 6th child
       octree->children[6] = octree->children[6]->createOctreeNode(boundingVolume6, points6, octree);
     }
@@ -1063,7 +1086,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-      octree->active_children |= (1 << 7);
+     // octree->active_children |= (1 << 7);
       //create the node for the last child
       octree->children[7] = octree->children[7]->createOctreeNode(boundingVolume7, points7, octree);
     }

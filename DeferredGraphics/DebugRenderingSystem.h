@@ -2391,6 +2391,10 @@ class DebugRenderingSystem
   bool isBSPOn = false;
   int levelForBSP = 0;
 
+  //memory information
+  int memory_usage_from_octree = 0;
+  int memory_usage_from_BVHTopeDown = 0;
+  int memory_usage_from_BSP = 0;
   BoundingSphere::BoundingSphereCalculationType sphereType = BoundingSphere::BoundingSphereCalculationType::Centroid;
 
   struct BVHDist 
@@ -2406,6 +2410,7 @@ class DebugRenderingSystem
   void drawLevelOrderAABB(BoundingVolumeHierarchy * root, int level, Scene & scene);
   void printLevelOrderAABB(BoundingVolumeHierarchy * root, Scene & scene);
   void createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
+  void createBSPTree(BSP * BSP, std::vector<BSP::Polygon> listOfPolygons, int level);
   void createOctree(Octree * octree, std::vector<MeshComponentPtr> meshes, int level);
   void createOctree(Octree* octree, const glm::vec3* pointsForOneMesh, const size_t size, int level);
   BoundingVolumeHierarchy* createBVHTreeBottomUp(const std::vector<MeshComponentPtr> meshes, int level);

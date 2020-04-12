@@ -15,6 +15,7 @@ Creation date: January 4th , 2020
 #include "Entity.h"
 #include <filesystem> //filenames
 #include <iostream>
+#include "Memory.h"
 
 namespace fs = std::filesystem;
 void Editor::init(GLFWwindow* window, const char* glslVersion)
@@ -551,6 +552,10 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //profiler settings
   ImGui::Begin("Profiler");
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+  ImGui::Text("Octree Temporary Mem Usage: %i / %i", Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
+  ImGui::Text("BVH Top Down Temporary Mem Usage: %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown, linearAllocator.memory_size);
+  ImGui::Text("------------------------------------------------");
+  ImGui::Text("Total Temporary Mem Usage: %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown + Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
   ImGui::End();
 
   //window settings
