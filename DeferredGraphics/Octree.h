@@ -5,18 +5,18 @@
 class Octree
 {
 public:
-  Octree* parent;                       //refrence to the parent
-  std::array<Octree *, 8> children;     //numbe of children for each node of the octree node
-  std::vector<MeshComponentPtr> meshes; //each contains its enclosed list of objects
-  std::vector<glm::vec3> points;        //specifically for a singular object -> extent + size
-  AABB boundingVolume;                  //bouding volume of enclosed meshes
+  //Octree* parent;                       //refrence to the parent
+  std::array<Octree *, 8> children;       //numbe of children for each node of the octree node  64 bytes
+  //std::vector<MeshComponentPtr> meshes; //each contains its enclosed list of objects
+  std::vector<glm::vec3> points;          //specifically for a singular object -> extent + size whatever the fuck bytes?
+  AABB boundingVolume;                    //bouding volume of enclosed meshes 24 bytes
   //unsigned int active_children = 0;     //checking which children are "active" aka valid nodes with thier own children
 
   //takes in a boundingVolume calculate by the meshes total AABB????
   //or a cubic box??? -> we goin for the cubic box
   Octree(const AABB boundingBox, const std::vector<MeshComponentPtr> meshes);
   Octree(const std::vector<glm::vec3> mesh_points); //switch to pointer + extent
-  static Octree* createOctreeNode(const AABB bv, const std::vector<glm::vec3> & points, Octree * parent);
+  static Octree* createOctreeNode(const AABB bv, const std::vector<glm::vec3> & points/*, Octree * parent*/);
   ~Octree();
 };
 

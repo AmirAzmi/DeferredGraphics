@@ -2380,12 +2380,14 @@ class DebugRenderingSystem
   int numberOfLevels = 0;
   bool isBVHBottomUpOn = false;
   int numberOfLevelsBUOn = 7;
+  int bvh_draw_calls = 0;
 
   //draw Octree for all objects
   bool isOctreeOnForAllObjects = false;
   int levelForAllObjects = 0;
   bool isOctreeOnForSingularObject = false;
   int levelForOneObject = 0;
+  int octree_draw_calls = 0;
 
   //draw BSP
   bool isBSPOn = false;

@@ -52,6 +52,8 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
   memory_usage_from_octree = 0;
   memory_usage_from_BVHTopeDown = 0;
   memory_usage_from_BSP = 0;
+  octree_draw_calls = 0;
+  bvh_draw_calls = 0;
 
   //aabb Check
   if (isAABBOn == true)
@@ -825,6 +827,7 @@ void DebugRenderingSystem::drawOctree(Octree* child, int level, Scene& scene)
 
   debugDrawID->setFloat("level", level);
   drawAABB(child->boundingVolume, scene);
+  octree_draw_calls++;
 
   for (int i = 0; i < child->children.size(); ++i)
   {
@@ -845,6 +848,7 @@ void DebugRenderingSystem::drawLevelOrderAABB(BoundingVolumeHierarchy* root, int
   if (level == 1)
   {
     drawAABB(root->boundingVolume, scene);
+    bvh_draw_calls++;
   }
   else if (level > 1)
   {
@@ -976,7 +980,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
      // octree->active_children |= (1 << 0);
 
       //create the node for the octree
-      octree->children[0] = octree->children[0]->createOctreeNode(boundingVolume0, points0, octree);
+      octree->children[0] = octree->children[0]->createOctreeNode(boundingVolume0, points0/*, octree*/);
     }
 
     //bottom back right
@@ -992,7 +996,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     {
      // octree->active_children |= (1 << 1);
       //create the node for the first child
-      octree->children[1] = octree->children[1]->createOctreeNode(boundingVolume1, points1, octree);
+      octree->children[1] = octree->children[1]->createOctreeNode(boundingVolume1, points1/*, octree*/);
     }
 
     //bottom front right
@@ -1008,7 +1012,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     {
      // octree->active_children |= (1 << 2);
       //create the node for the second child
-      octree->children[2] = octree->children[2]->createOctreeNode(boundingVolume2, points2, octree);
+      octree->children[2] = octree->children[2]->createOctreeNode(boundingVolume2, points2/*, octree*/);
     }
 
     //bottom front left
@@ -1024,7 +1028,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     {
      // octree->active_children |= (1 << 3);
       //create the node for the 3rd child
-      octree->children[3] = octree->children[3]->createOctreeNode(boundingVolume3, points3, octree);
+      octree->children[3] = octree->children[3]->createOctreeNode(boundingVolume3, points3/*, octree*/);
     }
 
     //top back left
@@ -1040,7 +1044,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     {
      // octree->active_children |= (1 << 4);
       //create the node for the 4th child
-      octree->children[4] = octree->children[4]->createOctreeNode(boundingVolume4, points4, octree);
+      octree->children[4] = octree->children[4]->createOctreeNode(boundingVolume4, points4/*, octree*/);
     }
 
     //top back right
@@ -1056,7 +1060,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     {
     //  octree->active_children |= (1 << 5);
       //create the node for the 5th child
-      octree->children[5] = octree->children[5]->createOctreeNode(boundingVolume5, points5, octree);
+      octree->children[5] = octree->children[5]->createOctreeNode(boundingVolume5, points5/*, octree*/);
     }
 
     //top front right
@@ -1072,7 +1076,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     {
      // octree->active_children |= (1 << 6);
       //create the node for the 6th child
-      octree->children[6] = octree->children[6]->createOctreeNode(boundingVolume6, points6, octree);
+      octree->children[6] = octree->children[6]->createOctreeNode(boundingVolume6, points6/*, octree*/);
     }
 
     //top front left
@@ -1088,7 +1092,7 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     {
      // octree->active_children |= (1 << 7);
       //create the node for the last child
-      octree->children[7] = octree->children[7]->createOctreeNode(boundingVolume7, points7, octree);
+      octree->children[7] = octree->children[7]->createOctreeNode(boundingVolume7, points7/*, octree*/);
     }
 
     //create the octree of that child else dont draw the octree

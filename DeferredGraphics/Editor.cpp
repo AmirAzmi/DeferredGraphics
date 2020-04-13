@@ -588,6 +588,26 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown + Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
   ImGui::EndTable();
   
+  ImGui::BeginTable("Table2", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders);
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("Debug Function Draw Calls");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text("Current # of Draws");
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("DebugRendering::DrawOctree:");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text("# of draws %i", Manager.debugRenderer->octree_draw_calls);
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("DebugRendering::DrawBVHTopDown:");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text("# of draws %i", Manager.debugRenderer->bvh_draw_calls);
+  ImGui::EndTable();
   ImGui::End();
 
   //window settings
