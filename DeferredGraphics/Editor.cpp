@@ -36,6 +36,11 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   colors[ImGuiCol_TitleBgActive] = ImVec4(0.28f, 0.48f, 0.77f, 1.00f);
   colors[ImGuiCol_PopupBg] = ImVec4(0.11f, 0.45f, 0.71f, 0.94f);
   colors[ImGuiCol_Separator] = ImVec4(1.00f, 1.00f, 1.00f, 0.11f);
+  colors[ImGuiCol_TableBorderStrong] = ImVec4(0.68f, 0.68f, 0.72f, 1.00f);
+  colors[ImGuiCol_TableRowBg] = ImVec4(0.24f, 0.40f, 0.57f, 1.00f);
+  colors[ImGuiCol_TableRowBgAlt] = ImVec4(0.17f, 0.33f, 0.67f, 0.07f);
+
+
 
 
 
@@ -47,6 +52,9 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   style.WindowRounding = 3.0f;
   style.WindowTitleAlign.x = 0.5f;
   style.WindowTitleAlign.y = 0.5f;
+
+
+
 
   ImGuiIO& io = ImGui::GetIO();
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -551,11 +559,35 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
   //profiler settings
   ImGui::Begin("Profiler");
-  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-  ImGui::Text("Octree Temporary Mem Usage: %i / %i", Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
-  ImGui::Text("BVH Top Down Temporary Mem Usage: %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown, linearAllocator.memory_size);
-  ImGui::Text("------------------------------------------------");
-  ImGui::Text("Total Temporary Mem Usage: %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown + Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
+  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)\n", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+  ImGui::BeginTable("Table", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders);
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("Temp Memory Usage");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text("Current Mem Used"); 
+  ImGui::TableNextRow();
+
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("Octree Temp Mem Usage:");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("BVH TD Temp Mem Usage:");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown, linearAllocator.memory_size);
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("Total Mem Usage:");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown + Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
+  ImGui::EndTable();
+  
   ImGui::End();
 
   //window settings
