@@ -47,6 +47,8 @@ DebugRenderingSystem::~DebugRenderingSystem()
 
 void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeight)
 {
+  auto start = std::chrono::high_resolution_clock::now();
+
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
   memory_usage_from_octree = 0;
@@ -188,6 +190,9 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
   }
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+  auto end = std::chrono::high_resolution_clock::now();
+  rendering_sytem_elapsed_time = end - start;
 }
 
 void DebugRenderingSystem::drawAABB(const MeshComponentPtr mesh, Scene& scene, bool isSquareAABB)

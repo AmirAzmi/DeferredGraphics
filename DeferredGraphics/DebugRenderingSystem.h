@@ -7,6 +7,8 @@
 #include "BSP.h"
 #include "Memory.h"
 
+#include <chrono>
+
 class DebugRenderingSystem
 {
   //projection and view matrix ID
@@ -2397,6 +2399,11 @@ class DebugRenderingSystem
   int memory_usage_from_octree = 0;
   int memory_usage_from_BVHTopeDown = 0;
   int memory_usage_from_BSP = 0;
+
+  //timer
+  std::chrono::duration<double, std::milli> rendering_sytem_elapsed_time;
+
+  //sphere type
   BoundingSphere::BoundingSphereCalculationType sphereType = BoundingSphere::BoundingSphereCalculationType::Centroid;
 
   struct BVHDist 

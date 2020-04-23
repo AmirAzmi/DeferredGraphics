@@ -16,6 +16,8 @@ Creation date: January 4th , 2020
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtx/transform.hpp>
 #include <vector>
+#include <chrono>
+
 #include "Scene.h"
 #include "LightComponent.h"
 
@@ -101,6 +103,7 @@ public:
   bool splitScreen = false;
   bool depthCopyToggle = true;
   bool brightBuffer = false;
+  std::chrono::duration<double, std::milli> rendering_sytem_elapsed_time;
 
   RenderingSystem(const int windowWidth, const int windowHeight);
   ~RenderingSystem();

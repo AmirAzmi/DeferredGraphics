@@ -608,6 +608,40 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::TableSetColumnIndex(1);
   ImGui::Text("# of draws %i", Manager.debugRenderer->bvh_draw_calls);
   ImGui::EndTable();
+
+
+
+
+  ImGui::BeginTable("Table3", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders);
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("Systems");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text("Time in milliseconds");
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("Debug Rendering System Frame Time:");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text("%f ms/frame (%.1f / 100.0)", Manager.debugRenderer->rendering_sytem_elapsed_time,
+    ((Manager.debugRenderer->rendering_sytem_elapsed_time) / (1000.0f / ImGui::GetIO().Framerate)) * 100.0f);
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("Main Rendering System Frame Time:");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text("%f ms/frame (%.1f / 100.0)", Manager.renderer->rendering_sytem_elapsed_time,
+    ((Manager.renderer->rendering_sytem_elapsed_time) / (1000.0f / ImGui::GetIO().Framerate)) * 100.0f);
+
+  ImGui::TableNextRow();
+  ImGui::TableSetColumnIndex(0);
+  ImGui::Text("Total Rendering Systems Frame Time:");
+  ImGui::TableSetColumnIndex(1);
+  ImGui::Text("%f ms/frame (%.1f / 100.0)", Manager.renderer->rendering_sytem_elapsed_time + Manager.renderer->rendering_sytem_elapsed_time, 
+    ((Manager.renderer->rendering_sytem_elapsed_time + Manager.debugRenderer->rendering_sytem_elapsed_time) / (1000.0f / ImGui::GetIO().Framerate)) * 100.0f);
+  ImGui::EndTable();
+
   ImGui::End();
 
   //window settings

@@ -213,6 +213,8 @@ RenderingSystem::~RenderingSystem()
 //update the mesh components of the entities
 void RenderingSystem::Update(Scene& scene, const int windowWidth, const int windowHeight)
 {
+  auto start = std::chrono::high_resolution_clock::now();
+
   glDepthFunc(GL_LEQUAL);
   //gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
@@ -441,6 +443,8 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
     DrawTextures(BrightBufferID, 0, 0, windowWidth / 2, windowHeight);
   }
 
+  auto end = std::chrono::high_resolution_clock::now();
+  rendering_sytem_elapsed_time = end - start;
 }
 
 void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)

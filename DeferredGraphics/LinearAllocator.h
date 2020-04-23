@@ -47,6 +47,7 @@ public:
 template<typename T, typename ...S>
 inline T * LinearAllocator::TAllocate(S&& ...args)
 {
+  //placement new for the pointer type of allocate and passing the constructor args of that type
   return new (Allocate(sizeof(T))) T(std::forward<S>(args)...);
   //return new T(std::forward<S>(args)...);
 }

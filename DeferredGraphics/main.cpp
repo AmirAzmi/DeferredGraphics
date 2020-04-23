@@ -14,6 +14,8 @@ Creation date: January 4th , 2020
 #include <glew/GL/glew.h>
 #include <glfw/GLFW/glfw3.h>
 #include <glm/glm/glm.hpp>
+#include <iostream>
+#include <fstream>
 
 #include "Editor.h"
 #include "SystemManager.h"
@@ -129,13 +131,61 @@ int main()
 
   } while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
+  //MOVE THIS OUT
+  //generate log right before freeing the data
+  std::ofstream myfile("profiler.txt");
+  if (myfile.is_open())
+  {
+    myfile << "Bounding Volume Hierarchy Information";
+    myfile << "\nBounding Volume Hierarchy On: " << systems.debugRenderer->isBVHOn;
+    myfile << "\nBounding Volume Hierarchy Levels: " << systems.debugRenderer->numberOfLevels;
+    myfile << "\nBounding Volume Hierarchy Draw Calls: " << systems.debugRenderer->bvh_draw_calls;
+    myfile << "\nBounding Volume Hierarchy Memory Usage: " << systems.debugRenderer->memory_usage_from_BVHTopeDown;
+     
+    myfile << "\n\nOctree Information";
+    myfile << "\nOctree On: " << systems.debugRenderer->isSubObjectDrawOn;
+    myfile << "\nOctree Levels: " << systems.debugRenderer->levelForOneObject;
+    myfile << "\nOctree Draw Calls: " << systems.debugRenderer->octree_draw_calls;
+    myfile << "\nOctree Memory Usage: " << systems.debugRenderer->memory_usage_from_octree;
+
+    myfile << "\n\nDebug Rendering System Draw Calls";
+    myfile << "\n\nTotal Draw Calls: " << systems.debugRenderer->bvh_draw_calls + systems.debugRenderer->octree_draw_calls;
+    myfile << "\nTotal Temporary Memory Usage: " << systems.debugRenderer->memory_usage_from_octree + systems.debugRenderer->memory_usage_from_BVHTopeDown << " out of "<<linearAllocator.memory_size;
+
+    myfile << "\n\nGraphics Settings";
+    myfile << "\nIs Bloom On: " << systems.renderer->bloom;
+    myfile << "\nIs Depth Copy On: " << systems.renderer->depthCopyToggle;
+    myfile << "\nIs Depth G Buffer Split Screen On: " << systems.renderer->splitScreen;
+    myfile << "\nIs Uncharted 2 Tone Mapping On: " << systems.renderer->exposure_tone_mapping;
+    myfile << "\nIs Gamma On: " << systems.renderer->gamma;
+    myfile << "\nIs Exposure Tone Mapping On: " << systems.renderer->exposure_tone_mapping;
+
+    if (systems.renderer->exposure_tone_mapping == true)
+    {
+      myfile << "\nExposure Value: " << systems.renderer->exposure;
+    }
+
+    myfile << "\n\nDebug Rendering System Frame Per Second: " << systems.debugRenderer->rendering_sytem_elapsed_time.count();
+    myfile << "\nMain Rendering System Frame Per Second: " << systems.renderer->rendering_sytem_elapsed_time.count();
+    myfile << "\nTotal Rendering System Frame Per Second: " << systems.debugRenderer->rendering_sytem_elapsed_time.count() + systems.renderer->rendering_sytem_elapsed_time.count();
+    myfile << "\nFrame Per Second: " << 1000.0f / ImGui::GetIO().Framerate;
+
+    myfile.close();
+  }
+  else
+  {
+    std::cout << "Unable to generate profiler log file.\n";
+  }
+
   //free the memory for the systems
   systems.Shutdown();
 
   //delete the scene
   delete scene;
 
+  //free memory for editor
   ImGuiEditor.shutdown();
+
   // Close OpenGL window and terminate GLFW
   glfwTerminate();
 
