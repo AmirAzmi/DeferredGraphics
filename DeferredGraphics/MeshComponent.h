@@ -20,7 +20,6 @@ Creation date: January 4th , 2020
 class MeshComponent
 {
 
-
 public:
 
   EntityPtr entity;       //8 bytes

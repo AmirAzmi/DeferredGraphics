@@ -26,9 +26,13 @@ class Scene
 public:
   glm::mat4 projectionMatrix;
   glm::mat4 viewMatrix;
+  glm::mat4 newProjectionMatrix;
+  glm::mat4 newViewMatrix;
   glm::vec3 eyePosition; //camera position
   glm::vec3 cameraDirection;
   glm::vec2 windowDimension;
+
+  glm::mat4 screenToWorld;
 
   float cameraSpeed;
   glm::vec3 upDirection;
@@ -52,6 +56,9 @@ public:
   std::vector<EntityPtr>& getEntities();
   std::vector<MeshComponentPtr>& getMeshes();
   std::vector<LightComponentPtr>& getLights();
+  const glm::mat4 ScreenToWorld();
+  const glm::mat4 getScreenToWorld();
+ 
 
   void Init();
   void PreRender(int windowWidth, int windowHeight);

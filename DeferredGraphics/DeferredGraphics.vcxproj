@@ -155,6 +155,7 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
     <ClCompile Include="BSP.cpp" />
+    <ClCompile Include="ColliderComponent.h" />
     <ClCompile Include="DebugRenderingSystem.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Memory.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="Raycast.cpp" />
     <ClCompile Include="RotationBehavior.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -200,6 +202,7 @@
     <ClInclude Include="Memory.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="Octree.h" />
+    <ClInclude Include="Raycast.h" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="RotationBehavior.h" />
     <ClInclude Include="Shader.h" />

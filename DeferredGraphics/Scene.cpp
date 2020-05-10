@@ -18,11 +18,14 @@ Creation date: January 4th , 2020
 
 #include "RotationBehavior.h"
 
-Scene::Scene(const int windowWidth, const int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(1000.0f), cameraSpeed(0.1f),
+Scene::Scene(const int windowWidth, const int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(100.0f), cameraSpeed(0.1f),
 eyePosition(glm::vec3(0.0f, 0.0f, 10.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, -1.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
 {
   windowDimension = getWindowDimension(windowWidth, windowHeight);
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
+  screenToWorld = ScreenToWorld();
+
+  newProjectionMatrix = glm::perspective(glm::radians(fov), (float)1919.0f / (float)1000.0f, nearDistance, farDistance);
   viewMatrix = glm::lookAt(eyePosition, cameraDirection, upDirection);
 }
 
@@ -36,6 +39,17 @@ std::vector<LightComponentPtr>& Scene::getLights()
 {
   //returns the vector of LightComponentPtrs in the scene
   return ListOfTypes.get<LightComponentPtr>();
+}
+
+const glm::mat4 Scene::ScreenToWorld()
+{
+  glm::mat4 screen_to_world = viewMatrix * projectionMatrix;
+  return glm::inverse(screen_to_world);
+}
+
+const glm::mat4 Scene::getScreenToWorld()
+{
+  return screenToWorld;
 }
 
 void Scene::Init()

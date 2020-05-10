@@ -5,10 +5,10 @@
 class BoundingVolumeHierarchy
 {
 public:
-  BoundingVolumeHierarchy * left_child;
-  BoundingVolumeHierarchy * right_child;
-  std::vector<MeshComponentPtr> meshes;
-  AABB boundingVolume;
+  BoundingVolumeHierarchy * left_child; //8 bytes
+  BoundingVolumeHierarchy * right_child; //8 bytes
+  std::vector<MeshComponentPtr> meshes;  //24 bytes
+  AABB boundingVolume; //24 bytes
 
   BoundingVolumeHierarchy(const std::vector<MeshComponentPtr> meshes);
   AABB calculateBoundingVolume(const std::vector<MeshComponentPtr> meshes);

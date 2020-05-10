@@ -54,8 +54,6 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   style.WindowTitleAlign.y = 0.5f;
 
 
-
-
   ImGuiIO& io = ImGui::GetIO();
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   //load fonts using "io.Fonts->AddFontFromFileTTF("your_font.ttf", size_pixels);"
@@ -187,6 +185,9 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::ShowDemoWindow();
   //*/
 
+  //highlight/manage objects here
+  //raycast from cursor position into the screen
+  //for any intersections of BVs, check the leaf nodes thoroughly
   //if you want to be able to move the window get rid of the flag in the ImGui::Begin();
   //Inspector Window, Entity List Window
   ImGui::Begin("Inspector");
@@ -238,7 +239,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
             {
               if (ImGui::Selectable(mesh_name[i].c_str()))
               {
-                meshComponent->mesh = mesh_handles[i];               
+                meshComponent->mesh = mesh_handles[i];
                 meshComponent->vertices = meshComponent->getVec4Vertices();
               }
             }
@@ -394,6 +395,29 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::Spacing();
   ImGui::TextWrapped("Q and E move up and down.");
   ImGui::Spacing();
+  ImGui::TextWrapped("Screen Space Mouse Position. X: %.2f", ImGui::GetIO().MousePos.x);
+  ImGui::TextWrapped("Screen Space Mouse Position. Y: %.2f", ImGui::GetIO().MousePos.y);
+  ImGui::Spacing();
+
+  if (ImGui::DragFloat("Camera Speed", &scene.cameraSpeed, .05f))
+  {
+  }
+
+  if (ImGui::DragFloat("Camera FOV", &scene.fov))
+  {
+  }
+
+  if (ImGui::DragFloat3("Camera Eye Position", &scene.eyePosition.x))
+  {
+  }
+
+  if (ImGui::DragFloat3("Camera Up Direction", &scene.upDirection.x))
+  {
+  }
+
+  if (ImGui::DragFloat3("Camera Direction", &scene.cameraDirection.x))
+  {
+  }
 
   //render settings
   if (ImGui::CollapsingHeader("Renderer Settings"))
@@ -557,100 +581,102 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
   ImGui::End();
 
-  //profiler settings
-  ImGui::Begin("Profiler");
-  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)\n", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+  {
+    //profiler settings
+    ImGui::Begin("Profiler");
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)\n", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-  ImGui::BeginTable("Table", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders);
+    if (ImGui::BeginTable("Table", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
+    {
 
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("Temp Memory Usage");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text("Current Mem Used"); 
-  ImGui::TableNextRow();
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Temp Memory Usage");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("Current Mem Used");
+      ImGui::TableNextRow();
 
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("Octree Temp Mem Usage:");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Octree Temp Mem Usage:");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
 
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("BVH TD Temp Mem Usage:");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown, linearAllocator.memory_size);
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("BVH TD Temp Mem Usage:");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown, linearAllocator.memory_size);
 
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("Total Mem Usage:");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown + Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
-  ImGui::EndTable();
-  
-  ImGui::BeginTable("Table2", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders);
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Total Mem Usage:");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text(" %i / %i", Manager.debugRenderer->memory_usage_from_BVHTopeDown + Manager.debugRenderer->memory_usage_from_octree, linearAllocator.memory_size);
+      ImGui::EndTable();
+    }
 
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("Debug Function Draw Calls");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text("Current # of Draws");
+    if (ImGui::BeginTable("Table2", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
+    {
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Debug Function Draw Calls");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("Current # of Draws");
 
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("DebugRendering::DrawOctree:");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text("# of draws %i", Manager.debugRenderer->octree_draw_calls);
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("DebugRendering::DrawOctree:");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("# of draws %i", Manager.debugRenderer->octree_draw_calls);
 
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("DebugRendering::DrawBVHTopDown:");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text("# of draws %i", Manager.debugRenderer->bvh_draw_calls);
-  ImGui::EndTable();
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("DebugRendering::DrawBVHTopDown:");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("# of draws %i", Manager.debugRenderer->bvh_draw_calls);
+      ImGui::EndTable();
+    }
 
 
+    if (ImGui::BeginTable("Table3", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
+    {
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Systems");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("Time in milliseconds");
 
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Debug Rendering System Frame Time:");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("%f ms/frame (%.1f / 100.0)", Manager.debugRenderer->rendering_sytem_elapsed_time,
+        ((Manager.debugRenderer->rendering_sytem_elapsed_time) / (1000.0f / ImGui::GetIO().Framerate)) * 100.0f);
 
-  ImGui::BeginTable("Table3", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders);
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Main Rendering System Frame Time:");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("%f ms/frame (%.1f / 100.0)", Manager.renderer->rendering_sytem_elapsed_time,
+        ((Manager.renderer->rendering_sytem_elapsed_time) / (1000.0f / ImGui::GetIO().Framerate)) * 100.0f);
 
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("Systems");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text("Time in milliseconds");
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Total Rendering Systems Frame Time:");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("%f ms/frame (%.1f / 100.0)", Manager.renderer->rendering_sytem_elapsed_time + Manager.renderer->rendering_sytem_elapsed_time,
+        ((Manager.renderer->rendering_sytem_elapsed_time + Manager.debugRenderer->rendering_sytem_elapsed_time) / (1000.0f / ImGui::GetIO().Framerate)) * 100.0f);
+      ImGui::EndTable();
+    }
 
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("Debug Rendering System Frame Time:");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text("%f ms/frame (%.1f / 100.0)", Manager.debugRenderer->rendering_sytem_elapsed_time,
-    ((Manager.debugRenderer->rendering_sytem_elapsed_time) / (1000.0f / ImGui::GetIO().Framerate)) * 100.0f);
-
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("Main Rendering System Frame Time:");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text("%f ms/frame (%.1f / 100.0)", Manager.renderer->rendering_sytem_elapsed_time,
-    ((Manager.renderer->rendering_sytem_elapsed_time) / (1000.0f / ImGui::GetIO().Framerate)) * 100.0f);
-
-  ImGui::TableNextRow();
-  ImGui::TableSetColumnIndex(0);
-  ImGui::Text("Total Rendering Systems Frame Time:");
-  ImGui::TableSetColumnIndex(1);
-  ImGui::Text("%f ms/frame (%.1f / 100.0)", Manager.renderer->rendering_sytem_elapsed_time + Manager.renderer->rendering_sytem_elapsed_time, 
-    ((Manager.renderer->rendering_sytem_elapsed_time + Manager.debugRenderer->rendering_sytem_elapsed_time) / (1000.0f / ImGui::GetIO().Framerate)) * 100.0f);
-  ImGui::EndTable();
-
-  ImGui::End();
+    ImGui::End();
+  }
 
   //window settings
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
   ImGui::Begin("Scene");
-
-  //takes in a texture, window size, and uvs
+  //takes in a texture, window size, and uvs -> draws final outto the whole imgui window
   ImGui::Image((void*)(intptr_t)(Manager.renderer->FinalColorBufferID), ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
-
   ImGui::End();
   ImGui::PopStyleVar();
 

@@ -25,11 +25,12 @@ Creation date: January 4th , 2020
 GLFWwindow* window;
 const int windowWidth = 1024;
 const int windowHeight = 768;
-
 const char* glsl_version = "#version 430";
 
 void processInput(GLFWwindow* window, Scene& scene);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 
 #ifdef _WIN32
 extern "C" {
@@ -67,6 +68,8 @@ int main()
 
   glfwMakeContextCurrent(window);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetMouseButtonCallback(window, mouse_button_callback);
+  glfwSetCursorPosCallback(window, cursor_position_callback);
 
   glewExperimental = static_cast<GLboolean>(true); // Needed for core profile
   if (glewInit() != GLEW_OK)
@@ -82,6 +85,7 @@ int main()
   //intialize the scene
   Scene* scene = new Scene(windowWidth, windowHeight);
   scene->Init();
+  glfwSetWindowUserPointer(window, scene);
 
   //initialize the systems the scene will be using
   SystemManager systems;
@@ -113,7 +117,6 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glCullFace(GL_BACK);
 
-
     //update the objects in the scene
     systems.Update(*scene, windowWidth, windowHeight);
 
@@ -141,7 +144,7 @@ int main()
     myfile << "\nBounding Volume Hierarchy Levels: " << systems.debugRenderer->numberOfLevels;
     myfile << "\nBounding Volume Hierarchy Draw Calls: " << systems.debugRenderer->bvh_draw_calls;
     myfile << "\nBounding Volume Hierarchy Memory Usage: " << systems.debugRenderer->memory_usage_from_BVHTopeDown;
-     
+
     myfile << "\n\nOctree Information";
     myfile << "\nOctree On: " << systems.debugRenderer->isSubObjectDrawOn;
     myfile << "\nOctree Levels: " << systems.debugRenderer->levelForOneObject;
@@ -150,7 +153,7 @@ int main()
 
     myfile << "\n\nDebug Rendering System Draw Calls";
     myfile << "\n\nTotal Draw Calls: " << systems.debugRenderer->bvh_draw_calls + systems.debugRenderer->octree_draw_calls;
-    myfile << "\nTotal Temporary Memory Usage: " << systems.debugRenderer->memory_usage_from_octree + systems.debugRenderer->memory_usage_from_BVHTopeDown << " out of "<<linearAllocator.memory_size;
+    myfile << "\nTotal Temporary Memory Usage: " << systems.debugRenderer->memory_usage_from_octree + systems.debugRenderer->memory_usage_from_BVHTopeDown << " out of " << linearAllocator.memory_size;
 
     myfile << "\n\nGraphics Settings";
     myfile << "\nIs Bloom On: " << systems.renderer->bloom;
@@ -237,7 +240,7 @@ void processInput(GLFWwindow* window, Scene& scene)
   if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye - glm::vec3(0.0f,1.0f,0.0f) * scene.cameraSpeed;
+    scene.eyePosition = eye - glm::vec3(0.0f, 1.0f, 0.0f) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
@@ -253,9 +256,76 @@ void processInput(GLFWwindow* window, Scene& scene)
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
   // make sure the viewport matches the new window dimensions; note that width and 
   // height will be significantly larger than specified on retina displays.
   glViewport(0, 0, width, height);
+}
+
+static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+  //get cursor postion in screen space
+  glfwGetCursorPos(window, &xpos, &ypos);
+  //std::cout << "Cursor X Pos in Screen Space: " << xpos << "\n";
+  //std::cout << "Cursor Y Pos in Screen Space: " << ypos << "\n";
+
+
+}
+
+static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+  if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+  {
+    double xpos; //screen x position
+    double ypos; //screen y position
+
+    //get cursor postion in screen space
+    glfwGetCursorPos(window, &xpos, &ypos);
+
+    //get pointer stored in window (you only get one)
+    Scene& scene = *(Scene*)glfwGetWindowUserPointer(window);
+
+    //convert it into world space
+    glm::mat4 screen_to_world = scene.screenToWorld;
+    glm::vec4 cursor_world_space;
+
+    //convert cursor vector from the range of -1 to 1 aka NDC
+    cursor_world_space.x = (2.0f * ((float)(xpos - 0) / 1919)) - 1.0f;
+    cursor_world_space.y = 1.0f - (2.0f * ((float)(ypos - 0) / 1000));
+    cursor_world_space.z = -1.0f; //-1 because opengl - goes into the scene
+    cursor_world_space.w = 1.0f;
+
+    std::cout << "\nBefore inverse matrix x: "<<cursor_world_space.x << "\n";
+    std::cout << "Before inverse matrix y: "<<cursor_world_space.y << "\n";
+    std::cout << "Before inverse matrix z: "<<cursor_world_space.z << "\n";
+    std::cout << "Before inverse matrix w: "<<cursor_world_space.w << "\n";
+
+    //dont know what the heck is happening here since I believe the math is correct going from screen space to world space but somewhere
+    //it after this point the world space ccordinates for the mouse are just messed up, ive like triple checked the matrices and how they are made
+    //the view matrix is calculated with window dimension as its aspect ratio, i tried sceen coordinates but nothing really changed
+    //perspective matrix is also calculated with the window dimension and not screen cooridinates, i also tried this as well but nope
+    //the ray is in screen space so the first thing we do is need to get into view space
+    glm::vec4 ray_view_space = inverse(scene.projectionMatrix) * cursor_world_space;
+    ray_view_space = glm::vec4(ray_view_space.x, ray_view_space.y, -1.0f, 0.0f);
+
+    //we are in view space now we need to get into world space
+    glm::vec3 ray_world_space = glm::inverse(scene.viewMatrix) * ray_view_space;
+    ray_world_space = glm::normalize(ray_world_space);
+
+    //perspective divide => DO NOT do this because a ray does not have depth
+
+    std::cout << "After inverse matrix x: " << cursor_world_space.x << "\n";
+    std::cout << "After inverse matrix y: " << cursor_world_space.y << "\n";
+    std::cout << "After inverse matrix z: " << cursor_world_space.z << "\n";
+    std::cout << "After inverse matrix w: " << cursor_world_space.w << "\n";
+    std::cout << "\nAfter ray x: " << ray_world_space.x << "\n";
+    std::cout << "After ray y: " << ray_world_space.y << "\n";
+    std::cout << "After ray z: " << ray_world_space.z << "\n";
+
+
+    //create ray from camera position in world space to cursor position in world space
+    //will have to come back to you later, i tried
+  }
+
 }
