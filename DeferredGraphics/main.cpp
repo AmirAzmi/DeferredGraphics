@@ -20,6 +20,8 @@ Creation date: January 4th , 2020
 #include "Editor.h"
 #include "SystemManager.h"
 
+#include "JsonParser.h"
+
 
 //window information
 GLFWwindow* window;
@@ -97,10 +99,44 @@ int main()
   //initialize the window
   ImGuiEditor.init(window, glsl_version);
 
+  // Read the Vertex Shader code from the file
+  std::string VertexShaderCode;
+  std::ifstream VertexShaderStream("Resources\\Json\\Empty.area.json", std::ios::in);
+  if (VertexShaderStream.is_open())
+  {
+    std::string Line;
+    while (getline(VertexShaderStream, Line))
+      VertexShaderCode += "\n" + Line;
+    VertexShaderStream.close();
+  }
+  else
+  {
+    std::cout << " oof you fucked";
+  }
+  
+  JsonValue level = jsonParser::toJson(VertexShaderCode);
+
+  if (std::holds_alternative<JsonObjectPtr>(level))
+  {
+    JsonObjectPtr & stuff = std::get<JsonObjectPtr>(level);
+    JsonArrayPtr & listOfEntities = std::get<JsonArrayPtr>(stuff->jsonObjects["entities"]);
+    JsonObjectPtr& first_entity = std::get<JsonObjectPtr>(listOfEntities->jsonArrays[0]);
+    JsonObjectPtr& componenets = std::get<JsonObjectPtr>(first_entity->jsonObjects["components"]);
+    JsonObjectPtr& sprite_data = std::get<JsonObjectPtr>(componenets->jsonObjects["Sprite"]);
+    std::string& material = std::get<std::string>(sprite_data->jsonObjects["material"]);
+
+    std::cout << material;
+
+  }
+
   do
   {
-    //input
-    processInput(window, *scene);
+    //blocks input to viewport when im focused on an imgui input event, not window
+    //but like literally in the capture input event mode
+    if (!ImGui::GetIO().WantCaptureKeyboard)
+    {
+      processInput(window, *scene);
+    }
 
     //render the window with the title Amir Azmi
     ImGuiEditor.preRender("Amir Azmi");
@@ -267,9 +303,6 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 {
   //get cursor postion in screen space
   glfwGetCursorPos(window, &xpos, &ypos);
-  //std::cout << "Cursor X Pos in Screen Space: " << xpos << "\n";
-  //std::cout << "Cursor Y Pos in Screen Space: " << ypos << "\n";
-
 
 }
 
@@ -277,51 +310,16 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 {
   if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
   {
-    double xpos; //screen x position
-    double ypos; //screen y position
-
-    //get cursor postion in screen space
+    double xpos;
+    double ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
-
-    //get pointer stored in window (you only get one)
-    Scene& scene = *(Scene*)glfwGetWindowUserPointer(window);
-
-    //convert it into world space
-    glm::mat4 screen_to_world = scene.screenToWorld;
-    glm::vec4 cursor_world_space;
-
-    //convert cursor vector from the range of -1 to 1 aka NDC
-    cursor_world_space.x = (2.0f * ((float)(xpos - 0) / 1919)) - 1.0f;
-    cursor_world_space.y = 1.0f - (2.0f * ((float)(ypos - 0) / 1000));
-    cursor_world_space.z = -1.0f; //-1 because opengl - goes into the scene
-    cursor_world_space.w = 1.0f;
-
-    std::cout << "\nBefore inverse matrix x: "<<cursor_world_space.x << "\n";
-    std::cout << "Before inverse matrix y: "<<cursor_world_space.y << "\n";
-    std::cout << "Before inverse matrix z: "<<cursor_world_space.z << "\n";
-    std::cout << "Before inverse matrix w: "<<cursor_world_space.w << "\n";
-
-    //dont know what the heck is happening here since I believe the math is correct going from screen space to world space but somewhere
+    //TODO: dont know what the heck is happening here since I believe the math is correct going from screen space to world space but somewhere
     //it after this point the world space ccordinates for the mouse are just messed up, ive like triple checked the matrices and how they are made
     //the view matrix is calculated with window dimension as its aspect ratio, i tried sceen coordinates but nothing really changed
     //perspective matrix is also calculated with the window dimension and not screen cooridinates, i also tried this as well but nope
     //the ray is in screen space so the first thing we do is need to get into view space
-    glm::vec4 ray_view_space = inverse(scene.projectionMatrix) * cursor_world_space;
-    ray_view_space = glm::vec4(ray_view_space.x, ray_view_space.y, -1.0f, 0.0f);
-
-    //we are in view space now we need to get into world space
-    glm::vec3 ray_world_space = glm::inverse(scene.viewMatrix) * ray_view_space;
-    ray_world_space = glm::normalize(ray_world_space);
 
     //perspective divide => DO NOT do this because a ray does not have depth
-
-    std::cout << "After inverse matrix x: " << cursor_world_space.x << "\n";
-    std::cout << "After inverse matrix y: " << cursor_world_space.y << "\n";
-    std::cout << "After inverse matrix z: " << cursor_world_space.z << "\n";
-    std::cout << "After inverse matrix w: " << cursor_world_space.w << "\n";
-    std::cout << "\nAfter ray x: " << ray_world_space.x << "\n";
-    std::cout << "After ray y: " << ray_world_space.y << "\n";
-    std::cout << "After ray z: " << ray_world_space.z << "\n";
 
 
     //create ray from camera position in world space to cursor position in world space

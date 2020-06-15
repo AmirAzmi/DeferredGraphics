@@ -1,0 +1,1996 @@
+{
+    "bounds" : {
+        "height" : 0.000000,
+        "x" : 0.000000,
+        "y" : 0.000000,
+        "width" : 0.000000
+    },
+    "entities" : [
+        {
+            "prefab_link" : {
+                "prefab_path" : ""
+            },
+            "is serializable" : true,
+            "name" : "Ground",
+            "components" : {
+                "RigidBody" : {
+                    "material" : {
+                        "static friction" : 0.500000,
+                        "dynamic friction" : 0.800000,
+                        "restitution" : 0.200000
+                    },
+                    "flags" : 4294967295.000000,
+                    "collide_family" : 4.000000,
+                    "collide_against" : 0.000000
+                },
+                "Sprite" : {
+                    "material" : "assets/materials/tiles_groundtile5.material.json",
+                    "flags" : 0.000000,
+                    "ignored_light_flags" : 0.000000,
+                    "color" : {
+                        "b" : 1.000000,
+                        "g" : 1.000000,
+                        "a" : 1.000000,
+                        "r" : 1.000000
+                    },
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : -0.500000,
+                            "z" : 0.000000,
+                            "y" : -0.510000
+                        },
+                        "origin" : {
+                            "x" : 0.500000,
+                            "z" : 0.000000,
+                            "y" : 0.500000
+                        },
+                        "scale" : {
+                            "x" : 50.000000,
+                            "z" : 1.000000,
+                            "y" : 0.640000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "texture uvs" : {
+                        "height" : 0.730000,
+                        "x" : 0.000000,
+                        "y" : 0.000000,
+                        "width" : 50.000000
+                    }
+                },
+                "Collider" : {
+                    "polygon_vertices" : [
+                        {
+                            "x" : 24.999998,
+                            "y" : -0.350000
+                        },
+                        {
+                            "x" : 24.999998,
+                            "y" : 0.350000
+                        },
+                        {
+                            "x" : -25.000002,
+                            "y" : 0.350000
+                        },
+                        {
+                            "x" : -25.000002,
+                            "y" : -0.350000
+                        }
+                    ],
+                    "is_trigger" : false,
+                    "polygon_normals" : [
+                        {
+                            "x" : 1.000000,
+                            "y" : -0.000000
+                        },
+                        {
+                            "x" : 0.000000,
+                            "y" : 1.000000
+                        },
+                        {
+                            "x" : -1.000000,
+                            "y" : -0.000000
+                        },
+                        {
+                            "x" : 0.000000,
+                            "y" : -1.000000
+                        }
+                    ],
+                    "type" : "Polygon",
+                    "circle_radius" : 1.000000,
+                    "density" : 0.000000
+                }
+            },
+            "is instance" : false,
+            "is active" : true,
+            "children" : [
+
+            ],
+            "transform" : {
+                "rotation3d" : {
+                    "x" : 0.000000,
+                    "z" : 0.000000,
+                    "y" : 0.000000
+                },
+                "position" : {
+                    "x" : -24.974205,
+                    "z" : -1.000000,
+                    "y" : 9.799667
+                },
+                "origin" : {
+                    "x" : 0.000000,
+                    "z" : 0.000000,
+                    "y" : 0.000000
+                },
+                "scale" : {
+                    "x" : 1.000000,
+                    "z" : 1.000000,
+                    "y" : 1.000000
+                },
+                "rotation" : 0.000000
+            },
+            "behaviors" : {
+                "PlatformMaterial" : {
+                    "footstepName" : "footstep_stone",
+                    "landingName" : "land_stone"
+                }
+            }
+        },
+        {
+            "prefab_link" : {
+                "prefab_path" : "assets/prefabs/Players/Gutz.prefab.json"
+            },
+            "is serializable" : true,
+            "name" : "Player One",
+            "components" : {
+                "Combat" : {
+                    "attack_amt" : 20.000000,
+                    "ingame_name" : "",
+                    "type" : "PLAYER",
+                    "min_health" : 0.000000,
+                    "armor" : 5.000000,
+                    "min_damage_taken" : 1.000000,
+                    "max_health" : 100.000000,
+                    "attack_speed" : 0.200000
+                },
+                "RigidBody" : {
+                    "material" : {
+                        "static friction" : 2.000000,
+                        "dynamic friction" : 2.000000,
+                        "restitution" : 0.200000
+                    },
+                    "flags" : 4294967294.000000,
+                    "collide_family" : 8.000000,
+                    "collide_against" : 2647.000000
+                },
+                "Sprite" : {
+                    "material" : "assets/materials/Gutz.material.json",
+                    "flags" : 0.000000,
+                    "ignored_light_flags" : 1.000000,
+                    "color" : {
+                        "b" : 1.000000,
+                        "g" : 1.000000,
+                        "a" : 1.000000,
+                        "r" : 1.000000
+                    },
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : -0.250000,
+                            "z" : -3.500000,
+                            "y" : -0.270000
+                        },
+                        "origin" : {
+                            "x" : 0.500000,
+                            "z" : 0.000000,
+                            "y" : 0.500000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "texture uvs" : {
+                        "height" : 0.166667,
+                        "x" : 0.000000,
+                        "y" : 0.833333,
+                        "width" : 0.125000
+                    }
+                },
+                "Collider" : {
+                    "polygon_vertices" : [
+                        {
+                            "x" : 0.460000,
+                            "y" : -0.902500
+                        },
+                        {
+                            "x" : 0.460000,
+                            "y" : 0.902500
+                        },
+                        {
+                            "x" : -0.460000,
+                            "y" : 0.902500
+                        },
+                        {
+                            "x" : -0.460000,
+                            "y" : -0.902500
+                        }
+                    ],
+                    "is_trigger" : false,
+                    "polygon_normals" : [
+                        {
+                            "x" : 1.000000,
+                            "y" : -0.000000
+                        },
+                        {
+                            "x" : 0.000000,
+                            "y" : 1.000000
+                        },
+                        {
+                            "x" : -1.000000,
+                            "y" : -0.000000
+                        },
+                        {
+                            "x" : 0.000000,
+                            "y" : -1.000000
+                        }
+                    ],
+                    "type" : "Polygon",
+                    "circle_radius" : 0.200000,
+                    "density" : 96.025177
+                },
+                "CameraTarget" : {
+                    "innerAttractorRad" : 0.000000,
+                    "framingPriority" : "PRIMARY",
+                    "outerAttractorRad" : 0.000000,
+                    "weight" : 1.000000,
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 1.800000,
+                            "z" : 0.000000,
+                            "y" : 0.250000
+                        },
+                        "origin" : {
+                            "x" : 0.500000,
+                            "z" : 0.000000,
+                            "y" : 0.500000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    }
+                },
+                "Audio" : {
+                    "handles" : {
+                        "shielddeny" : {
+                            "name" : "shielddeny",
+                            "isLooping" : false
+                        },
+                        "footstep" : {
+                            "name" : "footstep",
+                            "isLooping" : false
+                        },
+                        "batonhit" : {
+                            "name" : "batonhit",
+                            "isLooping" : false
+                        },
+                        "jump" : {
+                            "name" : "cricketjump",
+                            "isLooping" : false
+                        },
+                        "doublejump" : {
+                            "name" : "cricketdoublejump",
+                            "isLooping" : false
+                        },
+                        "dash" : {
+                            "name" : "dash",
+                            "isLooping" : false
+                        },
+                        "ouch" : {
+                            "name" : "gutzpain",
+                            "isLooping" : false
+                        },
+                        "land" : {
+                            "name" : "land",
+                            "isLooping" : false
+                        },
+                        "shielddown" : {
+                            "name" : "shielddown",
+                            "isLooping" : false
+                        },
+                        "shieldup" : {
+                            "name" : "shieldup",
+                            "isLooping" : false
+                        }
+                    },
+                    "is_playing" : true
+                },
+                "Animation" : {
+                    "speed" : 1.000000,
+                    "repeat" : false,
+                    "spritesheet" : "Gutz",
+                    "is_playing" : true,
+                    "current animation" : "Stand"
+                },
+                "ParticleEmitter" : {
+                    "max_lifetime" : 0.300000,
+                    "angle_off_range" : {
+                        "x" : -1.570796,
+                        "y" : -1.570796
+                    },
+                    "isPlaying" : true,
+                    "end_size" : {
+                        "x" : -2.000000,
+                        "y" : 2.000000
+                    },
+                    "motion" : "LINEAR",
+                    "multi_color" : {
+                        "uid_track" : 0.000000,
+                        "colors" : [
+
+                        ]
+                    },
+                    "angle_off_speed_range" : {
+                        "x" : 0.000000,
+                        "y" : 0.000000
+                    },
+                    "a_drag" : 0.000000,
+                    "min_lifetime" : 0.150000,
+                    "ang_grip" : 0.500000,
+                    "min_v" : 0.000010,
+                    "spriteSheet" : "Gutz",
+                    "restitution" : 0.980000,
+                    "start_size" : {
+                        "x" : -2.000000,
+                        "y" : 2.000000
+                    },
+                    "effect" : "CHANGE",
+                    "collide_mask" : 4.000000,
+                    "flip_x" : true,
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.150000
+                        },
+                        "origin" : {
+                            "x" : 0.500000,
+                            "z" : 0.000000,
+                            "y" : 0.500000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "v_drag" : 0.000000,
+                    "acceleration" : {
+                        "x" : 0.000000,
+                        "y" : 0.000000
+                    },
+                    "pv_drag" : 0.000000,
+                    "material" : "assets/materials/Gutz.material.json",
+                    "height" : 1.000000,
+                    "ang_velocity_relation" : 1.000000,
+                    "animationScale" : 1.000000,
+                    "direction" : {
+                        "x" : 0.000000,
+                        "y" : 0.000000
+                    },
+                    "phys_particles" : false,
+                    "isAnimated" : true,
+                    "max_particles" : 0.000000,
+                    "spawnShape" : "POINT",
+                    "inv_fric" : 0.980000,
+                    "spawnSpeed" : 1.000000,
+                    "max_bounces" : {
+
+                    },
+                    "random_influence" : {
+                        "x" : 1.000000,
+                        "y" : 1.000000
+                    },
+                    "start_color" : {
+                        "b" : 1.132000,
+                        "g" : 1.263000,
+                        "a" : 1.000000,
+                        "r" : 0.513000
+                    },
+                    "currentAnimation" : "Run",
+                    "not_spawning" : false,
+                    "pa_drag" : 0.000000,
+                    "end_color" : {
+                        "b" : 1.718000,
+                        "g" : 1.950000,
+                        "a" : 0.110000,
+                        "r" : 0.621000
+                    },
+                    "width" : 0.000000
+                }
+            },
+            "is instance" : true,
+            "is active" : true,
+            "children" : [
+                {
+                    "prefab_link" : {
+                        "prefab_path" : ""
+                    },
+                    "is serializable" : true,
+                    "name" : "Jump Trail",
+                    "components" : {
+                        "ParticleEmitter" : {
+                            "max_lifetime" : 0.000000,
+                            "angle_off_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "isPlaying" : true,
+                            "end_size" : {
+                                "x" : 0.100000,
+                                "y" : 0.100000
+                            },
+                            "motion" : "CIRCULAR",
+                            "multi_color" : {
+                                "uid_track" : 0.000000,
+                                "colors" : [
+
+                                ]
+                            },
+                            "angle_off_speed_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "a_drag" : 0.000000,
+                            "min_lifetime" : 0.000000,
+                            "ang_grip" : 0.500000,
+                            "min_v" : 0.000010,
+                            "spriteSheet" : "<null>",
+                            "restitution" : 0.980000,
+                            "start_size" : {
+                                "x" : 0.300000,
+                                "y" : 0.300000
+                            },
+                            "effect" : "CHANGE",
+                            "collide_mask" : 4.000000,
+                            "flip_x" : false,
+                            "transform" : {
+                                "rotation3d" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "position" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "origin" : {
+                                    "x" : 0.500000,
+                                    "z" : 0.000000,
+                                    "y" : 0.500000
+                                },
+                                "scale" : {
+                                    "x" : 1.000000,
+                                    "z" : 1.000000,
+                                    "y" : 1.000000
+                                },
+                                "rotation" : 0.000000
+                            },
+                            "v_drag" : 0.000000,
+                            "acceleration" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "pv_drag" : 0.000000,
+                            "material" : "assets/materials/smoke.material.json",
+                            "height" : 1.740000,
+                            "ang_velocity_relation" : 1.000000,
+                            "animationScale" : 1.000000,
+                            "direction" : {
+                                "x" : 1.000000,
+                                "y" : 1.000000
+                            },
+                            "phys_particles" : false,
+                            "isAnimated" : false,
+                            "max_particles" : 200.000000,
+                            "spawnShape" : "POINT",
+                            "inv_fric" : 0.980000,
+                            "spawnSpeed" : 1.000000,
+                            "max_bounces" : {
+
+                            },
+                            "random_influence" : {
+                                "x" : 10.000000,
+                                "y" : 10.000000
+                            },
+                            "start_color" : {
+                                "b" : 0.387251,
+                                "g" : 0.387251,
+                                "a" : 1.000000,
+                                "r" : 0.387255
+                            },
+                            "currentAnimation" : "",
+                            "not_spawning" : false,
+                            "pa_drag" : 0.000000,
+                            "end_color" : {
+                                "b" : 0.651954,
+                                "g" : 0.651954,
+                                "a" : 0.050000,
+                                "r" : 0.651961
+                            },
+                            "width" : 1.600000
+                        }
+                    },
+                    "is instance" : true,
+                    "is active" : true,
+                    "children" : [
+
+                    ],
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : -16.000000,
+                            "y" : 0.000000
+                        },
+                        "origin" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "behaviors" : {
+
+                    }
+                },
+                {
+                    "prefab_link" : {
+                        "prefab_path" : ""
+                    },
+                    "is serializable" : true,
+                    "name" : "Jump Trail",
+                    "components" : {
+                        "ParticleEmitter" : {
+                            "max_lifetime" : 0.000000,
+                            "angle_off_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "isPlaying" : true,
+                            "end_size" : {
+                                "x" : 0.100000,
+                                "y" : 0.100000
+                            },
+                            "motion" : "CIRCULAR",
+                            "multi_color" : {
+                                "uid_track" : 0.000000,
+                                "colors" : [
+
+                                ]
+                            },
+                            "angle_off_speed_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "a_drag" : 0.000000,
+                            "min_lifetime" : 0.000000,
+                            "ang_grip" : 0.500000,
+                            "min_v" : 0.000010,
+                            "spriteSheet" : "<null>",
+                            "restitution" : 0.980000,
+                            "start_size" : {
+                                "x" : 0.300000,
+                                "y" : 0.300000
+                            },
+                            "effect" : "CHANGE",
+                            "collide_mask" : 4.000000,
+                            "flip_x" : false,
+                            "transform" : {
+                                "rotation3d" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "position" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "origin" : {
+                                    "x" : 0.500000,
+                                    "z" : 0.000000,
+                                    "y" : 0.500000
+                                },
+                                "scale" : {
+                                    "x" : 1.000000,
+                                    "z" : 1.000000,
+                                    "y" : 1.000000
+                                },
+                                "rotation" : 0.000000
+                            },
+                            "v_drag" : 0.000000,
+                            "acceleration" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "pv_drag" : 0.000000,
+                            "material" : "assets/materials/smoke.material.json",
+                            "height" : 1.740000,
+                            "ang_velocity_relation" : 1.000000,
+                            "animationScale" : 1.000000,
+                            "direction" : {
+                                "x" : 1.000000,
+                                "y" : 1.000000
+                            },
+                            "phys_particles" : false,
+                            "isAnimated" : false,
+                            "max_particles" : 200.000000,
+                            "spawnShape" : "POINT",
+                            "inv_fric" : 0.980000,
+                            "spawnSpeed" : 1.000000,
+                            "max_bounces" : {
+
+                            },
+                            "random_influence" : {
+                                "x" : 10.000000,
+                                "y" : 10.000000
+                            },
+                            "start_color" : {
+                                "b" : 0.387251,
+                                "g" : 0.387251,
+                                "a" : 1.000000,
+                                "r" : 0.387255
+                            },
+                            "currentAnimation" : "",
+                            "not_spawning" : false,
+                            "pa_drag" : 0.000000,
+                            "end_color" : {
+                                "b" : 0.651954,
+                                "g" : 0.651954,
+                                "a" : 0.050000,
+                                "r" : 0.651961
+                            },
+                            "width" : 1.600000
+                        }
+                    },
+                    "is instance" : true,
+                    "is active" : true,
+                    "children" : [
+
+                    ],
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : -16.000000,
+                            "y" : 0.000000
+                        },
+                        "origin" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "behaviors" : {
+
+                    }
+                },
+                {
+                    "prefab_link" : {
+                        "prefab_path" : ""
+                    },
+                    "is serializable" : true,
+                    "name" : "Jump Trail",
+                    "components" : {
+                        "ParticleEmitter" : {
+                            "max_lifetime" : 0.000000,
+                            "angle_off_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "isPlaying" : true,
+                            "end_size" : {
+                                "x" : 0.100000,
+                                "y" : 0.100000
+                            },
+                            "motion" : "CIRCULAR",
+                            "multi_color" : {
+                                "uid_track" : 0.000000,
+                                "colors" : [
+
+                                ]
+                            },
+                            "angle_off_speed_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "a_drag" : 0.000000,
+                            "min_lifetime" : 0.000000,
+                            "ang_grip" : 0.500000,
+                            "min_v" : 0.000010,
+                            "spriteSheet" : "<null>",
+                            "restitution" : 0.980000,
+                            "start_size" : {
+                                "x" : 0.300000,
+                                "y" : 0.300000
+                            },
+                            "effect" : "CHANGE",
+                            "collide_mask" : 4.000000,
+                            "flip_x" : false,
+                            "transform" : {
+                                "rotation3d" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "position" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "origin" : {
+                                    "x" : 0.500000,
+                                    "z" : 0.000000,
+                                    "y" : 0.500000
+                                },
+                                "scale" : {
+                                    "x" : 1.000000,
+                                    "z" : 1.000000,
+                                    "y" : 1.000000
+                                },
+                                "rotation" : 0.000000
+                            },
+                            "v_drag" : 0.000000,
+                            "acceleration" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "pv_drag" : 0.000000,
+                            "material" : "assets/materials/smoke.material.json",
+                            "height" : 1.740000,
+                            "ang_velocity_relation" : 1.000000,
+                            "animationScale" : 1.000000,
+                            "direction" : {
+                                "x" : 1.000000,
+                                "y" : 1.000000
+                            },
+                            "phys_particles" : false,
+                            "isAnimated" : false,
+                            "max_particles" : 200.000000,
+                            "spawnShape" : "POINT",
+                            "inv_fric" : 0.980000,
+                            "spawnSpeed" : 1.000000,
+                            "max_bounces" : {
+
+                            },
+                            "random_influence" : {
+                                "x" : 10.000000,
+                                "y" : 10.000000
+                            },
+                            "start_color" : {
+                                "b" : 0.387251,
+                                "g" : 0.387251,
+                                "a" : 1.000000,
+                                "r" : 0.387255
+                            },
+                            "currentAnimation" : "",
+                            "not_spawning" : false,
+                            "pa_drag" : 0.000000,
+                            "end_color" : {
+                                "b" : 0.651954,
+                                "g" : 0.651954,
+                                "a" : 0.050000,
+                                "r" : 0.651961
+                            },
+                            "width" : 1.600000
+                        }
+                    },
+                    "is instance" : true,
+                    "is active" : true,
+                    "children" : [
+
+                    ],
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : -16.000000,
+                            "y" : 0.000000
+                        },
+                        "origin" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "behaviors" : {
+
+                    }
+                },
+                {
+                    "prefab_link" : {
+                        "prefab_path" : ""
+                    },
+                    "is serializable" : true,
+                    "name" : "Jump Trail",
+                    "components" : {
+                        "ParticleEmitter" : {
+                            "max_lifetime" : 0.000000,
+                            "angle_off_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "isPlaying" : true,
+                            "end_size" : {
+                                "x" : 0.100000,
+                                "y" : 0.100000
+                            },
+                            "motion" : "CIRCULAR",
+                            "multi_color" : {
+                                "uid_track" : 0.000000,
+                                "colors" : [
+
+                                ]
+                            },
+                            "angle_off_speed_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "a_drag" : 0.000000,
+                            "min_lifetime" : 0.000000,
+                            "ang_grip" : 0.500000,
+                            "min_v" : 0.000010,
+                            "spriteSheet" : "<null>",
+                            "restitution" : 0.980000,
+                            "start_size" : {
+                                "x" : 0.300000,
+                                "y" : 0.300000
+                            },
+                            "effect" : "CHANGE",
+                            "collide_mask" : 4.000000,
+                            "flip_x" : false,
+                            "transform" : {
+                                "rotation3d" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "position" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "origin" : {
+                                    "x" : 0.500000,
+                                    "z" : 0.000000,
+                                    "y" : 0.500000
+                                },
+                                "scale" : {
+                                    "x" : 1.000000,
+                                    "z" : 1.000000,
+                                    "y" : 1.000000
+                                },
+                                "rotation" : 0.000000
+                            },
+                            "v_drag" : 0.000000,
+                            "acceleration" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "pv_drag" : 0.000000,
+                            "material" : "assets/materials/smoke.material.json",
+                            "height" : 1.740000,
+                            "ang_velocity_relation" : 1.000000,
+                            "animationScale" : 1.000000,
+                            "direction" : {
+                                "x" : 1.000000,
+                                "y" : 1.000000
+                            },
+                            "phys_particles" : false,
+                            "isAnimated" : false,
+                            "max_particles" : 200.000000,
+                            "spawnShape" : "POINT",
+                            "inv_fric" : 0.980000,
+                            "spawnSpeed" : 1.000000,
+                            "max_bounces" : {
+
+                            },
+                            "random_influence" : {
+                                "x" : 10.000000,
+                                "y" : 10.000000
+                            },
+                            "start_color" : {
+                                "b" : 0.387251,
+                                "g" : 0.387251,
+                                "a" : 1.000000,
+                                "r" : 0.387255
+                            },
+                            "currentAnimation" : "",
+                            "not_spawning" : false,
+                            "pa_drag" : 0.000000,
+                            "end_color" : {
+                                "b" : 0.651954,
+                                "g" : 0.651954,
+                                "a" : 0.050000,
+                                "r" : 0.651961
+                            },
+                            "width" : 1.600000
+                        }
+                    },
+                    "is instance" : true,
+                    "is active" : true,
+                    "children" : [
+
+                    ],
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : -16.000000,
+                            "y" : 0.000000
+                        },
+                        "origin" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "behaviors" : {
+
+                    }
+                }
+            ],
+            "transform" : {
+                "rotation3d" : {
+                    "x" : 0.000000,
+                    "z" : 0.000000,
+                    "y" : 0.000000
+                },
+                "position" : {
+                    "x" : -13.058540,
+                    "z" : 0.000000,
+                    "y" : 8.563995
+                },
+                "origin" : {
+                    "x" : 0.500000,
+                    "z" : 0.500000,
+                    "y" : 0.500000
+                },
+                "scale" : {
+                    "x" : 2.000000,
+                    "z" : 1.000000,
+                    "y" : 2.000000
+                },
+                "rotation" : 0.000000
+            },
+            "behaviors" : {
+                "PlayerMovement" : {
+                    "is_gutz" : true,
+                    "controller" : 0.000000,
+                    "distance" : 24.000000,
+                    "inv_flash_time" : 0.050000,
+                    "dash_speed" : 25.000000,
+                    "deadzone" : 0.200000,
+                    "dash_distance" : 0.200000,
+                    "jump" : 10.000000,
+                    "hit_radius" : 0.600000,
+                    "m_MovementSpeed" : 9.000000,
+                    "dash_cooldown" : 0.900000,
+                    "num_jumps" : 1.000000,
+                    "jump_duration" : 0.200000
+                },
+                "ShieldBehavior" : {
+                    "Up_Time" : 5.000000,
+                    "Radius" : 1.500000,
+                    "Cooldown_Time" : 5.000000,
+                    "Damage Threshold" : 15.000000
+                },
+                "Melee_behavior" : {
+
+                }
+            }
+        },
+        {
+            "prefab_link" : {
+                "prefab_path" : "assets/prefabs/Players/Cricket.prefab.json"
+            },
+            "is serializable" : true,
+            "name" : "Player Two",
+            "components" : {
+                "Combat" : {
+                    "attack_amt" : 5.000000,
+                    "ingame_name" : "",
+                    "type" : "PLAYER",
+                    "min_health" : 0.000000,
+                    "armor" : 0.000000,
+                    "min_damage_taken" : 1.000000,
+                    "max_health" : 150.000000,
+                    "attack_speed" : 0.100000
+                },
+                "RigidBody" : {
+                    "material" : {
+                        "static friction" : 1.000000,
+                        "dynamic friction" : 1.000000,
+                        "restitution" : 0.200000
+                    },
+                    "flags" : 4294967294.000000,
+                    "collide_family" : 8.000000,
+                    "collide_against" : 2647.000000
+                },
+                "Sprite" : {
+                    "material" : "assets/materials/girl.material.json",
+                    "flags" : 0.000000,
+                    "ignored_light_flags" : 1.000000,
+                    "color" : {
+                        "b" : 1.000000,
+                        "g" : 1.000000,
+                        "a" : 1.000000,
+                        "r" : 1.000000
+                    },
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : -0.510000,
+                            "z" : -4.000000,
+                            "y" : -0.580000
+                        },
+                        "origin" : {
+                            "x" : 0.500000,
+                            "z" : 0.000000,
+                            "y" : 0.500000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "texture uvs" : {
+                        "height" : 0.100000,
+                        "x" : 0.875000,
+                        "y" : 0.200000,
+                        "width" : 0.125000
+                    }
+                },
+                "Collider" : {
+                    "polygon_vertices" : [
+                        {
+                            "x" : 0.315000,
+                            "y" : -0.770000
+                        },
+                        {
+                            "x" : 0.315000,
+                            "y" : 0.770000
+                        },
+                        {
+                            "x" : -0.315000,
+                            "y" : 0.770000
+                        },
+                        {
+                            "x" : -0.315000,
+                            "y" : -0.770000
+                        }
+                    ],
+                    "is_trigger" : false,
+                    "polygon_normals" : [
+                        {
+                            "x" : 1.000000,
+                            "y" : -0.000000
+                        },
+                        {
+                            "x" : 0.000000,
+                            "y" : 1.000000
+                        },
+                        {
+                            "x" : -1.000000,
+                            "y" : -0.000000
+                        },
+                        {
+                            "x" : 0.000000,
+                            "y" : -1.000000
+                        }
+                    ],
+                    "type" : "Polygon",
+                    "circle_radius" : 0.200000,
+                    "density" : 0.761642
+                },
+                "CameraTarget" : {
+                    "innerAttractorRad" : 0.000000,
+                    "framingPriority" : "PRIMARY",
+                    "outerAttractorRad" : 0.000000,
+                    "weight" : 1.000000,
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 1.800000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "origin" : {
+                            "x" : 0.500000,
+                            "z" : 0.000000,
+                            "y" : 0.500000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    }
+                },
+                "Audio" : {
+                    "handles" : {
+                        "cricketsmg" : {
+                            "name" : "cricketsmg",
+                            "isLooping" : false
+                        },
+                        "footstep" : {
+                            "name" : "footstep",
+                            "isLooping" : false
+                        },
+                        "noammo" : {
+                            "name" : "noammostungun",
+                            "isLooping" : false
+                        },
+                        "jump" : {
+                            "name" : "cricketjump",
+                            "isLooping" : false
+                        },
+                        "doublejump" : {
+                            "name" : "cricketdoublejump",
+                            "isLooping" : false
+                        },
+                        "dash" : {
+                            "name" : "dash",
+                            "isLooping" : false
+                        },
+                        "cricketstun" : {
+                            "name" : "cricketstun",
+                            "isLooping" : false
+                        },
+                        "ouch" : {
+                            "name" : "cricketpain",
+                            "isLooping" : false
+                        },
+                        "land" : {
+                            "name" : "land",
+                            "isLooping" : false
+                        }
+                    },
+                    "is_playing" : true
+                },
+                "Animation" : {
+                    "speed" : 1.000000,
+                    "repeat" : false,
+                    "spritesheet" : "Cricket",
+                    "is_playing" : true,
+                    "current animation" : "Stand"
+                },
+                "ParticleEmitter" : {
+                    "max_lifetime" : 2.000000,
+                    "angle_off_range" : {
+                        "x" : -1.570796,
+                        "y" : -1.570796
+                    },
+                    "isPlaying" : true,
+                    "end_size" : {
+                        "x" : -2.000000,
+                        "y" : 2.000000
+                    },
+                    "motion" : "LINEAR",
+                    "multi_color" : {
+                        "uid_track" : 0.000000,
+                        "colors" : [
+
+                        ]
+                    },
+                    "angle_off_speed_range" : {
+                        "x" : 0.000000,
+                        "y" : 0.000000
+                    },
+                    "a_drag" : 0.000000,
+                    "min_lifetime" : 0.150000,
+                    "ang_grip" : 0.500000,
+                    "min_v" : 0.000010,
+                    "spriteSheet" : "Cricket",
+                    "restitution" : 0.980000,
+                    "start_size" : {
+                        "x" : -2.000000,
+                        "y" : 2.000000
+                    },
+                    "effect" : "CHANGE",
+                    "collide_mask" : 4.000000,
+                    "flip_x" : true,
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : -0.098000
+                        },
+                        "origin" : {
+                            "x" : 0.500000,
+                            "z" : 0.000000,
+                            "y" : 0.500000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "v_drag" : 0.000000,
+                    "acceleration" : {
+                        "x" : 0.000000,
+                        "y" : 0.000000
+                    },
+                    "pv_drag" : 0.000000,
+                    "material" : "assets/materials/girl.material.json",
+                    "height" : 1.000000,
+                    "ang_velocity_relation" : 1.000000,
+                    "animationScale" : 1.000000,
+                    "direction" : {
+                        "x" : 0.000000,
+                        "y" : 0.000000
+                    },
+                    "phys_particles" : false,
+                    "isAnimated" : true,
+                    "max_particles" : 0.000000,
+                    "spawnShape" : "POINT",
+                    "inv_fric" : 0.980000,
+                    "spawnSpeed" : 1.000000,
+                    "max_bounces" : {
+
+                    },
+                    "random_influence" : {
+                        "x" : 1.000000,
+                        "y" : 1.000000
+                    },
+                    "start_color" : {
+                        "b" : 0.760000,
+                        "g" : 0.513000,
+                        "a" : 1.000000,
+                        "r" : 1.263000
+                    },
+                    "currentAnimation" : "Run",
+                    "not_spawning" : false,
+                    "pa_drag" : 0.000000,
+                    "end_color" : {
+                        "b" : 0.620000,
+                        "g" : 0.620000,
+                        "a" : 0.110000,
+                        "r" : 1.950000
+                    },
+                    "width" : 0.000000
+                }
+            },
+            "is instance" : true,
+            "is active" : true,
+            "children" : [
+                {
+                    "prefab_link" : {
+                        "prefab_path" : ""
+                    },
+                    "is serializable" : true,
+                    "name" : "Jump Trail",
+                    "components" : {
+                        "ParticleEmitter" : {
+                            "max_lifetime" : 0.000000,
+                            "angle_off_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "isPlaying" : true,
+                            "end_size" : {
+                                "x" : 0.100000,
+                                "y" : 0.100000
+                            },
+                            "motion" : "CIRCULAR",
+                            "multi_color" : {
+                                "uid_track" : 0.000000,
+                                "colors" : [
+
+                                ]
+                            },
+                            "angle_off_speed_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "a_drag" : 0.000000,
+                            "min_lifetime" : 0.000000,
+                            "ang_grip" : 0.500000,
+                            "min_v" : 0.000010,
+                            "spriteSheet" : "<null>",
+                            "restitution" : 0.980000,
+                            "start_size" : {
+                                "x" : 0.300000,
+                                "y" : 0.300000
+                            },
+                            "effect" : "CHANGE",
+                            "collide_mask" : 4.000000,
+                            "flip_x" : false,
+                            "transform" : {
+                                "rotation3d" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "position" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "origin" : {
+                                    "x" : 0.500000,
+                                    "z" : 0.000000,
+                                    "y" : 0.500000
+                                },
+                                "scale" : {
+                                    "x" : 1.000000,
+                                    "z" : 1.000000,
+                                    "y" : 1.000000
+                                },
+                                "rotation" : 0.000000
+                            },
+                            "v_drag" : 0.000000,
+                            "acceleration" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "pv_drag" : 0.000000,
+                            "material" : "assets/materials/smoke.material.json",
+                            "height" : 1.740000,
+                            "ang_velocity_relation" : 1.000000,
+                            "animationScale" : 1.000000,
+                            "direction" : {
+                                "x" : 1.000000,
+                                "y" : 1.000000
+                            },
+                            "phys_particles" : false,
+                            "isAnimated" : false,
+                            "max_particles" : 200.000000,
+                            "spawnShape" : "POINT",
+                            "inv_fric" : 0.980000,
+                            "spawnSpeed" : 1.000000,
+                            "max_bounces" : {
+
+                            },
+                            "random_influence" : {
+                                "x" : 10.000000,
+                                "y" : 10.000000
+                            },
+                            "start_color" : {
+                                "b" : 0.387251,
+                                "g" : 0.387251,
+                                "a" : 1.000000,
+                                "r" : 0.387255
+                            },
+                            "currentAnimation" : "",
+                            "not_spawning" : false,
+                            "pa_drag" : 0.000000,
+                            "end_color" : {
+                                "b" : 0.651954,
+                                "g" : 0.651954,
+                                "a" : 0.050000,
+                                "r" : 0.651961
+                            },
+                            "width" : 1.600000
+                        }
+                    },
+                    "is instance" : true,
+                    "is active" : true,
+                    "children" : [
+
+                    ],
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : -16.000000,
+                            "y" : 0.000000
+                        },
+                        "origin" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "behaviors" : {
+
+                    }
+                },
+                {
+                    "prefab_link" : {
+                        "prefab_path" : ""
+                    },
+                    "is serializable" : true,
+                    "name" : "Jump Trail",
+                    "components" : {
+                        "ParticleEmitter" : {
+                            "max_lifetime" : 0.000000,
+                            "angle_off_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "isPlaying" : true,
+                            "end_size" : {
+                                "x" : 0.100000,
+                                "y" : 0.100000
+                            },
+                            "motion" : "CIRCULAR",
+                            "multi_color" : {
+                                "uid_track" : 0.000000,
+                                "colors" : [
+
+                                ]
+                            },
+                            "angle_off_speed_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "a_drag" : 0.000000,
+                            "min_lifetime" : 0.000000,
+                            "ang_grip" : 0.500000,
+                            "min_v" : 0.000010,
+                            "spriteSheet" : "<null>",
+                            "restitution" : 0.980000,
+                            "start_size" : {
+                                "x" : 0.300000,
+                                "y" : 0.300000
+                            },
+                            "effect" : "CHANGE",
+                            "collide_mask" : 4.000000,
+                            "flip_x" : false,
+                            "transform" : {
+                                "rotation3d" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "position" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "origin" : {
+                                    "x" : 0.500000,
+                                    "z" : 0.000000,
+                                    "y" : 0.500000
+                                },
+                                "scale" : {
+                                    "x" : 1.000000,
+                                    "z" : 1.000000,
+                                    "y" : 1.000000
+                                },
+                                "rotation" : 0.000000
+                            },
+                            "v_drag" : 0.000000,
+                            "acceleration" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "pv_drag" : 0.000000,
+                            "material" : "assets/materials/smoke.material.json",
+                            "height" : 1.740000,
+                            "ang_velocity_relation" : 1.000000,
+                            "animationScale" : 1.000000,
+                            "direction" : {
+                                "x" : 1.000000,
+                                "y" : 1.000000
+                            },
+                            "phys_particles" : false,
+                            "isAnimated" : false,
+                            "max_particles" : 200.000000,
+                            "spawnShape" : "POINT",
+                            "inv_fric" : 0.980000,
+                            "spawnSpeed" : 1.000000,
+                            "max_bounces" : {
+
+                            },
+                            "random_influence" : {
+                                "x" : 10.000000,
+                                "y" : 10.000000
+                            },
+                            "start_color" : {
+                                "b" : 0.387251,
+                                "g" : 0.387251,
+                                "a" : 1.000000,
+                                "r" : 0.387255
+                            },
+                            "currentAnimation" : "",
+                            "not_spawning" : false,
+                            "pa_drag" : 0.000000,
+                            "end_color" : {
+                                "b" : 0.651954,
+                                "g" : 0.651954,
+                                "a" : 0.050000,
+                                "r" : 0.651961
+                            },
+                            "width" : 1.600000
+                        }
+                    },
+                    "is instance" : true,
+                    "is active" : false,
+                    "children" : [
+
+                    ],
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : -16.000000,
+                            "y" : 0.000000
+                        },
+                        "origin" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "behaviors" : {
+
+                    }
+                },
+                {
+                    "prefab_link" : {
+                        "prefab_path" : ""
+                    },
+                    "is serializable" : true,
+                    "name" : "Jump Trail",
+                    "components" : {
+                        "ParticleEmitter" : {
+                            "max_lifetime" : 0.000000,
+                            "angle_off_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "isPlaying" : true,
+                            "end_size" : {
+                                "x" : 0.100000,
+                                "y" : 0.100000
+                            },
+                            "motion" : "CIRCULAR",
+                            "multi_color" : {
+                                "uid_track" : 0.000000,
+                                "colors" : [
+
+                                ]
+                            },
+                            "angle_off_speed_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "a_drag" : 0.000000,
+                            "min_lifetime" : 0.000000,
+                            "ang_grip" : 0.500000,
+                            "min_v" : 0.000010,
+                            "spriteSheet" : "<null>",
+                            "restitution" : 0.980000,
+                            "start_size" : {
+                                "x" : 0.300000,
+                                "y" : 0.300000
+                            },
+                            "effect" : "CHANGE",
+                            "collide_mask" : 4.000000,
+                            "flip_x" : false,
+                            "transform" : {
+                                "rotation3d" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "position" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "origin" : {
+                                    "x" : 0.500000,
+                                    "z" : 0.000000,
+                                    "y" : 0.500000
+                                },
+                                "scale" : {
+                                    "x" : 1.000000,
+                                    "z" : 1.000000,
+                                    "y" : 1.000000
+                                },
+                                "rotation" : 0.000000
+                            },
+                            "v_drag" : 0.000000,
+                            "acceleration" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "pv_drag" : 0.000000,
+                            "material" : "assets/materials/smoke.material.json",
+                            "height" : 1.740000,
+                            "ang_velocity_relation" : 1.000000,
+                            "animationScale" : 1.000000,
+                            "direction" : {
+                                "x" : 1.000000,
+                                "y" : 1.000000
+                            },
+                            "phys_particles" : false,
+                            "isAnimated" : false,
+                            "max_particles" : 200.000000,
+                            "spawnShape" : "POINT",
+                            "inv_fric" : 0.980000,
+                            "spawnSpeed" : 1.000000,
+                            "max_bounces" : {
+
+                            },
+                            "random_influence" : {
+                                "x" : 10.000000,
+                                "y" : 10.000000
+                            },
+                            "start_color" : {
+                                "b" : 0.387251,
+                                "g" : 0.387251,
+                                "a" : 1.000000,
+                                "r" : 0.387255
+                            },
+                            "currentAnimation" : "",
+                            "not_spawning" : false,
+                            "pa_drag" : 0.000000,
+                            "end_color" : {
+                                "b" : 0.651954,
+                                "g" : 0.651954,
+                                "a" : 0.050000,
+                                "r" : 0.651961
+                            },
+                            "width" : 1.600000
+                        }
+                    },
+                    "is instance" : true,
+                    "is active" : false,
+                    "children" : [
+
+                    ],
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : -16.000000,
+                            "y" : 0.000000
+                        },
+                        "origin" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "behaviors" : {
+
+                    }
+                },
+                {
+                    "prefab_link" : {
+                        "prefab_path" : ""
+                    },
+                    "is serializable" : true,
+                    "name" : "Jump Trail",
+                    "components" : {
+                        "ParticleEmitter" : {
+                            "max_lifetime" : 0.000000,
+                            "angle_off_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "isPlaying" : true,
+                            "end_size" : {
+                                "x" : 0.100000,
+                                "y" : 0.100000
+                            },
+                            "motion" : "CIRCULAR",
+                            "multi_color" : {
+                                "uid_track" : 0.000000,
+                                "colors" : [
+
+                                ]
+                            },
+                            "angle_off_speed_range" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "a_drag" : 0.000000,
+                            "min_lifetime" : 0.000000,
+                            "ang_grip" : 0.500000,
+                            "min_v" : 0.000010,
+                            "spriteSheet" : "<null>",
+                            "restitution" : 0.980000,
+                            "start_size" : {
+                                "x" : 0.300000,
+                                "y" : 0.300000
+                            },
+                            "effect" : "CHANGE",
+                            "collide_mask" : 4.000000,
+                            "flip_x" : false,
+                            "transform" : {
+                                "rotation3d" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "position" : {
+                                    "x" : 0.000000,
+                                    "z" : 0.000000,
+                                    "y" : 0.000000
+                                },
+                                "origin" : {
+                                    "x" : 0.500000,
+                                    "z" : 0.000000,
+                                    "y" : 0.500000
+                                },
+                                "scale" : {
+                                    "x" : 1.000000,
+                                    "z" : 1.000000,
+                                    "y" : 1.000000
+                                },
+                                "rotation" : 0.000000
+                            },
+                            "v_drag" : 0.000000,
+                            "acceleration" : {
+                                "x" : 0.000000,
+                                "y" : 0.000000
+                            },
+                            "pv_drag" : 0.000000,
+                            "material" : "assets/materials/smoke.material.json",
+                            "height" : 1.740000,
+                            "ang_velocity_relation" : 1.000000,
+                            "animationScale" : 1.000000,
+                            "direction" : {
+                                "x" : 1.000000,
+                                "y" : 1.000000
+                            },
+                            "phys_particles" : false,
+                            "isAnimated" : false,
+                            "max_particles" : 200.000000,
+                            "spawnShape" : "POINT",
+                            "inv_fric" : 0.980000,
+                            "spawnSpeed" : 1.000000,
+                            "max_bounces" : {
+
+                            },
+                            "random_influence" : {
+                                "x" : 10.000000,
+                                "y" : 10.000000
+                            },
+                            "start_color" : {
+                                "b" : 0.387251,
+                                "g" : 0.387251,
+                                "a" : 1.000000,
+                                "r" : 0.387255
+                            },
+                            "currentAnimation" : "",
+                            "not_spawning" : false,
+                            "pa_drag" : 0.000000,
+                            "end_color" : {
+                                "b" : 0.651954,
+                                "g" : 0.651954,
+                                "a" : 0.050000,
+                                "r" : 0.651961
+                            },
+                            "width" : 1.600000
+                        }
+                    },
+                    "is instance" : true,
+                    "is active" : false,
+                    "children" : [
+
+                    ],
+                    "transform" : {
+                        "rotation3d" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "position" : {
+                            "x" : 0.000000,
+                            "z" : -16.000000,
+                            "y" : 0.000000
+                        },
+                        "origin" : {
+                            "x" : 0.000000,
+                            "z" : 0.000000,
+                            "y" : 0.000000
+                        },
+                        "scale" : {
+                            "x" : 1.000000,
+                            "z" : 1.000000,
+                            "y" : 1.000000
+                        },
+                        "rotation" : 0.000000
+                    },
+                    "behaviors" : {
+
+                    }
+                }
+            ],
+            "transform" : {
+                "rotation3d" : {
+                    "x" : 0.000000,
+                    "z" : 0.000000,
+                    "y" : 0.000000
+                },
+                "position" : {
+                    "x" : -28.116074,
+                    "z" : 0.000000,
+                    "y" : 8.695820
+                },
+                "origin" : {
+                    "x" : 0.000000,
+                    "z" : 0.000000,
+                    "y" : 0.000000
+                },
+                "scale" : {
+                    "x" : 2.000000,
+                    "z" : 1.000000,
+                    "y" : 2.000000
+                },
+                "rotation" : 0.000000
+            },
+            "behaviors" : {
+                "Player Shoot Stun" : {
+                    "Bullet Growth Amount" : 5.000000,
+                    "Life Time" : 5.000000,
+                    "Bullet Growth Speed" : 1.010000,
+                    "Cooldown Time" : 1.500000,
+                    "Velocity" : 8.000000,
+                    "Max Shots" : {
+
+                    }
+                },
+                "Player Shoot" : {
+                    "Life Time" : 0.400000,
+                    "Cooldown Time" : 0.200000,
+                    "Velocity" : 20.000000,
+                    "Full Rotation" : false
+                },
+                "PlayerMovement" : {
+                    "is_gutz" : false,
+                    "controller" : 1.000000,
+                    "distance" : 24.000000,
+                    "inv_flash_time" : 0.050000,
+                    "dash_speed" : 25.000000,
+                    "deadzone" : 0.200000,
+                    "dash_distance" : 0.200000,
+                    "jump" : 10.000000,
+                    "hit_radius" : 0.600000,
+                    "m_MovementSpeed" : 9.000000,
+                    "dash_cooldown" : 0.900000,
+                    "num_jumps" : 1.000000,
+                    "jump_duration" : 0.200000
+                }
+            }
+        }
+    ],
+    "camera" : {
+        "position" : {
+            "x" : 25.237335,
+            "z" : -9.000000,
+            "y" : -4.129895
+        },
+        "scale" : {
+            "x" : 0.660305,
+            "z" : 1.000000,
+            "y" : 0.660305
+        },
+        "clear_color" : {
+            "b" : 0.058824,
+            "g" : 0.058823,
+            "a" : 1.000000,
+            "r" : 0.058823
+        }
+    }
+}

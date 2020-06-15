@@ -16,6 +16,24 @@ Creation date: January 4th , 2020
 #include <filesystem> //filenames
 #include <iostream>
 #include "Memory.h"
+#include <Imgui/imgui_internal.h>
+
+float lerp(float a, float b, float t)
+{
+  return (1.0 - t) * a + b * t;
+}
+
+float invLerp(float a, float b, float v)
+{
+  return  (v - a) / (b - a);
+}
+
+float remap(float min, float max, float imin, float imax, float v)
+{
+  float t = invLerp(min, max, v);
+  return lerp(imin, imax, t);
+}
+
 
 namespace fs = std::filesystem;
 void Editor::init(GLFWwindow* window, const char* glslVersion)
@@ -39,10 +57,6 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   colors[ImGuiCol_TableBorderStrong] = ImVec4(0.68f, 0.68f, 0.72f, 1.00f);
   colors[ImGuiCol_TableRowBg] = ImVec4(0.24f, 0.40f, 0.57f, 1.00f);
   colors[ImGuiCol_TableRowBgAlt] = ImVec4(0.17f, 0.33f, 0.67f, 0.07f);
-
-
-
-
 
   //styling for the editor
   ImGuiStyle& style = ImGui::GetStyle();
@@ -191,6 +205,28 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //if you want to be able to move the window get rid of the flag in the ImGui::Begin();
   //Inspector Window, Entity List Window
   ImGui::Begin("Inspector");
+  if (ImGui::InputText("Search", buffer_size, sizeof(buffer_size)))
+  {
+    int size = std::strlen(buffer_size);
+    
+    for (int i = 0; i < size; ++i)
+    {
+      buffer_size[i] = std::tolower(buffer_size[i]);
+    }
+  }
+
+  std::string search_word(buffer_size);//cast char * to string
+
+  if (!search_word.empty())
+  {
+    ImGui::SameLine(); //this is for putting the clear on the same line when there are
+    //words in the search bar
+
+    if (ImGui::Button("Clear"))
+    {
+      buffer_size[0] = '\0'; //to clear the string the first element is null terminated
+    }
+  }
 
   if (ImGui::Button("Add Entity"))
   {
@@ -201,6 +237,23 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //transform component
   for (int i = 0; i < scene.getEntities().size(); ++i)
   {
+    const std::string & name = scene.getEntities()[i]->name;
+
+    if (!search_word.empty())
+    {
+      std::string lower_str;
+
+      for (int j = 0; j < name.size(); ++j)
+      {
+        lower_str.push_back(std::tolower(name[j]));
+      }
+
+      if (lower_str.find(search_word) == std::string::npos)
+      {
+        continue;
+      }
+    }
+
     ImGui::PushID(i);
     if (ImGui::CollapsingHeader(scene.getEntities()[i]->name.c_str()))
     {
@@ -399,23 +452,24 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::TextWrapped("Screen Space Mouse Position. Y: %.2f", ImGui::GetIO().MousePos.y);
   ImGui::Spacing();
 
+  ImGui::Text("Camera Settings");
   if (ImGui::DragFloat("Camera Speed", &scene.cameraSpeed, .05f))
   {
   }
 
-  if (ImGui::DragFloat("Camera FOV", &scene.fov))
+  if (ImGui::DragFloat("Camera FOV", &scene.fov, .1f))
   {
   }
 
-  if (ImGui::DragFloat3("Camera Eye Position", &scene.eyePosition.x))
+  if (ImGui::DragFloat3("Camera Eye Position", &scene.eyePosition.x, 0.05f))
   {
   }
 
-  if (ImGui::DragFloat3("Camera Up Direction", &scene.upDirection.x))
+  if (ImGui::DragFloat3("Camera Up Direction", &scene.upDirection.x, 0.05f))
   {
   }
 
-  if (ImGui::DragFloat3("Camera Direction", &scene.cameraDirection.x))
+  if (ImGui::DragFloat3("Camera Direction", &scene.cameraDirection.x, 0.05f))
   {
   }
 
@@ -675,8 +729,50 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //window settings
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
   ImGui::Begin("Scene");
+  ImVec2 window_size = ImGui::GetContentRegionAvail();
+  ImVec2 window_pos = ImGui::GetCursorScreenPos();
+  sceneDimension = window_pos + window_size;
+
+  glm::vec4 screen_space_cursor;
+  ImVec2 curs(ImGui::GetIO().MousePos);
+  screen_space_cursor.x = ImGui::GetIO().MousePos.x;
+  screen_space_cursor.y = ImGui::GetIO().MousePos.y;
+  screen_space_cursor.z = -1.0f;
+  screen_space_cursor.w = 1.0f;
+
+  //if its within the window bounds, calcualte world pos
+  if (screen_space_cursor.x >= window_pos.x &&
+    screen_space_cursor.y >= window_pos.y &&
+    screen_space_cursor.x <= window_pos.x + window_size.x &&
+    screen_space_cursor.y <= window_pos.y + window_size.y)
+  {
+    std::cout << "\nScreen Space X: " << screen_space_cursor.x << "\n";
+    std::cout << "Screen Space Y: " << screen_space_cursor.y << "\n";
+
+    screen_space_cursor.x = remap(window_pos.x, window_pos.x + window_size.x, -1.0f, 1.0f, curs.x);
+    screen_space_cursor.y = remap(window_pos.y, window_pos.y + window_size.y, 1.0f, -1.0f, curs.y);
+
+    std::cout << "\nNDC Space X: " << screen_space_cursor.x << "\n";
+    std::cout << "NDC Space Y: " << screen_space_cursor.y << "\n";
+
+    glm::mat4 persp = glm::perspective(glm::radians(scene.fov), window_size.x / window_size.y, scene.nearDistance, scene.farDistance);
+    screen_space_cursor = glm::inverse(persp) * screen_space_cursor;
+    screen_space_cursor.z = -1.0f;
+    screen_space_cursor.w = 0.0f;
+
+    glm::vec3 ray_world = glm::inverse(scene.viewMatrix) * screen_space_cursor;
+
+    glm::normalize(ray_world);
+
+
+    std::cout << "\nWorld Space X: " << ray_world.x << "\n";
+    std::cout << "World Space Y: " << ray_world.y << "\n";
+    std::cout << "World Space Z: " << ray_world.z << "\n";
+  }
+
+
   //takes in a texture, window size, and uvs -> draws final outto the whole imgui window
-  ImGui::Image((void*)(intptr_t)(Manager.renderer->FinalColorBufferID), ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
+  ImGui::Image((void*)(intptr_t)(Manager.renderer->FinalColorBufferID), ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
   ImGui::End();
   ImGui::PopStyleVar();
 
@@ -715,5 +811,3 @@ void Editor::shutdown()
   ImGui_ImplOpenGL3_Shutdown();
   ImGui::DestroyContext();
 }
-
-

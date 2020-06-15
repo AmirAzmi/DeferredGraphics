@@ -60,8 +60,10 @@ private:
   //depth buffer ID for the gBuffer
   GLuint rboDepthID;
 
+public:
   //depth buffer ID for the FinalOutput Buffer
   GLuint rboDepthID2;
+private:
 
   //quad data
   GLuint quadVAOID = 0;

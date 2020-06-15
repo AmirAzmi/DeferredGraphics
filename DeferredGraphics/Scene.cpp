@@ -123,6 +123,7 @@ void Scene::PreRender(int windowWidth, int windowHeight)
 {
   //setup the initial vuew and projection matrices
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
+  //  newProjectionMatrix = glm::perspective(glm::radians(fov), (float)1919.0f / (float)1000.0f, nearDistance, farDistance);
   glViewport(0, 0, windowWidth, windowHeight);
 
   for (EntityPtr entity : getEntities())

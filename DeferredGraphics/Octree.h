@@ -8,7 +8,7 @@ public:
   //Octree* parent;                       //refrence to the parent
   std::array<Octree *, 8> children;       //numbe of children for each node of the octree node  64 bytes
   //std::vector<MeshComponentPtr> meshes; //each contains its enclosed list of objects
-  std::vector<glm::vec3> points;          //specifically for a singular object -> extent + size whatever the fuck bytes?
+  std::vector<glm::vec3> points;          //specifically for a singular object -> extent + size 24 bytes
   AABB boundingVolume;                    //bouding volume of enclosed meshes 24 bytes
   //unsigned int active_children = 0;     //checking which children are "active" aka valid nodes with thier own children
 

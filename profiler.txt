@@ -25,6 +25,6 @@ Is Exposure Tone Mapping On: 1
 Exposure Value: 1
 
 Debug Rendering System Frame Per Second: 0.0098
-Main Rendering System Frame Per Second: 1.7926
-Total Rendering System Frame Per Second: 1.8024
-Frame Per Second: 7.17561
+Main Rendering System Frame Per Second: 5.7893
+Total Rendering System Frame Per Second: 5.7991
+Frame Per Second: 33.9487

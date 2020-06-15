@@ -25,8 +25,10 @@ class Editor
   Scene& scene;
   SystemManager& manager;
 public:
+  ImVec2 sceneDimension;
   bool lightsOn = true;
   unsigned default_name_count = 0;
+  char buffer_size[256] = {0};
   std::vector<std::string> filenames;
   std::vector<std::string> shader_filenames;
   std::vector<std::string> mesh_name;

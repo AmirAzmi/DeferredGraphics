@@ -165,6 +165,7 @@
     <ClCompile Include="External\Imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="External\Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="External\Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="JsonParser.cpp" />
     <ClCompile Include="LinearAllocator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="External\Imgui\imstb_rectpack.h" />
     <ClInclude Include="External\Imgui\imstb_textedit.h" />
     <ClInclude Include="External\Imgui\imstb_truetype.h" />
+    <ClInclude Include="JsonParser.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LinearAllocator.h" />
     <ClInclude Include="Material.h" />
