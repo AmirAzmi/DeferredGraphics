@@ -911,7 +911,7 @@ void DebugRenderingSystem::printLevelOrderAABBIter(BoundingVolumeHierarchy* root
 void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy* BVH, std::vector<MeshComponentPtr> meshes, int level)
 {
   //base case
-  if (level < 0)
+  if (level < 0 || meshes.size() <= 2)
   {
     return;
   }
