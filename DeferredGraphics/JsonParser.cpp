@@ -2,7 +2,7 @@
 
 std::string jsonParser::toString(const JsonValue& Val)
 {
-  
+  return std::string();
 }
 
 

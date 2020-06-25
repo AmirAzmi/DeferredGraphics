@@ -2418,6 +2418,7 @@ class DebugRenderingSystem
   void drawOctree(Octree * root, int level, Scene & scene);
   void drawLevelOrderAABB(BoundingVolumeHierarchy * root, int level, Scene & scene);
   void printLevelOrderAABB(BoundingVolumeHierarchy * root, Scene & scene);
+  void printLevelOrderAABBIter(BoundingVolumeHierarchy * root, Scene & scene);
   void createBVHTree(BoundingVolumeHierarchy * BVH, std::vector<MeshComponentPtr> meshes, int level);
   void createBSPTree(BSP * BSP, std::vector<BSP::Polygon> listOfPolygons, int level);
   void createOctree(Octree * octree, std::vector<MeshComponentPtr> meshes, int level);

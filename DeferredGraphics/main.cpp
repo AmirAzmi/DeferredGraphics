@@ -85,16 +85,16 @@ int main()
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
   //intialize the scene
-  Scene* scene = new Scene(windowWidth, windowHeight);
-  scene->Init();
-  glfwSetWindowUserPointer(window, scene);
+  Scene scene(windowWidth, windowHeight);
+  scene.Init();
+  glfwSetWindowUserPointer(window, &scene);
 
   //initialize the systems the scene will be using
   SystemManager systems;
-  systems.Init(*scene, windowWidth, windowHeight);
+  systems.Init(scene, windowWidth, windowHeight);
 
   //initialize the imgui editor
-  Editor ImGuiEditor(*scene, systems);
+  Editor ImGuiEditor(scene, systems);
 
   //initialize the window
   ImGuiEditor.init(window, glsl_version);
@@ -135,7 +135,7 @@ int main()
     //but like literally in the capture input event mode
     if (!ImGui::GetIO().WantCaptureKeyboard)
     {
-      processInput(window, *scene);
+      processInput(window, scene);
     }
 
     //render the window with the title Amir Azmi
@@ -145,7 +145,7 @@ int main()
     glfwGetWindowSize(window, &width, &height);
     glViewport(0, 0, width, height);
 
-    scene->PreRender(windowWidth, windowHeight);
+    scene.PreRender(windowWidth, windowHeight);
 
     glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -154,13 +154,13 @@ int main()
     glCullFace(GL_BACK);
 
     //update the objects in the scene
-    systems.Update(*scene, windowWidth, windowHeight);
+    systems.Update(scene, windowWidth, windowHeight);
 
     //render the scene
-    scene->Render();
+    scene.Render();
 
     //render the contents of ImGui
-    ImGuiEditor.Render(*scene, systems);
+    ImGuiEditor.Render(scene, systems);
 
     //Call Imguie::End and other post render information
     ImGuiEditor.postRender();
@@ -218,9 +218,6 @@ int main()
 
   //free the memory for the systems
   systems.Shutdown();
-
-  //delete the scene
-  delete scene;
 
   //free memory for editor
   ImGuiEditor.shutdown();

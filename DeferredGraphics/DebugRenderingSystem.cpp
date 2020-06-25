@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <list>
+#include <queue>
 #include "DebugRenderingSystem.h"
 #include "MeshComponent.h"
 #include "Entity.h"
@@ -154,7 +155,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     //draw level order aabb tree Note: this is O(N^2) Drawing method so you can draw each level
     //there is O(N) method using a queue
     //this is also considered breadth first search
-    printLevelOrderAABB(BVHTree, scene);
+    printLevelOrderAABBIter(BVHTree, scene);
 
     //manually call the destructor because I used placement new to use my own memory
     linearAllocator.TDeallocate<BoundingVolumeHierarchy>(BVHTree);
@@ -869,6 +870,41 @@ void DebugRenderingSystem::printLevelOrderAABB(BoundingVolumeHierarchy* root, Sc
   for (int i = 1; i <= h; ++i)
   {
     drawLevelOrderAABB(root, i, scene);
+  }
+}
+
+void DebugRenderingSystem::printLevelOrderAABBIter(BoundingVolumeHierarchy* root, Scene& scene)
+{
+  std::queue<BoundingVolumeHierarchy*> tree_nodes; //create temp queue
+
+  tree_nodes.push(root); //push the root onto the queue
+
+  while (!tree_nodes.empty()) //if queue sint empty
+  {
+    BoundingVolumeHierarchy* top_node = tree_nodes.front(); //get the first element in the queue
+
+    drawAABB(top_node->boundingVolume, scene); //print it aka draw
+    bvh_draw_calls++;
+
+    tree_nodes.pop(); //pop the first elemeney from the queue
+
+    /************************************************************/
+    /************************************************************/
+    //Note: If you want to print inorder from left to right, you need
+    //      to push the left node first, if you want to print right to left
+    //      you need to push the right node first
+    /************************************************************/
+    /************************************************************/
+
+    if (top_node->left_child != nullptr)
+    {
+      tree_nodes.push(top_node->left_child); //discover left
+    }
+
+    if (top_node->right_child != nullptr)
+    {
+      tree_nodes.push(top_node->right_child); //discover right
+    }
   }
 }
 

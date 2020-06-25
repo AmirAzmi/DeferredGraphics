@@ -1,8 +1,8 @@
 Bounding Volume Hierarchy Information
-Bounding Volume Hierarchy On: 0
+Bounding Volume Hierarchy On: 1
 Bounding Volume Hierarchy Levels: 0
-Bounding Volume Hierarchy Draw Calls: 0
-Bounding Volume Hierarchy Memory Usage: 0
+Bounding Volume Hierarchy Draw Calls: 1
+Bounding Volume Hierarchy Memory Usage: 64
 
 Octree Information
 Octree On: 0
@@ -12,8 +12,8 @@ Octree Memory Usage: 0
 
 Debug Rendering System Draw Calls
 
-Total Draw Calls: 0
-Total Temporary Memory Usage: 0 out of 5000000
+Total Draw Calls: 1
+Total Temporary Memory Usage: 64 out of 5000000
 
 Graphics Settings
 Is Bloom On: 0
@@ -24,7 +24,7 @@ Is Gamma On: 1
 Is Exposure Tone Mapping On: 1
 Exposure Value: 1
 
-Debug Rendering System Frame Per Second: 0.0098
-Main Rendering System Frame Per Second: 5.7893
-Total Rendering System Frame Per Second: 5.7991
-Frame Per Second: 33.9487
+Debug Rendering System Frame Per Second: 0.1039
+Main Rendering System Frame Per Second: 1.1748
+Total Rendering System Frame Per Second: 1.2787
+Frame Per Second: 8.50497
