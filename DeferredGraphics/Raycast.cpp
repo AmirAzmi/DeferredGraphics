@@ -4,7 +4,7 @@
 bool Raycast::RayBoxIntersection(AABB bounds)
 {
   //direction from origin
-  glm::vec3 direction_from_origin = destination - origin;
+  glm::vec3 direction_from_origin = destination;
 
   //ray
   glm::vec3 ray = origin + (direction_from_origin);

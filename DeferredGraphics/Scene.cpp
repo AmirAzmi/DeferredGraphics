@@ -17,6 +17,8 @@ Creation date: January 4th , 2020
 #include <string>
 
 #include "RotationBehavior.h"
+#include "CameraPossessBehavior.h"
+#include "MovementBehavior.h"
 
 Scene::Scene(const int windowWidth, const int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(100.0f), cameraSpeed(0.1f),
 eyePosition(glm::vec3(0.0f, 0.0f, 10.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, -1.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
@@ -84,6 +86,10 @@ void Scene::Init()
   //create the Entity ptr
   EntityPtr centerObject = addEntity("Center Object");
 
+  glm::vec3 offset(0,-2,5);
+  centerObject->addBehavior<CameraPossessBehavior>(offset);
+  centerObject->addBehavior<MovementBehavior>();
+
   //add a mesh component pointer to the object with the setup from the prelims
   MeshComponentPtr meshComp = centerObject->add<MeshComponent>(centerObject, bunny, gBuffer, material);
   LightComponentPtr lightComp = centerObject->add<LightComponent>();
@@ -121,9 +127,9 @@ void Scene::Init()
 
 void Scene::PreRender(int windowWidth, int windowHeight)
 {
-  //setup the initial vuew and projection matrices
+  //setup the initial view and projection matrices
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
-  //  newProjectionMatrix = glm::perspective(glm::radians(fov), (float)1919.0f / (float)1000.0f, nearDistance, farDistance);
+
   glViewport(0, 0, windowWidth, windowHeight);
 
   for (EntityPtr entity : getEntities())

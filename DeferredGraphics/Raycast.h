@@ -3,7 +3,7 @@
 #include "AABB.h"
 class Raycast
 {
-
+public:
   //Ray information
   glm::vec3 origin;
   glm::vec3 destination;

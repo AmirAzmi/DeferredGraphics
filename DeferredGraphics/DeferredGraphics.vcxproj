@@ -155,6 +155,7 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
     <ClCompile Include="BSP.cpp" />
+    <ClCompile Include="CameraPossessBehavior.cpp" />
     <ClCompile Include="ColliderComponent.h" />
     <ClCompile Include="DebugRenderingSystem.cpp" />
     <ClCompile Include="Editor.cpp" />
@@ -165,11 +166,13 @@
     <ClCompile Include="External\Imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="External\Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="External\Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="JsonParser.cpp" />
     <ClCompile Include="LinearAllocator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="MovementBehavior.cpp" />
     <ClCompile Include="Octree.cpp" />
     <ClCompile Include="Raycast.cpp" />
     <ClCompile Include="RotationBehavior.cpp" />
@@ -185,6 +188,7 @@
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="BoundingVolumeHierarchy.h" />
     <ClInclude Include="BSP.h" />
+    <ClInclude Include="CameraPossessBehavior.h" />
     <ClInclude Include="DebugRenderingSystem.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EngineTypes.h" />
@@ -197,12 +201,14 @@
     <ClInclude Include="External\Imgui\imstb_rectpack.h" />
     <ClInclude Include="External\Imgui\imstb_textedit.h" />
     <ClInclude Include="External\Imgui\imstb_truetype.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="JsonParser.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LinearAllocator.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="MovementBehavior.h" />
     <ClInclude Include="Octree.h" />
     <ClInclude Include="Raycast.h" />
     <ClInclude Include="RenderingSystem.h" />

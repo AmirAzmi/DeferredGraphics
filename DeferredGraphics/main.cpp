@@ -16,7 +16,7 @@ Creation date: January 4th , 2020
 #include <glm/glm/glm.hpp>
 #include <iostream>
 #include <fstream>
-
+#include "Input.h"
 #include "Editor.h"
 #include "SystemManager.h"
 
@@ -60,7 +60,7 @@ int main()
   glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
   // Open a window and create its OpenGL context
-  window = glfwCreateWindow(mode->width, mode->height, "Amir Azmi CS350", nullptr, nullptr);
+  window = glfwCreateWindow(mode->width, mode->height, "Trifrost Engine", nullptr, nullptr);
   if (window == nullptr)
   {
     fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 4.0 compatible.\n");
@@ -99,6 +99,7 @@ int main()
   //initialize the window
   ImGuiEditor.init(window, glsl_version);
 
+  //JSON testing
   // Read the Vertex Shader code from the file
   std::string VertexShaderCode;
   std::ifstream VertexShaderStream("Resources\\Json\\Empty.area.json", std::ios::in);
@@ -131,10 +132,20 @@ int main()
 
   do
   {
+    /*
+    //Sytem Order Update:
+    //input
+    //logic
+    //physics
+    //graphics
+    */
+    glfwPollEvents();
+
     //blocks input to viewport when im focused on an imgui input event, not window
     //but like literally in the capture input event mode
     if (!ImGui::GetIO().WantCaptureKeyboard)
     {
+      Input::update();
       processInput(window, scene);
     }
 
@@ -153,20 +164,19 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glCullFace(GL_BACK);
 
-    //update the objects in the scene
-    systems.Update(scene, windowWidth, windowHeight);
+    //render the contents of ImGui
+    ImGuiEditor.Render(scene, systems);
 
     //render the scene
     scene.Render();
 
-    //render the contents of ImGui
-    ImGuiEditor.Render(scene, systems);
+    //update the objects in the scene
+    systems.Update(scene, windowWidth, windowHeight);
 
     //Call Imguie::End and other post render information
     ImGuiEditor.postRender();
 
     glfwSwapBuffers(window);
-    glfwPollEvents();
 
   } while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
@@ -237,7 +247,7 @@ void processInput(GLFWwindow* window, Scene& scene)
     glfwSetWindowShouldClose(window, true);
   }
 
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+  /*if (Input::getKeyDown('W'))
   {
 
     glm::vec3 eye = scene.getEyePosition();
@@ -246,45 +256,45 @@ void processInput(GLFWwindow* window, Scene& scene)
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
 
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+  if (Input::getKeyDown('A'))
   {
     glm::vec3 eye = scene.getEyePosition();
     scene.eyePosition = eye - glm::normalize(glm::cross(scene.cameraDirection, scene.upDirection)) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
-
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+      
+  if (Input::getKeyDown('S'))
   {
     glm::vec3 eye = scene.getEyePosition();
     scene.eyePosition = eye - scene.cameraDirection * 0.1f;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
-
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+      
+  if (Input::getKeyDown('D'))
   {
     glm::vec3 eye = scene.getEyePosition();
     scene.eyePosition = eye + glm::normalize(glm::cross(scene.cameraDirection, scene.upDirection)) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
-
-  if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+      
+  if (Input::getKeyDown('Q'))
   {
     glm::vec3 eye = scene.getEyePosition();
     scene.eyePosition = eye - glm::vec3(0.0f, 1.0f, 0.0f) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
-
-  if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+      
+  if (Input::getKeyDown('E'))
   {
     glm::vec3 eye = scene.getEyePosition();
     scene.eyePosition = eye + glm::vec3(0.0f, 1.0f, 0.0f) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
-  }
+  }*/
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

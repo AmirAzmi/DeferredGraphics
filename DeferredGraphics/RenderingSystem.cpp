@@ -125,6 +125,11 @@ RenderingSystem::RenderingSystem(const int windowWidth, const int windowHeight) 
   //draws all 3 buffers and the hdr buffer
   glDrawBuffers(2, attachment);
 
+  glGenRenderbuffers(1, &rboDepthID3);
+  glBindRenderbuffer(GL_RENDERBUFFER, rboDepthID3);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, windowWidth, windowHeight);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepthID3);
+
   //check if above frame buffer is complete
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     std::cout << "Framebuffer not complete!" << std::endl;
@@ -293,6 +298,30 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   //used for the next bounded shader and draw calls that are effected by that
   //shader
   DrawQuad();
+  glDepthMask(GL_TRUE);
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, gBufferFBOID); //gets the data stored in the gBuffer framebuffer
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, LightingPassFBOID); // write to default framebuffer with information from the the gBuffer
+  glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+  //use the lighting shader and set its material also this is where we draw forward rendered objects
+  //in the default framebuffer
+  //------------------------------------------------------------
+  forwardLightingShaderID->UseShader();
+
+  //lighting information for the forward objects
+  {
+    //bind the ssbo for each shader and memcpy the light data into the lights
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[1]);
+    GLvoid* q = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+    shader_data.numberOfLights = index;
+    memcpy(q, &shader_data, sizeof(shader_data));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+  }
+
+  forwardLightingShaderID->setVec3("view_position", scene.getEyePosition());
+
+  //draw forward objects next
+  std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
 
   //read the data that was written from drawing the quad and use it as uniforms for the shader
   glActiveTexture(GL_TEXTURE0);
@@ -403,26 +432,6 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
       glBlitFramebuffer(0, 0, windowWidth, windowHeight, windowWidth / 2, 0, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
     }
   }
-
-  //use the lighting shader and set its material also this is where we draw forward rendered objects
-  //in the default framebuffer
-  //------------------------------------------------------------
-  forwardLightingShaderID->UseShader();
-
-  //lighting information for the forward objects
-  {
-    //bind the ssbo for each shader and memcpy the light data into the lights
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[1]);
-    GLvoid* q = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-    shader_data.numberOfLights = index;
-    memcpy(q, &shader_data, sizeof(shader_data));
-    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-  }
-
-  forwardLightingShaderID->setVec3("view_position", scene.getEyePosition());
-
-  //draw forward objects next
-  std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
 
   //need to draw textures after the depth toggle 
   //for correct rendering of the split screen

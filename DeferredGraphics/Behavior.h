@@ -13,6 +13,7 @@ Creation date: January 4th , 2020
 #pragma once
 
 #include "EngineTypes.h" /* Entity, EntityPtr */
+#include "Scene.h"
 
 class Behavior
 {

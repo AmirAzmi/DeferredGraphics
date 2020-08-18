@@ -16,6 +16,7 @@ Creation date: January 4th , 2020
 #include <filesystem> //filenames
 #include <iostream>
 #include "Memory.h"
+#include "Raycast.h"
 #include <Imgui/imgui_internal.h>
 
 float lerp(float a, float b, float t)
@@ -208,7 +209,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   if (ImGui::InputText("Search", buffer_size, sizeof(buffer_size)))
   {
     int size = std::strlen(buffer_size);
-    
+
     for (int i = 0; i < size; ++i)
     {
       buffer_size[i] = std::tolower(buffer_size[i]);
@@ -237,7 +238,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //transform component
   for (int i = 0; i < scene.getEntities().size(); ++i)
   {
-    const std::string & name = scene.getEntities()[i]->name;
+    const std::string& name = scene.getEntities()[i]->name;
 
     if (!search_word.empty())
     {
@@ -746,29 +747,45 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     screen_space_cursor.x <= window_pos.x + window_size.x &&
     screen_space_cursor.y <= window_pos.y + window_size.y)
   {
-    std::cout << "\nScreen Space X: " << screen_space_cursor.x << "\n";
-    std::cout << "Screen Space Y: " << screen_space_cursor.y << "\n";
+    //std::cout << "\nScreen Space X: " << screen_space_cursor.x << "\n";
+    //std::cout << "Screen Space Y: " << screen_space_cursor.y << "\n";
 
     screen_space_cursor.x = remap(window_pos.x, window_pos.x + window_size.x, -1.0f, 1.0f, curs.x);
     screen_space_cursor.y = remap(window_pos.y, window_pos.y + window_size.y, 1.0f, -1.0f, curs.y);
 
-    std::cout << "\nNDC Space X: " << screen_space_cursor.x << "\n";
-    std::cout << "NDC Space Y: " << screen_space_cursor.y << "\n";
+    //std::cout << "\nNDC Space X: " << screen_space_cursor.x << "\n";
+    //std::cout << "NDC Space Y: " << screen_space_cursor.y << "\n";
+    //-----------------------------------------------------------------------------
+    glm::mat4 persp = scene.getProjectionMatrix();
+    glm::mat4 view = scene.getViewMatrix();
 
-    glm::mat4 persp = glm::perspective(glm::radians(scene.fov), window_size.x / window_size.y, scene.nearDistance, scene.farDistance);
     screen_space_cursor = glm::inverse(persp) * screen_space_cursor;
     screen_space_cursor.z = -1.0f;
     screen_space_cursor.w = 0.0f;
+    screen_space_cursor = glm::inverse(view) * screen_space_cursor;
 
-    glm::vec3 ray_world = glm::inverse(scene.viewMatrix) * screen_space_cursor;
+    glm::vec3 ray_world = screen_space_cursor;
 
-    glm::normalize(ray_world);
+    ray_world = glm::normalize(ray_world);
 
 
-    std::cout << "\nWorld Space X: " << ray_world.x << "\n";
-    std::cout << "World Space Y: " << ray_world.y << "\n";
-    std::cout << "World Space Z: " << ray_world.z << "\n";
+    //std::cout << "\nWorld Space X: " << ray_world.x << "\n";
+    //std::cout << "World Space Y: " << ray_world.y << "\n";
+    //std::cout << "World Space Z: " << ray_world.z << "\n";
+
+    /*Raycast ray;
+    ray.destination = ray_world;
+    ray.origin = scene.eyePosition;
+
+    for (auto i : scene.getEntities())
+    {
+      if (ray.RayBoxIntersection(i->get<MeshComponent>()->getMeshBounds()) == true)
+      {
+        Manager.debugRenderer->drawAABB(scene.getEntities()[0]->get<MeshComponent>(), scene, false);
+      }
+    }*/
   }
+  
 
 
   //takes in a texture, window size, and uvs -> draws final outto the whole imgui window

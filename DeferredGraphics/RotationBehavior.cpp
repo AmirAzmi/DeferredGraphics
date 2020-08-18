@@ -15,10 +15,15 @@ Creation date: February 16th , 2020
 
 #include <glm/glm/vec3.hpp>
 #include "Entity.h"
+#include "Input.h"
 
 void RotationBehavior::Update()
 {
-  owner->currentPosition += 0.001f;
-  //getEntities()[i]->angle += 0.001f;
-  owner->position = glm::vec3(cosf(owner->currentPosition), 0.0f, sinf(owner->currentPosition)) * 4.0f;
+
+  if (Input::getKeyDown('R'))
+  {
+    owner->currentPosition += 0.001f;
+    owner->angle += 0.001f;
+    owner->position = glm::vec3(cosf(owner->currentPosition), 0.0f, sinf(owner->currentPosition)) * 4.0f;
+  }
 }

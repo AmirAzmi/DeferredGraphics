@@ -63,6 +63,9 @@ private:
 public:
   //depth buffer ID for the FinalOutput Buffer
   GLuint rboDepthID2;
+
+  //lighting Pass FBOID
+  GLuint rboDepthID3;
 private:
 
   //quad data
