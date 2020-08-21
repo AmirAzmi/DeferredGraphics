@@ -23,9 +23,9 @@ protected:
   EntityPtr owner = nullptr; // The entity the behavior is attached to.
 
 public:
-  virtual void OnFrameBegin();
-  virtual void Update() = 0;
-  virtual void OnFrameEnd();
+  virtual void OnFrameBegin(float delta_time);
+  virtual void Update(float delta_time) = 0;
+  virtual void OnFrameEnd(float delta_time);
 
   virtual ~Behavior() = default;
 };

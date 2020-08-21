@@ -51,9 +51,9 @@ public:
     return static_cast<T*>(addBehaviorImpl(new T(args...)));
   }
 
-  void onFrameBegin();
-  void update();
-  void onFrameEnd();
+  void onFrameBegin(float delta_time);
+  void update(float delta_time);
+  void onFrameEnd(float delta_time);
 
   ~Entity();
 

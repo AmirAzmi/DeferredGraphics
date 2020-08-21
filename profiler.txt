@@ -24,7 +24,7 @@ Is Gamma On: 1
 Is Exposure Tone Mapping On: 1
 Exposure Value: 1
 
-Debug Rendering System Frame Per Second: 0.0172
-Main Rendering System Frame Per Second: 2.5755
-Total Rendering System Frame Per Second: 2.5927
-Frame Per Second: 9.01913
+Debug Rendering System Frame Per Second: 0.0007
+Main Rendering System Frame Per Second: 2.1479
+Total Rendering System Frame Per Second: 2.1486
+Frame Per Second: 7.84538

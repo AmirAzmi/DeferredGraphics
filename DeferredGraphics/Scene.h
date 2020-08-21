@@ -45,14 +45,14 @@ public:
   float positionUpdate = 0.0f;
 
   Scene(const int windowWidth, const int windowHeight);
-  const glm::mat4 getProjectionMatrix();
-  const glm::mat4 getViewMatrix();
-  const glm::vec3 getEyePosition();
-  const glm::vec3 getCameraDirection();
-  const glm::vec3 getUpDirection();
-  const float getNearDistance();
-  const float getFarDistance();
-  const float getFOV();
+  const glm::mat4 getProjectionMatrix() const;
+  const glm::mat4 getViewMatrix() const;
+  const glm::vec3 getEyePosition() const;
+  const glm::vec3 getCameraDirection() const;
+  const glm::vec3 getUpDirection() const;
+  const float getNearDistance() const;
+  const float getFarDistance() const;
+  const float getFOV() const;
   std::vector<EntityPtr>& getEntities();
   std::vector<MeshComponentPtr>& getMeshes();
   std::vector<LightComponentPtr>& getLights();
@@ -61,15 +61,15 @@ public:
  
 
   void Init();
-  void PreRender(int windowWidth, int windowHeight);
-  void Render();
-  void PostRender();
+  void PreRender(int windowWidth, int windowHeight, float delta_time);
+  void Render(float delta_time);
+  void PostRender(float delta_time);
 
   EntityPtr addEntity(std::string name);
   EntityPtr findEntity(std::string name);
   void removeEntity(std::string name);
 
-  glm::vec2 getWindowDimension(int windowWidth, int WindowHeight)
+  glm::vec2 getWindowDimension(int windowWidth, int WindowHeight) const
   {
     return glm::vec2(windowWidth, WindowHeight);
   }

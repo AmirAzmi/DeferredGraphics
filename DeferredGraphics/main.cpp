@@ -28,6 +28,11 @@ GLFWwindow* window;
 const int windowWidth = 1024;
 const int windowHeight = 768;
 const char* glsl_version = "#version 430";
+float lastX = windowWidth / 2;
+float lastY = windowHeight / 2;
+float yaw = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+float pitch = 0.0f;
+
 
 void processInput(GLFWwindow* window, Scene& scene);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -52,6 +57,10 @@ int main()
 
   GLFWmonitor* monitor = glfwGetPrimaryMonitor();
   const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+  double lastFrame = 0.0f;
+  double dt = 1 / 60.0;
+  double currentTime = glfwGetTime();
 
   // Setting up OpenGL properties
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -81,8 +90,9 @@ int main()
     return -1;
   }
 
-  // Ensure we can capture the escape key being pressed below
+  //Ensure we can capture the escape key being pressed below
   glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+  //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   //intialize the scene
   Scene scene(windowWidth, windowHeight);
@@ -114,13 +124,13 @@ int main()
   {
     std::cout << " oof you fucked";
   }
-  
+
   JsonValue level = jsonParser::toJson(VertexShaderCode);
 
   if (std::holds_alternative<JsonObjectPtr>(level))
   {
-    JsonObjectPtr & stuff = std::get<JsonObjectPtr>(level);
-    JsonArrayPtr & listOfEntities = std::get<JsonArrayPtr>(stuff->jsonObjects["entities"]);
+    JsonObjectPtr& stuff = std::get<JsonObjectPtr>(level);
+    JsonArrayPtr& listOfEntities = std::get<JsonArrayPtr>(stuff->jsonObjects["entities"]);
     JsonObjectPtr& first_entity = std::get<JsonObjectPtr>(listOfEntities->jsonArrays[0]);
     JsonObjectPtr& componenets = std::get<JsonObjectPtr>(first_entity->jsonObjects["components"]);
     JsonObjectPtr& sprite_data = std::get<JsonObjectPtr>(componenets->jsonObjects["Sprite"]);
@@ -132,6 +142,11 @@ int main()
 
   do
   {
+    const double currentFrame = glfwGetTime();
+    double frameTime = currentFrame - lastFrame;
+    const double savedFrameTime = frameTime;
+    lastFrame = currentFrame;
+
     /*
     //Sytem Order Update:
     //input
@@ -139,6 +154,7 @@ int main()
     //physics
     //graphics
     */
+
     glfwPollEvents();
 
     //blocks input to viewport when im focused on an imgui input event, not window
@@ -149,14 +165,14 @@ int main()
       processInput(window, scene);
     }
 
-    //render the window with the title Amir Azmi
-    ImGuiEditor.preRender("Amir Azmi");
-
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     glViewport(0, 0, width, height);
 
-    scene.PreRender(windowWidth, windowHeight);
+    scene.PreRender(windowWidth, windowHeight, savedFrameTime);
+
+    //render the window with the title Amir Azmi
+    ImGuiEditor.preRender("Amir Azmi");
 
     glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -167,14 +183,26 @@ int main()
     //render the contents of ImGui
     ImGuiEditor.Render(scene, systems);
 
-    //render the scene
-    scene.Render();
+    while (frameTime > 0.0)
+    {
+      float deltaTime = std::min(frameTime, dt);
 
-    //update the objects in the scene
+      //render the scene aka update the logic for all behaviors
+      scene.Render(deltaTime);
+
+      frameTime -= deltaTime;
+
+      //update the time
+      lastFrame += frameTime;
+    }
+
+    //update the objects in the scene aka the rendering of objects
     systems.Update(scene, windowWidth, windowHeight);
 
     //Call Imguie::End and other post render information
     ImGuiEditor.postRender();
+
+    scene.PostRender(savedFrameTime);
 
     glfwSwapBuffers(window);
 
@@ -263,7 +291,7 @@ void processInput(GLFWwindow* window, Scene& scene)
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
-      
+
   if (Input::getKeyDown('S'))
   {
     glm::vec3 eye = scene.getEyePosition();
@@ -271,7 +299,7 @@ void processInput(GLFWwindow* window, Scene& scene)
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
-      
+
   if (Input::getKeyDown('D'))
   {
     glm::vec3 eye = scene.getEyePosition();
@@ -279,7 +307,7 @@ void processInput(GLFWwindow* window, Scene& scene)
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
-      
+
   if (Input::getKeyDown('Q'))
   {
     glm::vec3 eye = scene.getEyePosition();
@@ -287,7 +315,7 @@ void processInput(GLFWwindow* window, Scene& scene)
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
-      
+
   if (Input::getKeyDown('E'))
   {
     glm::vec3 eye = scene.getEyePosition();
@@ -315,22 +343,5 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-  if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-  {
-    double xpos;
-    double ypos;
-    glfwGetCursorPos(window, &xpos, &ypos);
-    //TODO: dont know what the heck is happening here since I believe the math is correct going from screen space to world space but somewhere
-    //it after this point the world space ccordinates for the mouse are just messed up, ive like triple checked the matrices and how they are made
-    //the view matrix is calculated with window dimension as its aspect ratio, i tried sceen coordinates but nothing really changed
-    //perspective matrix is also calculated with the window dimension and not screen cooridinates, i also tried this as well but nope
-    //the ray is in screen space so the first thing we do is need to get into view space
-
-    //perspective divide => DO NOT do this because a ray does not have depth
-
-
-    //create ray from camera position in world space to cursor position in world space
-    //will have to come back to you later, i tried
-  }
 
 }

@@ -21,6 +21,6 @@ Creation date: February 16th , 2020
 class RotationBehavior : public Behavior
 {
 public:
-  void Update() override;
+  void Update(float delta_time) override;
 };
 

@@ -17,7 +17,7 @@ Creation date: February 16th , 2020
 #include "Entity.h"
 #include "Input.h"
 
-void RotationBehavior::Update()
+void RotationBehavior::Update(float delta_time)
 {
 
   if (Input::getKeyDown('R'))

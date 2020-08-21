@@ -19,27 +19,27 @@ Entity::Entity(std::string name, Scene& scene):name(name),  scene(scene), axisOf
 {
 }
 
-void Entity::onFrameBegin()
+void Entity::onFrameBegin(float delta_time)
 {
   for (BehaviorPtr behavior : behaviors)
   {
-    behavior->OnFrameBegin();
+    behavior->OnFrameBegin(delta_time);
   }
 }
 
-void Entity::update()
+void Entity::update(float delta_time)
 {
   for (BehaviorPtr behavior : behaviors)
   {
-    behavior->Update();
+    behavior->Update(delta_time);
   }
 }
 
-void Entity::onFrameEnd()
+void Entity::onFrameEnd(float delta_time)
 {
   for (BehaviorPtr behavior : behaviors)
   {
-    behavior->OnFrameEnd();
+    behavior->OnFrameEnd(delta_time);
   }
 }
 
@@ -49,6 +49,7 @@ Entity::~Entity()
   {
     delete behavior;
   }
+
   behaviors.clear();
 }
 

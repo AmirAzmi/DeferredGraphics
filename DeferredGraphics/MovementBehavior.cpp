@@ -2,25 +2,25 @@
 #include "Input.h"
 #include "Entity.h"
 
-void MovementBehavior::Update()
+void MovementBehavior::Update(float delta_time)
 {
   if (Input::getKeyDown('W'))
   {
-    owner->position.z += speed.z;
+    owner->position.z += speed.z * delta_time;
   }
 
   if (Input::getKeyDown('A'))
   {
-    owner->position.x += speed.x;
+    owner->position.x += speed.x * delta_time;
   }
 
   if (Input::getKeyDown('S'))
   {
-    owner->position.z -= speed.z;
+    owner->position.z -= speed.z * delta_time;
   }
 
   if (Input::getKeyDown('D'))
   {
-    owner->position.x -= speed.x;
+    owner->position.x -= speed.x * delta_time;
   }
 }

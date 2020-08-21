@@ -86,7 +86,7 @@ void Scene::Init()
   //create the Entity ptr
   EntityPtr centerObject = addEntity("Center Object");
 
-  glm::vec3 offset(0,-2,5);
+  glm::vec3 offset(0,-1.5f,4);
   centerObject->addBehavior<CameraPossessBehavior>(offset);
   centerObject->addBehavior<MovementBehavior>();
 
@@ -125,7 +125,7 @@ void Scene::Init()
   }
 }
 
-void Scene::PreRender(int windowWidth, int windowHeight)
+void Scene::PreRender(int windowWidth, int windowHeight,float delta_time)
 {
   //setup the initial view and projection matrices
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
@@ -135,25 +135,25 @@ void Scene::PreRender(int windowWidth, int windowHeight)
   for (EntityPtr entity : getEntities())
   {
     //updates the behaviors for all entities
-    entity->onFrameBegin();
+    entity->onFrameBegin(delta_time);
   }
 }
 
 //update the scene objects
-void Scene::Render()
+void Scene::Render(float delta_time)
 {
   for (int i = 0; i < getEntities().size(); ++i)
   {
     //updates the entity behaviors
-    getEntities()[i]->update();
+    getEntities()[i]->update(delta_time);
   }
 }
 
-void Scene::PostRender()
+void Scene::PostRender(float delta_time)
 {
   for (EntityPtr entity : getEntities())
   {
-    entity->onFrameEnd();
+    entity->onFrameEnd(delta_time);
   }
 }
 
@@ -217,42 +217,42 @@ void Scene::removeEntity(std::string name)
   }
 }
 
-const glm::mat4 Scene::getProjectionMatrix()
+const glm::mat4 Scene::getProjectionMatrix() const
 {
   return projectionMatrix;
 }
 
-const glm::mat4 Scene::getViewMatrix()
+const glm::mat4 Scene::getViewMatrix() const
 {
   return viewMatrix;
 }
 
-const glm::vec3 Scene::getEyePosition()
+const glm::vec3 Scene::getEyePosition() const
 {
   return eyePosition;
 }
 
-const glm::vec3 Scene::getCameraDirection()
+const glm::vec3 Scene::getCameraDirection() const
 {
   return cameraDirection;
 }
 
-const glm::vec3 Scene::getUpDirection()
+const glm::vec3 Scene::getUpDirection() const
 {
   return upDirection;
 }
 
-const float Scene::getNearDistance()
+const float Scene::getNearDistance() const
 {
   return nearDistance;
 }
 
-const float Scene::getFarDistance()
+const float Scene::getFarDistance()const
 {
   return farDistance;
 }
 
-const float Scene::getFOV()
+const float Scene::getFOV() const
 {
   return fov;
 }

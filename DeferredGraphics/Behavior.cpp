@@ -13,10 +13,10 @@ Creation date: January 4th , 2020
 
 #include "Behavior.h"
 
-void Behavior::OnFrameBegin()
+void Behavior::OnFrameBegin(float delta_time)
 {
 }
 
-void Behavior::OnFrameEnd()
+void Behavior::OnFrameEnd(float delta_time)
 {
 }
