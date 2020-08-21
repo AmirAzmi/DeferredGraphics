@@ -27,3 +27,7 @@ void RotationBehavior::Update(float delta_time)
     owner->position = glm::vec3(cosf(owner->currentPosition), 0.0f, sinf(owner->currentPosition)) * 4.0f;
   }
 }
+
+void RotationBehavior::inspect()
+{
+}

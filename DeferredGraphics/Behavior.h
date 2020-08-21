@@ -23,6 +23,8 @@ protected:
   EntityPtr owner = nullptr; // The entity the behavior is attached to.
 
 public:
+  virtual void inspect() = 0;
+  virtual std::string name() = 0;
   virtual void OnFrameBegin(float delta_time);
   virtual void Update(float delta_time) = 0;
   virtual void OnFrameEnd(float delta_time);

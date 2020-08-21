@@ -11,6 +11,12 @@ public:
   {
   }
 
+  std::string name() override
+  {
+    return std::string("Camera Possess");
+  }
+
+  void inspect() override;
   void Update(float delta_time) override;
 };
 

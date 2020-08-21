@@ -18,6 +18,7 @@ Creation date: January 4th , 2020
 #include "Memory.h"
 #include "Raycast.h"
 #include <Imgui/imgui_internal.h>
+#include "Behavior.h"
 
 float lerp(float a, float b, float t)
 {
@@ -431,6 +432,26 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
           lightComponent->light.position = scene.getEntities()[i]->position;
         }
       }
+
+      std::vector<BehaviorPtr> behaviorList = scene.getEntities()[i]->behaviors;
+
+      ImGui::Separator();
+      if (ImGui::TreeNode("Behaviors"))
+      {
+        if (!behaviorList.empty())
+        {
+          for (auto& behave : behaviorList)
+          {
+            if (ImGui::CollapsingHeader(behave->name().c_str()))
+            {
+              behave->inspect();
+            }
+          }
+
+          ImGui::TreePop();
+        }
+      }
+
       ImGui::Separator();
 
       if (ImGui::Button("Remove Entity"))
@@ -785,7 +806,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       }
     }*/
   }
-  
+
 
 
   //takes in a texture, window size, and uvs -> draws final outto the whole imgui window

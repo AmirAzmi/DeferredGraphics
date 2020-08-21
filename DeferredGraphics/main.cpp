@@ -11,6 +11,7 @@ Author: Amir Azmi, amr.azmi, 180002217
 Creation date: January 4th , 2020
 --------------------------------------------------------*/
 
+#include <Windows.h>
 #include <glew/GL/glew.h>
 #include <glfw/GLFW/glfw3.h>
 #include <glm/glm/glm.hpp>
@@ -19,7 +20,6 @@ Creation date: January 4th , 2020
 #include "Input.h"
 #include "Editor.h"
 #include "SystemManager.h"
-
 #include "JsonParser.h"
 
 
@@ -59,7 +59,21 @@ int main()
   const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
   double lastFrame = 0.0f;
-  double dt = 1 / 60.0;
+  DEVMODE lpDevMode;
+  memset(&lpDevMode, 0, sizeof(DEVMODE));
+  lpDevMode.dmSize = sizeof(DEVMODE);
+  double dt;
+
+
+  if (EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &lpDevMode) == 0)
+  {
+    dt = 1.0 / 144.0;
+  }
+  else
+  {
+    dt = 1.0f / lpDevMode.dmDisplayFrequency;
+  }
+
   double currentTime = glfwGetTime();
 
   // Setting up OpenGL properties
@@ -144,8 +158,10 @@ int main()
   {
     const double currentFrame = glfwGetTime();
     double frameTime = currentFrame - lastFrame;
-    const double savedFrameTime = frameTime;
     lastFrame = currentFrame;
+
+    //std::cout << "frameTime: "<< frameTime <<'\n';
+    //std::cout << "frame rate: " << 1/frameTime <<'\n';
 
     /*
     //Sytem Order Update:
@@ -169,7 +185,7 @@ int main()
     glfwGetWindowSize(window, &width, &height);
     glViewport(0, 0, width, height);
 
-    scene.PreRender(windowWidth, windowHeight, savedFrameTime);
+    scene.PreRender(windowWidth, windowHeight, dt);
 
     //render the window with the title Amir Azmi
     ImGuiEditor.preRender("Amir Azmi");
@@ -183,18 +199,9 @@ int main()
     //render the contents of ImGui
     ImGuiEditor.Render(scene, systems);
 
-    while (frameTime > 0.0)
-    {
-      float deltaTime = std::min(frameTime, dt);
 
-      //render the scene aka update the logic for all behaviors
-      scene.Render(deltaTime);
-
-      frameTime -= deltaTime;
-
-      //update the time
-      lastFrame += frameTime;
-    }
+    //render the scene aka update the logic for all behaviors
+    scene.Render(dt);
 
     //update the objects in the scene aka the rendering of objects
     systems.Update(scene, windowWidth, windowHeight);
@@ -202,7 +209,7 @@ int main()
     //Call Imguie::End and other post render information
     ImGuiEditor.postRender();
 
-    scene.PostRender(savedFrameTime);
+    scene.PostRender(dt);
 
     glfwSwapBuffers(window);
 

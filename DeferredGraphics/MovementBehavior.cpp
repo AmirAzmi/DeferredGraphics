@@ -24,3 +24,7 @@ void MovementBehavior::Update(float delta_time)
     owner->position.x -= speed.x * delta_time;
   }
 }
+
+void MovementBehavior::inspect()
+{
+}

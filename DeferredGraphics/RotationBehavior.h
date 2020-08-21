@@ -22,5 +22,11 @@ class RotationBehavior : public Behavior
 {
 public:
   void Update(float delta_time) override;
+  void inspect() override;
+
+  std::string name() override
+  {
+    return std::string("Rotation");
+  }
 };
 
