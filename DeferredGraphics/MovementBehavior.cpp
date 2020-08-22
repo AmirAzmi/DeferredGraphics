@@ -1,6 +1,7 @@
 #include "MovementBehavior.h"
 #include "Input.h"
 #include "Entity.h"
+#include "Imgui/imgui.h"
 
 void MovementBehavior::Update(float delta_time)
 {
@@ -27,4 +28,5 @@ void MovementBehavior::Update(float delta_time)
 
 void MovementBehavior::inspect()
 {
+  ImGui::DragFloat3("Movement Speed: ",&speed.x);
 }

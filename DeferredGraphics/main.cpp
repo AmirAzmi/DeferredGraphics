@@ -32,6 +32,7 @@ float lastX = windowWidth / 2;
 float lastY = windowHeight / 2;
 float yaw = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
 float pitch = 0.0f;
+bool firstMouse = true;
 
 
 void processInput(GLFWwindow* window, Scene& scene);
@@ -95,6 +96,7 @@ int main()
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
   glfwSetMouseButtonCallback(window, mouse_button_callback);
   glfwSetCursorPosCallback(window, cursor_position_callback);
+
 
   glewExperimental = static_cast<GLboolean>(true); // Needed for core profile
   if (glewInit() != GLEW_OK)
@@ -345,6 +347,37 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 {
   //get cursor postion in screen space
   glfwGetCursorPos(window, &xpos, &ypos);
+  Scene * scene = reinterpret_cast<Scene*>(glfwGetWindowUserPointer(window));
+  if (firstMouse)
+  {
+    lastX = xpos;
+    lastY = ypos;
+    firstMouse = false;
+  }
+
+  float xoffset = xpos - lastX;
+  float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+  lastX = xpos;
+  lastY = ypos;
+
+  float sensitivity = 0.1f; // change this value to your liking
+  xoffset *= sensitivity;
+  yoffset *= sensitivity;
+
+  yaw += xoffset;
+  pitch += yoffset;
+
+  // make sure that when pitch is out of bounds, screen doesn't get flipped
+  if (pitch > 89.0f)
+    pitch = 89.0f;
+  if (pitch < -89.0f)
+    pitch = -89.0f;
+
+  glm::vec3 front;
+  front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+  front.y = sin(glm::radians(pitch));
+  front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+  scene->cameraDirection = glm::normalize(front);
 
 }
 
