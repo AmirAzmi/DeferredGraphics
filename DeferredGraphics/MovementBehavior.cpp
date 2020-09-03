@@ -7,22 +7,32 @@ void MovementBehavior::Update(float delta_time)
 {
   if (Input::getKeyDown('W'))
   {
-    owner->position.z += speed.z * delta_time;
+    owner->position.z -= speed.z * delta_time; //go towards -z
   }
 
   if (Input::getKeyDown('A'))
   {
-    owner->position.x += speed.x * delta_time;
+    owner->position.x -= speed.x * delta_time;
   }
 
   if (Input::getKeyDown('S'))
   {
-    owner->position.z -= speed.z * delta_time;
+    owner->position.z += speed.z * delta_time; //go towards + z
   }
 
   if (Input::getKeyDown('D'))
   {
-    owner->position.x -= speed.x * delta_time;
+    owner->position.x += speed.x * delta_time;
+  }
+
+  if (Input::getKeyDown('Q'))
+  {
+    owner->position.y -= speed.y * delta_time; //go towards + z
+  }
+
+  if (Input::getKeyDown('E'))
+  {
+    owner->position.y += speed.y * delta_time;
   }
 }
 

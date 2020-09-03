@@ -763,7 +763,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   screen_space_cursor.w = 1.0f;
 
   //if its within the window bounds, calcualte world pos
-  if (screen_space_cursor.x >= window_pos.x &&
+  /*if (screen_space_cursor.x >= window_pos.x &&
     screen_space_cursor.y >= window_pos.y &&
     screen_space_cursor.x <= window_pos.x + window_size.x &&
     screen_space_cursor.y <= window_pos.y + window_size.y)
@@ -794,7 +794,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     //std::cout << "World Space Y: " << ray_world.y << "\n";
     //std::cout << "World Space Z: " << ray_world.z << "\n";
 
-    /*Raycast ray;
+    Raycast ray;
     ray.destination = ray_world;
     ray.origin = scene.eyePosition;
 
@@ -804,8 +804,8 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       {
         Manager.debugRenderer->drawAABB(scene.getEntities()[0]->get<MeshComponent>(), scene, false);
       }
-    }*/
-  }
+    }
+  }*/
 
 
 

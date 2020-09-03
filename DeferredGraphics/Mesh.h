@@ -19,21 +19,54 @@ Creation date: January 4th , 2020
 #include <fstream>
 #include "AABB.h"
 
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+enum ModelType
+{
+  DEFAULT,
+  ASSIMP
+};
+
+struct Texture 
+{
+  unsigned int id;
+  std::string type;
+};
+
 class Mesh
 {
-  GLuint posVBO;
+  //mesh data
+  GLuint posVBO; 
   GLuint normsVBO;
   GLuint indexVBO;
+  GLuint colorVBO;
   GLuint uvVBO;
   GLuint VAO;
 
   std::vector<glm::vec3> vertices = {};
   std::vector<glm::vec3> normals = {};
+  std::vector<glm::vec3> colors = {};
   std::vector<glm::vec2> uv = {};
+
   std::vector<GLuint> indices = {};
   std::vector<GLuint> normal_indices = {};
 
+  //model data 
+  std::vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+  std::vector<Mesh> meshes;
+  std::string directory;
+
 public:
+
+  struct FaceTemp
+  {
+    int vt;
+    int uv;
+    int norm;
+  };
+
   struct Face
   {
     glm::vec3 vertex_position_indices;
@@ -46,15 +79,23 @@ private:
 
   static glm::vec3 getValuesInBetweenWhiteSpacesVec3(const std::string line);
   static glm::vec2 getValuesInBetweenWhiteSpacesVec2(const std::string line);
-  static Face getFaceData(const std::string line);
+  static std::vector<int> getUVFaceData(const std::string line);
+  static std::vector<int> getIndicesFaceData(const std::string line);
+  static std::vector<int> getNormalIndicesFaceData(const std::string line);
 
 public:
 
   Mesh(const std::string filePath);
+  Mesh(const std::string filePath, ModelType type);
   Mesh(float radius, int latitudeSlices, int longitudeSlices);
+
+  void processNode(aiNode* node, const aiScene* scene);
+  Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+
   GLuint getPosVBO();
   GLuint getNormsVBO();
   GLuint getIndexVBO();
+  GLuint getColorVBO();
   GLuint getVAO();
   GLuint getUVBO();
 

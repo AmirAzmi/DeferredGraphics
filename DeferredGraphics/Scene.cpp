@@ -65,7 +65,7 @@ void Scene::Init()
   /*********************************************************************************/
 
   //add a mesh to the component
-  MeshHandle cube = std::make_shared<Mesh>("Resources/cube.obj");
+  MeshHandle cube = std::make_shared<Mesh>("Resources/pitch.obj");
   MeshHandle bunny = std::make_shared<Mesh>("Resources/bunny.obj");
   MeshHandle sphere = std::make_shared<Mesh>("Resources/sphere.obj");
   MeshHandle pitch = std::make_shared<Mesh>("Resources/pitch.obj");
@@ -73,10 +73,12 @@ void Scene::Init()
   //declare the Resources/Shaders that will be used for this scene
   ShaderHandle gBuffer = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
   ShaderHandle forwardRenderer = std::make_shared<Shader>("Resources/Shaders/forwardLightingPass.vert", "Resources/Shaders/forwardLightingPass.frag", false);
+  ShaderHandle textureShader = std::make_shared<Shader>("Resources/Shaders/texture.vert", "Resources/Shaders/texture.frag", false);
 
   //add a material(s) to the component
   MaterialHandle material = std::make_shared<Material>(gBuffer);
   MaterialHandle material2 = std::make_shared<Material>(forwardRenderer);
+  MaterialHandle material3 = std::make_shared<Material>(textureShader);
 
   //Any material information needed
   material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
@@ -111,7 +113,7 @@ void Scene::Init()
     EntityPtr object = addEntity(str);
 
     //add a mesh component pointer to the object with the setup from the prelims
-    MeshComponentPtr meshComp2 = object->add<MeshComponent>(object, cube, forwardRenderer, material2);
+    MeshComponentPtr meshComp2 = object->add<MeshComponent>(object, cube, textureShader, material3);
     //lightComp = object->add<LightComponent>();
 
     //manipulate the properties of the object by getting it from the component

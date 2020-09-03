@@ -248,6 +248,9 @@
     <ClInclude Include="MovementBehavior.h">
       <Filter>Header Files\Behavior</Filter>
     </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Framebuffers.txt">
@@ -307,6 +310,12 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="..\Resources\Shaders\sphereDebugDraw.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\texture.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\texture.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

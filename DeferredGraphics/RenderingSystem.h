@@ -33,6 +33,7 @@ public:
   GLuint gPositionID;
   GLuint gNormalID;
   GLuint gColorSpecID;
+  GLuint texture; ////////
 private:
 
   //lighting Pass FBO ID

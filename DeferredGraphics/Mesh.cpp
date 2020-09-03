@@ -19,12 +19,15 @@ Creation date: January 4th , 2020
 Mesh::Mesh(const std::string filePath)
 {
   std::ifstream file(filePath);//read in the file
-  std::string text_file_string;//stores all the text into string
   std::string line;            //variable for reading in a line
 
   glm::vec3 max(std::numeric_limits<float>::min());//min point
   glm::vec3 min(std::numeric_limits<float>::max());//max point
   glm::vec3 averagePosition = glm::vec3(0.0f, 0.0f, 0.0f);
+
+  std::vector<int> vt_locations;
+  std::vector<int> ind_locations;
+  std::vector<int> norm_locations;
 
   //if the file is open
   if (file.is_open())
@@ -35,120 +38,135 @@ Mesh::Mesh(const std::string filePath)
       switch (line[0])
       {
         //this means there is a comment on this line
-      case '#':
-      {
-        break;
-      }
-
-      //this means the first character is 'v' which means it could either ve a vertex, normal, or uv coordinates
-      case 'v':
-      {
-        //grab the second character of the line
-        switch (line[1])
+        case '#':
         {
-          //if it is a space then we know its a vertex
-        case ' ':
-        {
-          //create the temporary vertex
-          glm::vec3 vertex;
-
-          //gets the values in between the spaces and stores it into a vec3
-          vertex = getValuesInBetweenWhiteSpacesVec3(line);
-   
-
-          averagePosition += vertex;
-
-          if (max.x < vertex.x) { max.x = vertex.x; }
-          if (max.y < vertex.y) { max.y = vertex.y; }
-          if (max.z < vertex.z) { max.z = vertex.z; }
-
-          if (min.x > vertex.x) { min.x = vertex.x; }
-          if (min.y > vertex.y) { min.y = vertex.y; }
-          if (min.z > vertex.z) { min.z = vertex.z; }
-
-          //stores vertex into vertices buffer
-          vertices.push_back(vertex);
-
-          //break out
           break;
         }
 
-        //if it is a 'n' then we know its a vertex normal
-        case 'n':
+        //this means the first character is 'v' which means it could either ve a vertex, normal, or uv coordinates
+        case 'v':
         {
-          //create the temporary vertex
-          glm::vec3 vertexNormal;
+          //grab the second character of the line
+          switch (line[1])
+          {
+            //if it is a space then we know its a vertex
+            case ' ':
+            {
+              //create the temporary vertex
+              glm::vec3 vertex;
 
-          //gets the values in between the spaces and stores it into a vec3
-          vertexNormal = getValuesInBetweenWhiteSpacesVec3(line);
+              //gets the values in between the spaces and stores it into a vec3
+              vertex = getValuesInBetweenWhiteSpacesVec3(line);
 
-          //stores vertex into normals buffer
-          normals.push_back(vertexNormal);
 
-          //break out
+              averagePosition += vertex;
+
+              if (max.x < vertex.x) { max.x = vertex.x; }
+              if (max.y < vertex.y) { max.y = vertex.y; }
+              if (max.z < vertex.z) { max.z = vertex.z; }
+
+              if (min.x > vertex.x) { min.x = vertex.x; }
+              if (min.y > vertex.y) { min.y = vertex.y; }
+              if (min.z > vertex.z) { min.z = vertex.z; }
+
+              //stores vertex into vertices buffer
+              vertices.push_back(vertex);
+
+              //break out
+              break;
+            }
+
+            //if it is a 'n' then we know its a vertex normal
+            case 'n':
+            {
+              //create the temporary vertex
+              glm::vec3 vertexNormal;
+
+              //gets the values in between the spaces and stores it into a vec3
+              vertexNormal = getValuesInBetweenWhiteSpacesVec3(line);
+
+              //stores vertex into normals buffer
+              normals.push_back(vertexNormal);
+
+              //break out
+              break;
+            }
+
+            //if it is a 't' then we know its a UV value
+            case 't':
+            {
+              //create the temporary vertex
+              glm::vec2 UVs;
+
+              //gets the values in between the spaces and stores it into a vec3
+              UVs = getValuesInBetweenWhiteSpacesVec2(line);
+
+              //stores vertex into normals buffer
+              uv.push_back(UVs);
+
+              //break out
+              break;
+            }
+
+            //if it is none of those characters stated above
+            default:
+            {
+              break;
+            }
+          }
           break;
         }
-
-        //if it is a 't' then we know its a UV value
-        case 't':
+        //if the first character is an 'f' that means its an index ordering
+        case 'f':
         {
-          //create the temporary vertex
-          glm::vec2 UVs;
+          if (line.find('/') != std::string::npos)
+          {
+            /*
+            std::vector<int> index_data = getIndicesFaceData(line);
+            std::vector<int> uv_data = getUVFaceData(line);
+            std::vector<int> norm_data = getNormalIndicesFaceData(line);
 
-          //gets the values in between the spaces and stores it into a vec3
-          UVs = getValuesInBetweenWhiteSpacesVec2(line);
+            for (int i = 0; i < index_data.size(); ++i)
+            {
+              vt_locations.push_back(index_data[i]);
+            }
 
-          //stores vertex into normals buffer
-          uv.push_back(UVs);
+            for (int i = 0; i < uv_data.size(); ++i)
+            {
+              ind_locations.push_back(uv_data[i]);
+            }
 
-          //break out
+            for (int i = 0; i < norm_data.size(); ++i)
+            {
+              norm_locations.push_back(norm_data[i]);
+            }*/
+
+            glm::vec3 faceIndices;
+
+            faceIndices = getValuesInBetweenWhiteSpacesVec3(line);
+
+            indices.push_back(faceIndices[0] - 1);
+            indices.push_back(faceIndices[1] - 1);
+            indices.push_back(faceIndices[2] - 1);
+          }
+          else
+          {
+            glm::vec3 faceIndices;
+
+            faceIndices = getValuesInBetweenWhiteSpacesVec3(line);
+
+            indices.push_back(faceIndices[0] - 1);
+            indices.push_back(faceIndices[1] - 1);
+            indices.push_back(faceIndices[2] - 1);
+          }
+
+          //break out    
           break;
         }
-
-        //if it is none of those characters stated above
         default:
         {
           break;
         }
-        }
-        break;
-      }
-      //if the first character is an 'f' that means its an index ordering
-      case 'f':
-      {
-        if (line.find('/') == true)
-        {
-
-          //gets the values in between the spaces and stores it into a vec3
-          Face indexLocation = getFaceData(line);
-
-          //stores values into index buffer
-          indices.push_back(indexLocation.vertex_position_indices[0] - 1);
-          indices.push_back(indexLocation.vertex_position_indices[1] - 1);
-          indices.push_back(indexLocation.vertex_position_indices[2] - 1);
-
-          normal_indices.push_back(indexLocation.vertex_normal_indices[0] - 1);
-          normal_indices.push_back(indexLocation.vertex_normal_indices[1] - 1);
-          normal_indices.push_back(indexLocation.vertex_normal_indices[2] - 1);
-        }
-        else
-        {
-          glm::vec3 faceIndices;
-
-          faceIndices = getValuesInBetweenWhiteSpacesVec3(line);
-
-          indices.push_back(faceIndices[0] - 1);
-          indices.push_back(faceIndices[1] - 1);
-          indices.push_back(faceIndices[2] - 1);
-        }
-
-        //break out    
-        break;
-      }
-      default:
-      {
-        break;
-      }
       }
     }
   }
@@ -158,6 +176,26 @@ Mesh::Mesh(const std::string filePath)
     exit(1);
   }
 
+
+  /*std::vector<FaceTemp> temp_faces;
+  temp_faces.resize(ind_locations.size());
+
+  for (int i = 0; i < ind_locations.size(); ++i)
+  {
+    temp_faces[i].vt = vt_locations[i];
+    temp_faces[i].uv = ind_locations[i];
+    temp_faces[i].norm = norm_locations[i];
+  }*/
+
+  bool isEmpty = true;
+
+  //if uv is not empty
+  if (!uv.empty())
+  {
+    isEmpty = false;
+  }
+
+  std::vector<glm::vec2> uploadedFromSlashesUVs;
   std::vector<glm::vec2> uploadedUVs;
   std::vector<glm::vec3> faceNormals;
 
@@ -194,24 +232,40 @@ Mesh::Mesh(const std::string filePath)
     //set up the vertex normals (dont know how this works yet)
     count[indices[i]] += 1;
     normals[indices[i]] += faceNormals.back();
-    count[indices[i]+1] += 1;
-    normals[indices[i+1]] += faceNormals.back();
-    count[indices[i+2]] += 1;
-    normals[indices[i+2]] += faceNormals.back();
+    count[indices[i] + 1] += 1;
+    normals[indices[i + 1]] += faceNormals.back();
+    count[indices[i + 2]] += 1;
+    normals[indices[i + 2]] += faceNormals.back();
 
     //upload UV data
-    uploadedUVs.push_back(glm::vec2(0.0f, 0.0f));
-    uploadedUVs.push_back(glm::vec2(0.0f, 1.0f));
-    uploadedUVs.push_back(glm::vec2(1.0f, 1.0f));
+
+    if (isEmpty == true)
+    {
+      uploadedUVs.push_back(glm::vec2(0.0f, 0.0f));
+      uploadedUVs.push_back(glm::vec2(0.0f, 1.0f));
+      uploadedUVs.push_back(glm::vec2(1.0f, 1.0f));
+    }
+
+  }
+
+  if (isEmpty == true)
+  {
+    uv = uploadedUVs;
   }
 
   //https://stackoverflow.com/questions/4703432/why-does-my-opengl-phong-shader-behave-like-a-flat-shader
   //renormalize the normals becuase that is what some website said to do for calculating vertex normals
   for (int i = 0; i < indices.size(); ++i)
-  { 
+  {
     normals[indices[i]] = glm::normalize(normals[indices[i]] / (float)count[indices[i]]);
   }
-  
+
+  colors.resize(vertices.size());
+  for (int i = 0; i < colors.size(); ++i)
+  {
+    colors[i] = glm::vec3(1.0f, 1.0f, 1.0f);
+  }
+
   //generate the Vertex Array Object
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
@@ -231,8 +285,14 @@ Mesh::Mesh(const std::string filePath)
   //genereate the buffer that stores uv data from the vector of uv
   glGenBuffers(1, &uvVBO);
   glBindBuffer(GL_ARRAY_BUFFER, uvVBO);
-  glBufferData(GL_ARRAY_BUFFER, uploadedUVs.size() * sizeof(glm::vec2),
-    uploadedUVs.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, uv.size() * sizeof(glm::vec2),
+    uv.data(), GL_STATIC_DRAW);
+
+  //genereate the buffer that stores normal data from the vector of normal
+  glGenBuffers(1, &colorVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3),
+    colors.data(), GL_STATIC_DRAW);
 
   //genereate the buffer that stores index data from the vector of indices
   glGenBuffers(1, &indexVBO);
@@ -253,6 +313,11 @@ GLuint Mesh::getNormsVBO()
 GLuint Mesh::getIndexVBO()
 {
   return indexVBO;
+}
+
+GLuint Mesh::getColorVBO()
+{
+  return colorVBO;
 }
 
 GLuint Mesh::getVAO()
@@ -357,83 +422,96 @@ glm::vec2 Mesh::getValuesInBetweenWhiteSpacesVec2(const std::string line)
   return positionVertex;
 }
 
-Mesh::Face Mesh::getFaceData(const std::string line)
+std::vector<int> Mesh::getUVFaceData(const std::string line)
 {
-  Face face;
-  face.vertex_normal_indices = glm::vec3();
-  face.vertex_position_indices = glm::vec3();
-  face.vertex_texture_coordinate_indices = glm::vec3();
+  size_t iterator = 0;
+  std::vector<int> uvs;
 
-  std::string vn;
-  std::string uv;
-  std::string pos;
-
-  int pos_counter = 0;
-  int uv_counter = 0;
-  int vn_counter = 0;
-
-  int slash_counter = 0;
-
-  for (int i = 0; i <= line.size(); ++i)
+  while (iterator < line.size() - 1)
   {
-    //f  10/20/30  4/5/6  7/8/9
-    if (i == line.size())
-    {
-      if (pos_counter < 3)
-      {
-        slash_counter++;
-        face.vertex_position_indices[pos_counter++] = std::atof(pos.c_str());
-        face.vertex_texture_coordinate_indices[uv_counter++] = std::atof(uv.c_str());
-        face.vertex_normal_indices[vn_counter++] = std::atof(vn.c_str());
+    size_t start = line.find('/', iterator);
 
-        pos.clear();
-        vn.clear();
-        uv.clear();
-      }
+    if (start == std::string::npos)
+    {
+      break;
     }
-    if (line[i] == ' ' || line[i] == 'f' || i == line.size())
-    {
-      if (pos.empty() == true || line[i + 1] == ' ')
-      {
-        continue;
-      }
-      else
-      {
-        slash_counter++;
-        face.vertex_position_indices[pos_counter++] = std::atof(pos.c_str());
-        face.vertex_texture_coordinate_indices[uv_counter++] = std::atof(uv.c_str());
-        face.vertex_normal_indices[vn_counter++] = std::atof(vn.c_str());
 
-        pos.clear();
-        uv.clear();
-        vn.clear();
-      }
+    size_t end = line.find('/', start + 1);
+    std::string num = line.substr(start + 1, end - (start + 1));
+    int val = atoi(num.c_str());
+    uvs.push_back(val);
+    iterator = end + 1;
+  }
+
+  return uvs;
+}
+
+std::vector<int> Mesh::getIndicesFaceData(const std::string line)
+{
+  size_t iterator = 0;
+  std::vector<int> indices;
+
+  while (iterator < line.size() - 1)
+  {
+    size_t start = line.find(' ', iterator);
+
+    if (start == std::string::npos)
+    {
+      break;
+    }
+    size_t end = line.find('/', start + 1);
+    std::string num = line.substr(start + 1, end - (start + 1));
+    int val = atoi(num.c_str());
+    indices.push_back(val);
+    iterator = end + 1;
+  }
+
+  return indices;
+}
+
+std::vector<int> Mesh::getNormalIndicesFaceData(const std::string line)
+{
+
+  size_t iterator = 0;
+  std::vector<int> normal_indices;
+
+  while (iterator < line.size() - 1)
+  {
+    size_t first_slash = line.find('/', iterator);
+
+    if (first_slash == std::string::npos)
+    {
+      break;
+    }
+
+    size_t start = line.find('/', first_slash + 1);
+
+    if (start == std::string::npos)
+    {
+      break;
+    }
+    size_t end_of_line = line.size() - 1;
+
+    size_t end = line.find(' ', start + 1);
+
+    if (end > end_of_line)
+    {
+      std::string num = line.substr(start + 1, line.size() - (start + 1));
+      int val = atoi(num.c_str());
+      normal_indices.push_back(val);
+      break;
     }
     else
     {
-      if (line[i] == '/')
-      {
-        slash_counter++;
-        continue;
-      }
-
-      if (slash_counter % 3 == 0)
-      {
-        pos.push_back(line[i]);
-      }
-
-      if (slash_counter % 3 == 1)
-      {
-        uv.push_back(line[i]);
-      }
-
-      if (slash_counter % 3 == 2)
-      {
-        vn.push_back(line[i]);
-      }
+      end = line.find(' ', start + 1);
     }
 
+    std::string num = line.substr(start + 1, end - (start + 1));
+    int val = atoi(num.c_str());
+    normal_indices.push_back(val);
+    iterator = end + 1;
   }
 
-  return face;
+  return normal_indices;
+
 }

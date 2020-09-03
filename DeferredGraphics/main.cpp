@@ -17,6 +17,7 @@ Creation date: January 4th , 2020
 #include <glm/glm/glm.hpp>
 #include <iostream>
 #include <fstream>
+
 #include "Input.h"
 #include "Editor.h"
 #include "SystemManager.h"
@@ -49,6 +50,9 @@ extern "C" {
 
 int main()
 {
+  /*Assimp::Importer importer;
+  const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+  */
   // Initialise GLFW
   if (!glfwInit())
   {
@@ -107,7 +111,7 @@ int main()
   }
 
   //Ensure we can capture the escape key being pressed below
-  glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+  glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
   //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   //intialize the scene
@@ -347,6 +351,7 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 {
   //get cursor postion in screen space
   glfwGetCursorPos(window, &xpos, &ypos);
+
   Scene * scene = reinterpret_cast<Scene*>(glfwGetWindowUserPointer(window));
   if (firstMouse)
   {
@@ -378,7 +383,7 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
   front.y = sin(glm::radians(pitch));
   front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
   scene->cameraDirection = glm::normalize(front);
-
+  
 }
 
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)

@@ -10,6 +10,10 @@ Project: amir.azmi_CS350_1
 Author: Amir Azmi, amr.azmi, 180002217
 Creation date: January 4th , 2020
 --------------------------------------------------------*/
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include <iostream>
 #include <algorithm>
 #include "RenderingSystem.h"
@@ -47,6 +51,33 @@ RenderingSystem::RenderingSystem(const int windowWidth, const int windowHeight) 
   blockIndex[1] = glGetProgramResourceIndex(forwardLightingShaderID->getProgramID(), GL_SHADER_STORAGE_BLOCK, "shader_data");
   glShaderStorageBlockBinding(forwardLightingShaderID->getProgramID(), blockIndex[1], ssboBindingPointIndex[1]);
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ssboBindingPointIndex[1], ssboID[1]);
+
+  /*******************************************************************************************/
+  /*******************************************************************************************/
+  /*******************************************************************************************/
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  // set the texture wrapping/filtering options (on the currently bound texture object)
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  // load and generate the texture
+  int width, height, nrChannels;
+  unsigned char* data = stbi_load("Resources/Textures/container.jpg", &width, &height, &nrChannels, 0);
+  if (data)
+  {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  }
+  else
+  {
+    std::cout << "Failed to load texture" << std::endl;
+  }
+  stbi_image_free(data);
+  /********************************************************************************************/
+  /********************************************************************************************/
+  /********************************************************************************************/
 
   /********************************************************************************************/
   //BIG NOTE: Layout Location in Shader only matters for what framebuffer is binded to
@@ -462,6 +493,8 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
   {
     //bind the program here and set the material for the shader    
     mesh->getMaterial()->apply();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     //first bind the vertex array object that you are using
     glBindVertexArray(mesh->getMesh()->getVAO());
@@ -477,11 +510,14 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
     glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (void*)0);
 
     //enable UV data that will be transferred to the GPU
-
-    /*glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->getMesh()->getUVBO());
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    */
+
+    //enable colors data that will be transferred to the GPU
+    glEnableVertexAttribArray(3);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getMesh()->getColorVBO());
+    glVertexAttribPointer(3, 3, GL_FLOAT, false, 0, (void*)0);
 
     //bind the index buffer that will be transferred to the GPU
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getMesh()->getIndexVBO());
