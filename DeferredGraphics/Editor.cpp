@@ -262,6 +262,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       ImGui::Indent();
       if (ImGui::TreeNode("Transform"))
       {
+        //ImGui::Text("Number of Vertices: %f", &scene.getEntities()[i]->get<>);
         if (ImGui::DragFloat3("Position:", &scene.getEntities()[i]->position.x, .1f))
         {
         }
@@ -287,8 +288,9 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::TreeNode("Mesh Component"))
         {
-          //second parameter can be the mesh name if i had a mesh name id 
-          if (ImGui::BeginCombo("Mesh List", " + Mesh"))
+          ImGui::Text("Number of Vertices: %i", meshComponent->getMesh()->vertices.size());
+            //second parameter can be the mesh name if i had a mesh name id 
+          if (ImGui::BeginCombo("Mesh List", meshComponent->getMesh()->getName().c_str()))
           {
             for (int i = 0; i < mesh_name.size(); ++i)
             {
@@ -353,7 +355,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
               {
                 if (v4.first == "diffuse_color")
                 {
-                  if (ImGui::ColorEdit3("Diffuse Color", &v4.second.x))
+                  if (ImGui::ColorEdit3("Diffuse Color", &v4.second.x,ImGuiColorEditFlags_::ImGuiColorEditFlags_HDR))
                   {
                   }
                 }
@@ -508,7 +510,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       if (ImGui::Checkbox("Split Screen", &Manager.renderer->splitScreen))
       {
       }
-
+   
       if (ImGui::Checkbox("Bright Buffer", &Manager.renderer->brightBuffer))
       {
       }
@@ -604,7 +606,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::SliderInt("Levels: Top Down", &Manager.debugRenderer->numberOfLevels, 0, 7);
       }
 
-      if (ImGui::Checkbox("Bounding Volume Hierarchy Bottom Up", &Manager.debugRenderer->isBVHBottomUpOn))
+      /*if (ImGui::Checkbox("Bounding Volume Hierarchy Bottom Up", &Manager.debugRenderer->isBVHBottomUpOn))
       {
         Manager.debugRenderer->isAABBOn = true;
       }
@@ -612,9 +614,9 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       if (Manager.debugRenderer->isBVHBottomUpOn)
       {
         ImGui::SliderInt("Levels: Bottom Up", &Manager.debugRenderer->numberOfLevelsBUOn, 0, 7);
-      }
+      }*/
 
-      if (ImGui::TreeNode("Bounding Sphere Calculation Types"))
+      /*if (ImGui::TreeNode("Bounding Sphere Calculation Types"))
       {
         Manager.debugRenderer->isBSOn = true;
         BoundingSphere::BoundingSphereCalculationType mode = Manager.debugRenderer->sphereType;
@@ -650,7 +652,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       else
       {
         Manager.debugRenderer->isBSOn = false;
-      }
+      }*/
     }
     ImGui::Unindent();
   }
@@ -660,7 +662,11 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   {
     //profiler settings
     ImGui::Begin("Profiler");
+    arr[counter] = ImGui::GetIO().Framerate;
+    counter++;
+
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)\n", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::PlotLines("Framerate", arr.data(), 256, 0, NULL, 0.0f, 144.0f, ImVec2(0, 40));
 
     if (ImGui::BeginTable("Table", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
     {

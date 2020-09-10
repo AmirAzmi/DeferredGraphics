@@ -44,7 +44,9 @@ class Mesh
   GLuint colorVBO;
   GLuint uvVBO;
   GLuint VAO;
+  std::string name;
 
+public:
   std::vector<glm::vec3> vertices = {};
   std::vector<glm::vec3> normals = {};
   std::vector<glm::vec3> colors = {};
@@ -53,6 +55,7 @@ class Mesh
   std::vector<GLuint> indices = {};
   std::vector<GLuint> normal_indices = {};
 
+private:
   //model data 
   std::vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
   std::vector<Mesh> meshes;
@@ -92,12 +95,41 @@ public:
   void processNode(aiNode* node, const aiScene* scene);
   Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
-  inline GLuint getPosVBO();
-  inline GLuint getNormsVBO();
-  inline GLuint getIndexVBO();
-  inline GLuint getColorVBO();
-  inline GLuint getUVBO();
-  GLuint getVAO();
+  inline GLuint getPosVBO()
+  {
+    return posVBO;
+  }
+
+  inline GLuint getNormsVBO()
+  {
+    return normsVBO;
+  }
+
+  inline GLuint getIndexVBO()
+  {
+    return indexVBO;
+  }
+
+  inline GLuint getColorVBO()
+  {
+    return colorVBO;
+  }
+
+  inline GLuint getUVBO()
+  {
+    return uvVBO;
+  }
+
+  GLuint getVAO()
+  {
+    return VAO;
+  }
+
+  inline std::string getName()
+  {
+    return name;
+  }
+
 
   const std::vector<GLuint> getIndices();
   const std::vector<glm::vec3> getVertices();

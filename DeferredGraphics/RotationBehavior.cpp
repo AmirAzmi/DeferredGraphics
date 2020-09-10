@@ -20,9 +20,10 @@ Creation date: February 16th , 2020
 
 void RotationBehavior::Update(float delta_time)
 {
-  owner->currentPosition += delta_time* position_speed;
+  owner->currentPosition += delta_time * position_speed;
   owner->angle += delta_time * rotation_speed;
-  owner->position = glm::vec3(cosf(owner->currentPosition), 0.0f, sinf(owner->currentPosition)) * 4.0f;
+  owner->position.x = cosf(owner->currentPosition) * 4.0f;
+  owner->position.z = sinf(owner->currentPosition) * 4.0f;
 
 }
 

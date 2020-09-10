@@ -29,6 +29,8 @@ public:
   bool lightsOn = true;
   unsigned default_name_count = 0;
   char buffer_size[256] = {0};
+  uint8_t counter = 0;
+  std::array<float, 256> arr;
   std::vector<std::string> filenames;
   std::vector<std::string> shader_filenames;
   std::vector<std::string> mesh_name;

@@ -91,7 +91,7 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
   //doing this because I current dont know, I will change it to mode once I know for sure it works
   BoundingSphereCalculationType myType = mode;
   float maxmimum_distance_radius = -INFINITY;
-  int size = vertices.size();
+  size_t size = vertices.size();
 
   switch (myType)
   {
@@ -204,7 +204,7 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
     O(sn). [1]
     */
 
-    int number_of_points = vertices.size();
+    size_t number_of_points = vertices.size();
     std::vector<glm::vec3> norms =
     {
      glm::vec3(2, 2, 1),

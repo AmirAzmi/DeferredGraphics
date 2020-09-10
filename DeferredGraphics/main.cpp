@@ -205,7 +205,6 @@ int main()
     //render the contents of ImGui
     ImGuiEditor.Render(scene, systems);
 
-
     //render the scene aka update the logic for all behaviors
     scene.Render(dt);
 

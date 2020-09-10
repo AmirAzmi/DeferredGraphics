@@ -20,7 +20,7 @@ Mesh::Mesh(const std::string filePath)
 {
   std::ifstream file(filePath);//read in the file
   std::string line;            //variable for reading in a line
-
+  
   glm::vec3 max(std::numeric_limits<float>::min());//min point
   glm::vec3 min(std::numeric_limits<float>::max());//max point
   glm::vec3 averagePosition = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -28,6 +28,17 @@ Mesh::Mesh(const std::string filePath)
   std::vector<int> vt_locations;
   std::vector<int> ind_locations;
   std::vector<int> norm_locations;
+
+  size_t last_char = filePath.find_last_of('/');
+
+  if (last_char == std::string::npos)
+  {
+    name = filePath;
+  }
+  else
+  {
+    name = filePath.substr(last_char + 1);
+  }
 
   //if the file is open
   if (file.is_open())
@@ -323,35 +334,6 @@ Mesh::Mesh(const std::string filePath)
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, getIndexVBO());
 }
 
-inline GLuint Mesh::getPosVBO()
-{
-  return posVBO;
-}
-
-inline GLuint Mesh::getNormsVBO()
-{
-  return normsVBO;
-}
-
-inline GLuint Mesh::getIndexVBO()
-{
-  return indexVBO;
-}
-
-inline GLuint Mesh::getColorVBO()
-{
-  return colorVBO;
-}
-
-GLuint Mesh::getVAO()
-{
-  return VAO;
-}
-
-inline GLuint Mesh::getUVBO()
-{
-  return uvVBO;
-}
 
 const std::vector<GLuint> Mesh::getIndices()
 {

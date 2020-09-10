@@ -27,8 +27,9 @@ public:
   MeshHandle mesh;        //8 bytes
   MaterialHandle material;//8 bytes
   ShaderHandle shader;    //8 bytes
+  std::string name;       //32 bytes
   //-------------------------------
-  //total: 56 bytes
+  //total: ?? bytes
 
   MeshComponent()
   {
