@@ -297,7 +297,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
               if (ImGui::Selectable(mesh_name[i].c_str()))
               {
                 meshComponent->mesh = mesh_handles[i];
-                meshComponent->vertices = meshComponent->getVec4Vertices();
+
               }
             }
 
@@ -383,7 +383,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         {
           meshComponent = scene.getEntities()[i]->add<MeshComponent>();
           meshComponent->entity = scene.getEntities()[i];
-          meshComponent->vertices = meshComponent->getVec4Vertices();
         }
       }
 
@@ -808,9 +807,12 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       ray.destination = ray_world;
       ray.origin = scene.eyePosition;
 
-      if (ray.RayBoxIntersection(scene.getEntities()[0]->get<MeshComponent>()->getMeshBounds()) == true)
+      for (auto & mesh : scene.getMeshes())
       {
-        scene.getEntities()[0]->scale = glm::vec3(2.0f);
+        if (ray.RayBoxIntersection(mesh->getMeshBounds()) == true)
+        {
+          mesh->getEntityPtr()->scale = glm::vec3(2.0f);
+        }
       }
     }
 
