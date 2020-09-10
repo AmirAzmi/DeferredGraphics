@@ -1,7 +1,6 @@
 
 *.tlog
 *.ipch
-x64/
 .vs/
 DeferredGraphics/Debug/
 DeferredGraphics/x64/

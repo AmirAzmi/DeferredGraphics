@@ -288,7 +288,7 @@ void processInput(GLFWwindow* window, Scene& scene)
     glfwSetWindowShouldClose(window, true);
   }
 
-  /*if (Input::getKeyDown('W'))
+  if (Input::getKeyDown('W'))
   {
 
     glm::vec3 eye = scene.getEyePosition();
@@ -335,7 +335,7 @@ void processInput(GLFWwindow* window, Scene& scene)
     scene.eyePosition = eye + glm::vec3(0.0f, 1.0f, 0.0f) * scene.cameraSpeed;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
-  }*/
+  }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -352,7 +352,7 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
   //get cursor postion in screen space
   glfwGetCursorPos(window, &xpos, &ypos);
 
-  Scene * scene = reinterpret_cast<Scene*>(glfwGetWindowUserPointer(window));
+  /*Scene * scene = reinterpret_cast<Scene*>(glfwGetWindowUserPointer(window));
   if (firstMouse)
   {
     lastX = xpos;
@@ -383,7 +383,7 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
   front.y = sin(glm::radians(pitch));
   front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
   scene->cameraDirection = glm::normalize(front);
-  
+  */
 }
 
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)

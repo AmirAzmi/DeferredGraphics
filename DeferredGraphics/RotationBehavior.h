@@ -24,6 +24,8 @@ public:
   void Update(float delta_time) override;
   void inspect() override;
 
+  float rotation_speed = 1.0f;
+  float position_speed = 1.0f;
   std::string name() override
   {
     return std::string("Rotation");

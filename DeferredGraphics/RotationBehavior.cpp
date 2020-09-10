@@ -16,18 +16,18 @@ Creation date: February 16th , 2020
 #include <glm/glm/vec3.hpp>
 #include "Entity.h"
 #include "Input.h"
+#include "Imgui/imgui.h"
 
 void RotationBehavior::Update(float delta_time)
 {
+  owner->currentPosition += delta_time* position_speed;
+  owner->angle += delta_time * rotation_speed;
+  owner->position = glm::vec3(cosf(owner->currentPosition), 0.0f, sinf(owner->currentPosition)) * 4.0f;
 
-  if (Input::getKeyDown('R'))
-  {
-    owner->currentPosition += 0.001f;
-    owner->angle += 0.001f;
-    owner->position = glm::vec3(cosf(owner->currentPosition), 0.0f, sinf(owner->currentPosition)) * 4.0f;
-  }
 }
 
 void RotationBehavior::inspect()
 {
+  ImGui::DragFloat("Rotation Speed: ",&rotation_speed);
+  ImGui::DragFloat("Position Speed: ",&position_speed);
 }

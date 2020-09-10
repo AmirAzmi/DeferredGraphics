@@ -75,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)DeferredGraphics\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)DeferredGraphics\libs\assimp\x64\Debug;$(SolutionDir)DeferredGraphics\libs\glew_lib\Release\x64;$(SolutionDir)DeferredGraphics\libs\lib-vc2019;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)DeferredGraphics\libs\assimp\x64\Debug;$(SolutionDir)DeferredGraphics\libs\glew_lib\Release;$(SolutionDir)DeferredGraphics\libs\lib-vc2019;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)DeferredGraphics\includes;$(IncludePath)</IncludePath>

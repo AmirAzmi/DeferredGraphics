@@ -65,7 +65,7 @@ void Scene::Init()
   /*********************************************************************************/
 
   //add a mesh to the component
-  MeshHandle cube = std::make_shared<Mesh>("Resources/pitch.obj");
+  MeshHandle cube = std::make_shared<Mesh>("Resources/sphere.obj");
   MeshHandle bunny = std::make_shared<Mesh>("Resources/bunny.obj");
   MeshHandle sphere = std::make_shared<Mesh>("Resources/sphere.obj");
   MeshHandle pitch = std::make_shared<Mesh>("Resources/pitch.obj");
@@ -89,8 +89,8 @@ void Scene::Init()
   EntityPtr centerObject = addEntity("Center Object");
 
   glm::vec3 offset(0,-1.5f,4);
-  centerObject->addBehavior<CameraPossessBehavior>(offset);
-  centerObject->addBehavior<MovementBehavior>();
+  //centerObject->addBehavior<CameraPossessBehavior>(offset);
+  //centerObject->addBehavior<MovementBehavior>();
 
   //add a mesh component pointer to the object with the setup from the prelims
   MeshComponentPtr meshComp = centerObject->add<MeshComponent>(centerObject, bunny, gBuffer, material);
