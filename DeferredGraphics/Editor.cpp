@@ -289,7 +289,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         if (ImGui::TreeNode("Mesh Component"))
         {
           ImGui::Text("Number of Vertices: %i", meshComponent->getMesh()->vertices.size());
-            //second parameter can be the mesh name if i had a mesh name id 
+          //second parameter can be the mesh name if i had a mesh name id 
           if (ImGui::BeginCombo("Mesh List", meshComponent->getMesh()->getName().c_str()))
           {
             for (int i = 0; i < mesh_name.size(); ++i)
@@ -355,7 +355,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
               {
                 if (v4.first == "diffuse_color")
                 {
-                  if (ImGui::ColorEdit3("Diffuse Color", &v4.second.x,ImGuiColorEditFlags_::ImGuiColorEditFlags_HDR))
+                  if (ImGui::ColorEdit3("Diffuse Color", &v4.second.x, ImGuiColorEditFlags_::ImGuiColorEditFlags_HDR))
                   {
                   }
                 }
@@ -510,7 +510,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       if (ImGui::Checkbox("Split Screen", &Manager.renderer->splitScreen))
       {
       }
-   
+
       if (ImGui::Checkbox("Bright Buffer", &Manager.renderer->brightBuffer))
       {
       }
@@ -757,61 +757,64 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //window settings
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
   ImGui::Begin("Scene");
-  ImVec2 window_size = ImGui::GetContentRegionAvail();
-  ImVec2 window_pos = ImGui::GetCursorScreenPos();
-  sceneDimension = window_pos + window_size;
 
-  glm::vec4 screen_space_cursor;
-  ImVec2 curs(ImGui::GetIO().MousePos);
-  screen_space_cursor.x = ImGui::GetIO().MousePos.x;
-  screen_space_cursor.y = ImGui::GetIO().MousePos.y;
-  screen_space_cursor.z = -1.0f;
-  screen_space_cursor.w = 1.0f;
-
-  //if its within the window bounds, calcualte world pos
-  /*if (screen_space_cursor.x >= window_pos.x &&
-    screen_space_cursor.y >= window_pos.y &&
-    screen_space_cursor.x <= window_pos.x + window_size.x &&
-    screen_space_cursor.y <= window_pos.y + window_size.y)
+  if (Manager.debugRenderer->isAABBOn == true)
   {
-    //std::cout << "\nScreen Space X: " << screen_space_cursor.x << "\n";
-    //std::cout << "Screen Space Y: " << screen_space_cursor.y << "\n";
 
-    screen_space_cursor.x = remap(window_pos.x, window_pos.x + window_size.x, -1.0f, 1.0f, curs.x);
-    screen_space_cursor.y = remap(window_pos.y, window_pos.y + window_size.y, 1.0f, -1.0f, curs.y);
+    ImVec2 window_size = ImGui::GetContentRegionAvail();
+    ImVec2 window_pos = ImGui::GetCursorScreenPos();
+    sceneDimension = window_pos + window_size;
 
-    //std::cout << "\nNDC Space X: " << screen_space_cursor.x << "\n";
-    //std::cout << "NDC Space Y: " << screen_space_cursor.y << "\n";
-    //-----------------------------------------------------------------------------
-    glm::mat4 persp = scene.getProjectionMatrix();
-    glm::mat4 view = scene.getViewMatrix();
-
-    screen_space_cursor = glm::inverse(persp) * screen_space_cursor;
+    glm::vec4 screen_space_cursor;
+    ImVec2 curs(ImGui::GetIO().MousePos);
+    screen_space_cursor.x = ImGui::GetIO().MousePos.x;
+    screen_space_cursor.y = ImGui::GetIO().MousePos.y;
     screen_space_cursor.z = -1.0f;
-    screen_space_cursor.w = 0.0f;
-    screen_space_cursor = glm::inverse(view) * screen_space_cursor;
+    screen_space_cursor.w = 1.0f;
 
-    glm::vec3 ray_world = screen_space_cursor;
-
-    ray_world = glm::normalize(ray_world);
-
-
-    //std::cout << "\nWorld Space X: " << ray_world.x << "\n";
-    //std::cout << "World Space Y: " << ray_world.y << "\n";
-    //std::cout << "World Space Z: " << ray_world.z << "\n";
-
-    Raycast ray;
-    ray.destination = ray_world;
-    ray.origin = scene.eyePosition;
-
-    for (auto i : scene.getEntities())
+    //if its within the window bounds, calcualte world pos
+    if (screen_space_cursor.x >= window_pos.x &&
+      screen_space_cursor.y >= window_pos.y &&
+      screen_space_cursor.x <= window_pos.x + window_size.x &&
+      screen_space_cursor.y <= window_pos.y + window_size.y)
     {
-      if (ray.RayBoxIntersection(i->get<MeshComponent>()->getMeshBounds()) == true)
+      //std::cout << "\nScreen Space X: " << screen_space_cursor.x << "\n";
+      //std::cout << "Screen Space Y: " << screen_space_cursor.y << "\n";
+
+      screen_space_cursor.x = remap(window_pos.x, window_pos.x + window_size.x, -1.0f, 1.0f, curs.x);
+      screen_space_cursor.y = remap(window_pos.y, window_pos.y + window_size.y, 1.0f, -1.0f, curs.y);
+
+      //std::cout << "\nNDC Space X: " << screen_space_cursor.x << "\n";
+      //std::cout << "NDC Space Y: " << screen_space_cursor.y << "\n";
+      //-----------------------------------------------------------------------------
+      glm::mat4 persp = scene.getProjectionMatrix();
+      glm::mat4 view = scene.getViewMatrix();
+
+      screen_space_cursor = glm::inverse(persp) * screen_space_cursor;
+      screen_space_cursor.z = -1.0f;
+      screen_space_cursor.w = 0.0f;
+      screen_space_cursor = glm::inverse(view) * screen_space_cursor;
+
+      glm::vec3 ray_world = screen_space_cursor;
+
+      ray_world = glm::normalize(ray_world);
+
+
+      //std::cout << "\nWorld Space X: " << ray_world.x << "\n";
+      //std::cout << "World Space Y: " << ray_world.y << "\n";
+      //std::cout << "World Space Z: " << ray_world.z << "\n";
+
+      Raycast ray;
+      ray.destination = ray_world;
+      ray.origin = scene.eyePosition;
+
+      if (ray.RayBoxIntersection(scene.getEntities()[0]->get<MeshComponent>()->getMeshBounds()) == true)
       {
-        Manager.debugRenderer->drawAABB(scene.getEntities()[0]->get<MeshComponent>(), scene, false);
+        scene.getEntities()[0]->scale = glm::vec3(2.0f);
       }
     }
-  }*/
+
+  }
 
 
 

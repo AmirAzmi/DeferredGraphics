@@ -5,8 +5,8 @@ class CameraPossessBehavior : public Behavior
 {
 public:
 
-  glm::vec3 offset;
-  glm::vec3 eye;
+  glm::vec3 offset = {};
+  glm::vec3 eye = {};
 
   CameraPossessBehavior(glm::vec3 off):offset(off)
   {

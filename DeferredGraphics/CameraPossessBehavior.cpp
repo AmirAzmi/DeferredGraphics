@@ -5,7 +5,7 @@
 
 void CameraPossessBehavior::inspect()
 {
-  ImGui::DragFloat3("Camera Offset: ", &offset.x, 0.05, -10.0f, 10.0f);
+  ImGui::DragFloat3("Camera Offset: ", &offset.x, 0.05f, -10.0f, 10.0f);
   ImGui::DragFloat3("Camera Position: ", &eye.x);
 }
 

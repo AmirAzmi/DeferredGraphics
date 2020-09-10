@@ -16,7 +16,7 @@ Total Draw Calls: 0
 Total Temporary Memory Usage: 0 out of 5000000
 
 Graphics Settings
-Is Bloom On: 1
+Is Bloom On: 0
 Is Depth Copy On: 1
 Is Depth G Buffer Split Screen On: 0
 Is Uncharted 2 Tone Mapping On: 1
@@ -24,7 +24,7 @@ Is Gamma On: 1
 Is Exposure Tone Mapping On: 1
 Exposure Value: 1
 
-Debug Rendering System Frame Per Second: 0.0058
-Main Rendering System Frame Per Second: 0.6705
-Total Rendering System Frame Per Second: 0.6763
-Frame Per Second: 7.73006
+Debug Rendering System Frame Per Second: 0.1461
+Main Rendering System Frame Per Second: 0.58
+Total Rendering System Frame Per Second: 0.7261
+Frame Per Second: 7.64033

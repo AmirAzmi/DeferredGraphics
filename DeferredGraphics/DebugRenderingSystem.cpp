@@ -833,7 +833,7 @@ void DebugRenderingSystem::drawOctree(Octree* child, int level, Scene& scene)
     return;
   }
 
-  debugDrawID->setFloat("level", level);
+  debugDrawID->setInt("level", level);
   drawAABB(child->boundingVolume, scene);
   octree_draw_calls++;
 
@@ -949,7 +949,7 @@ void DebugRenderingSystem::createBVHTree(BoundingVolumeHierarchy* BVH, std::vect
     }
 
     //store right side meshes
-    for (int i = meshes.size() / 2; i < meshes.size(); ++i)
+    for (size_t i = meshes.size() / 2; i < meshes.size(); ++i)
     {
       right.push_back(meshes[i]);
     }

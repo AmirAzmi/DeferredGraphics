@@ -138,9 +138,9 @@ BoundingSphere::BSInfo BoundingSphere::calculateBS(BoundingSphereCalculationType
     glm::vec3 x_point = vertices[0];
 
     //weird intializers so this might be a bug
-    glm::vec3 y_point;
+    glm::vec3 y_point = {};
     glm::vec3 z_point;
-    glm::vec3 center_point_between_yz;
+    glm::vec3 center_point_between_yz = glm::vec3(0.0f);
 
     //calculate furthest y point from x point
     for (auto& vertex : vertices)

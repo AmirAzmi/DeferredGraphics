@@ -368,7 +368,7 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   colorAndBrightShaderID->UseShader();
 
   bool horizontal = true, first_iteration = true;
-  int amount = 10;
+  unsigned int amount = 10;
   for (unsigned int i = 0; i < amount; i++)
   {
     glBindFramebuffer(GL_FRAMEBUFFER, PingPongFBO[horizontal]);
