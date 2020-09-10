@@ -36,7 +36,7 @@ float pitch = 0.0f;
 bool firstMouse = true;
 
 
-void processInput(GLFWwindow* window, Scene& scene);
+void processInput(GLFWwindow* window, Scene& scene, float dt);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
@@ -184,7 +184,7 @@ int main()
     if (!ImGui::GetIO().WantCaptureKeyboard)
     {
       Input::update();
-      processInput(window, scene);
+      processInput(window, scene, dt);
     }
 
     int width, height;
@@ -281,7 +281,7 @@ int main()
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window, Scene& scene)
+void processInput(GLFWwindow* window, Scene& scene, float dt)
 {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
   {
@@ -292,7 +292,7 @@ void processInput(GLFWwindow* window, Scene& scene)
   {
 
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye + scene.cameraDirection * scene.cameraSpeed;
+    scene.eyePosition = eye + scene.cameraDirection * scene.cameraSpeed * dt;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
@@ -300,7 +300,7 @@ void processInput(GLFWwindow* window, Scene& scene)
   if (Input::getKeyDown('A'))
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye - glm::normalize(glm::cross(scene.cameraDirection, scene.upDirection)) * scene.cameraSpeed;
+    scene.eyePosition = eye - glm::normalize(glm::cross(scene.cameraDirection, scene.upDirection)) * scene.cameraSpeed * dt;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
@@ -308,7 +308,7 @@ void processInput(GLFWwindow* window, Scene& scene)
   if (Input::getKeyDown('S'))
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye - scene.cameraDirection * 0.1f;
+    scene.eyePosition = eye - scene.cameraDirection * dt;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
@@ -316,7 +316,7 @@ void processInput(GLFWwindow* window, Scene& scene)
   if (Input::getKeyDown('D'))
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye + glm::normalize(glm::cross(scene.cameraDirection, scene.upDirection)) * scene.cameraSpeed;
+    scene.eyePosition = eye + glm::normalize(glm::cross(scene.cameraDirection, scene.upDirection)) * scene.cameraSpeed * dt;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
@@ -324,7 +324,7 @@ void processInput(GLFWwindow* window, Scene& scene)
   if (Input::getKeyDown('Q'))
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye - glm::vec3(0.0f, 1.0f, 0.0f) * scene.cameraSpeed;
+    scene.eyePosition = eye - glm::vec3(0.0f, 1.0f, 0.0f) * scene.cameraSpeed * dt;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }
@@ -332,7 +332,7 @@ void processInput(GLFWwindow* window, Scene& scene)
   if (Input::getKeyDown('E'))
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye + glm::vec3(0.0f, 1.0f, 0.0f) * scene.cameraSpeed;
+    scene.eyePosition = eye + glm::vec3(0.0f, 1.0f, 0.0f) * scene.cameraSpeed * dt;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }

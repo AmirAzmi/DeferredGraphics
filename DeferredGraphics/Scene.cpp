@@ -20,7 +20,7 @@ Creation date: January 4th , 2020
 #include "CameraPossessBehavior.h"
 #include "MovementBehavior.h"
 
-Scene::Scene(const int windowWidth, const int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(100.0f), cameraSpeed(0.1f),
+Scene::Scene(const int windowWidth, const int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(100.0f), cameraSpeed(3.0f),
 eyePosition(glm::vec3(0.0f, 0.0f, 10.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, -1.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
 {
   windowDimension = getWindowDimension(windowWidth, windowHeight);
