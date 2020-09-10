@@ -348,10 +348,12 @@ void DebugRenderingSystem::drawAABB(const AABB bounds, Scene& scene)
 void DebugRenderingSystem::drawBS(const MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type)
 {
   BoundingSphere sphere;
+  /**/
 
+  /**/
   if (boundingSphereVAOID == 0)
   {
-    std::vector<glm::vec3> sphereVertices = {
+    /*std::vector<glm::vec3> sphereVertices = {
       glm::vec3(0.000000, 0.000000, -1.849175),
       glm::vec3(0.172309, 0.000000, -1.834635),
       glm::vec3(0.337484, 0.000000, -1.791151),
@@ -739,7 +741,7 @@ void DebugRenderingSystem::drawBS(const MeshComponentPtr mesh, Scene& scene, Bou
       glm::vec3(-0.501543, -0.501543, -0.498457),
       glm::vec3(-0.501543, 0.501543, -0.498457)
     };
-
+    */
     /*glm::vec3 max(-INFINITY);//min point
     glm::vec3 min(std::numeric_limits<float>::max());//max point
     glm::vec3 averagePosition = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -775,7 +777,7 @@ void DebugRenderingSystem::drawBS(const MeshComponentPtr mesh, Scene& scene, Bou
     }    */
 
     //generate the vao for the cube
-    glGenVertexArrays(1, &boundingSphereVAOID);
+    /*glGenVertexArrays(1, &boundingSphereVAOID);
 
     //generate the vertex and index buffers for the quad
     glGenBuffers(1, &boundingSphereVBOID);
@@ -792,10 +794,10 @@ void DebugRenderingSystem::drawBS(const MeshComponentPtr mesh, Scene& scene, Bou
 
     //enable Index buffer object data that will be transferred to the GPU from the quad vertices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boundingSphereIBOID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sphereIndices.size() * sizeof(glm::uint), sphereIndices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sphereIndices.size() * sizeof(glm::uint), sphereIndices.data(), GL_STATIC_DRAW);*/
   }
-
-  sphere.info = sphere.calculateBS(type, mesh->getMesh()->getVertices());
+  
+  /*sphere.info = sphere.calculateBS(type, mesh->getMesh()->getVertices());
 
   glm::mat4 ObjectToWorld =
     glm::translate(sphere.info.center + mesh->getEntityPtr()->position) *
@@ -820,7 +822,7 @@ void DebugRenderingSystem::drawBS(const MeshComponentPtr mesh, Scene& scene, Bou
 
   glLineWidth(2);
   glBindVertexArray(boundingSphereVAOID);
-  glDrawElements(GL_LINES, sphereIndices.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_LINES, sphereIndices.size(), GL_UNSIGNED_INT, 0);*/
 }
 
 void DebugRenderingSystem::drawOctree(Octree* child, int level, Scene& scene)

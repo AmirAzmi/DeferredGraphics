@@ -29,7 +29,7 @@ enum ModelType
   ASSIMP
 };
 
-struct Texture 
+struct Texture
 {
   unsigned int id;
   std::string type;
@@ -38,7 +38,7 @@ struct Texture
 class Mesh
 {
   //mesh data
-  GLuint posVBO; 
+  GLuint posVBO;
   GLuint normsVBO;
   GLuint indexVBO;
   GLuint colorVBO;
@@ -92,12 +92,12 @@ public:
   void processNode(aiNode* node, const aiScene* scene);
   Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
-  GLuint getPosVBO();
-  GLuint getNormsVBO();
-  GLuint getIndexVBO();
-  GLuint getColorVBO();
+  inline GLuint getPosVBO();
+  inline GLuint getNormsVBO();
+  inline GLuint getIndexVBO();
+  inline GLuint getColorVBO();
+  inline GLuint getUVBO();
   GLuint getVAO();
-  GLuint getUVBO();
 
   const std::vector<GLuint> getIndices();
   const std::vector<glm::vec3> getVertices();

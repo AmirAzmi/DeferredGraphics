@@ -447,9 +447,9 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
               behave->inspect();
             }
           }
-
-          ImGui::TreePop();
         }
+
+        ImGui::TreePop();
       }
 
       ImGui::Separator();

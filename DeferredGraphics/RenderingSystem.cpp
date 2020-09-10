@@ -499,29 +499,6 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
     //first bind the vertex array object that you are using
     glBindVertexArray(mesh->getMesh()->getVAO());
 
-    //enable position data that will be transferred to the GPU
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->getMesh()->getPosVBO());
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    //enable normals data that will be transferred to the GPU
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->getMesh()->getNormsVBO());
-    glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (void*)0);
-
-    //enable UV data that will be transferred to the GPU
-    glEnableVertexAttribArray(2);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->getMesh()->getUVBO());
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    //enable colors data that will be transferred to the GPU
-    glEnableVertexAttribArray(3);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->getMesh()->getColorVBO());
-    glVertexAttribPointer(3, 3, GL_FLOAT, false, 0, (void*)0);
-
-    //bind the index buffer that will be transferred to the GPU
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getMesh()->getIndexVBO());
-
     //object to world matrix
     glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
 

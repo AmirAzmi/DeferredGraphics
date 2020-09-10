@@ -298,24 +298,47 @@ Mesh::Mesh(const std::string filePath)
   glGenBuffers(1, &indexVBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(glm::uint), indices.data(), GL_STATIC_DRAW);
+
+  //enable position data that will be transferred to the GPU
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, getPosVBO());
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+  //enable normals data that will be transferred to the GPU
+  glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, getNormsVBO());
+  glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (void*)0);
+
+  //enable UV data that will be transferred to the GPU
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, getUVBO());
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+  //enable colors data that will be transferred to the GPU
+  glEnableVertexAttribArray(3);
+  glBindBuffer(GL_ARRAY_BUFFER, getColorVBO());
+  glVertexAttribPointer(3, 3, GL_FLOAT, false, 0, (void*)0);
+
+  //bind the index buffer that will be transferred to the GPU
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, getIndexVBO());
 }
 
-GLuint Mesh::getPosVBO()
+inline GLuint Mesh::getPosVBO()
 {
   return posVBO;
 }
 
-GLuint Mesh::getNormsVBO()
+inline GLuint Mesh::getNormsVBO()
 {
   return normsVBO;
 }
 
-GLuint Mesh::getIndexVBO()
+inline GLuint Mesh::getIndexVBO()
 {
   return indexVBO;
 }
 
-GLuint Mesh::getColorVBO()
+inline GLuint Mesh::getColorVBO()
 {
   return colorVBO;
 }
@@ -325,7 +348,7 @@ GLuint Mesh::getVAO()
   return VAO;
 }
 
-GLuint Mesh::getUVBO()
+inline GLuint Mesh::getUVBO()
 {
   return uvVBO;
 }
