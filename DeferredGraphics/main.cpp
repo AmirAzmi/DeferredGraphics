@@ -307,7 +307,7 @@ void processInput(GLFWwindow* window, Scene& scene, float dt)
   if (Input::getKeyDown('S'))
   {
     glm::vec3 eye = scene.getEyePosition();
-    scene.eyePosition = eye - scene.cameraDirection * dt;
+    scene.eyePosition = eye - scene.cameraDirection * scene.cameraSpeed * dt;
     scene.projectionMatrix = glm::perspective(glm::radians(scene.fov), (float)windowWidth / (float)windowHeight, scene.nearDistance, scene.farDistance);
     scene.viewMatrix = glm::lookAt(scene.eyePosition, scene.eyePosition + scene.cameraDirection, scene.upDirection);
   }

@@ -47,9 +47,10 @@ void main()
     result = vec3(1.0) - exp(-hdrColor * exposure);
   }
 
+
   if(uncharted_tone_mapping)
   {
-     result = Uncharted2Tonemap(hdrColor);
+     result = Uncharted2Tonemap(hdrColor * exposure);
   }
 
   if(gamma_correction)

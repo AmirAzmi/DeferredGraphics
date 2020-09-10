@@ -502,19 +502,48 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     ImGui::Indent();
     if (Manager.renderer != nullptr)
     {
-      if (ImGui::Checkbox("Depth Toggle", &Manager.renderer->depthCopyToggle))
-      {
-      }
 
       if (ImGui::Checkbox("Split Screen", &Manager.renderer->splitScreen))
       {
       }
 
-      if (ImGui::Checkbox("Bright Buffer", &Manager.renderer->brightBuffer))
+      if (Manager.renderer->splitScreen == true)
+      {
+        ImGui::Indent();
+        ImGui::TextWrapped("Split Screen will show you what objects are using deffered rendering versus which objects are not.");
+        ImGui::Unindent();
+      }
+
+      if (ImGui::Checkbox("Tone Mapping", &Manager.renderer->exposure_tone_mapping))
       {
       }
 
-      if (ImGui::Checkbox("Lights On", &lightsOn))
+      if (Manager.renderer->exposure_tone_mapping == true)
+      {
+        ImGui::TextWrapped("Exposure only works for tone mapping");
+        if (ImGui::DragFloat("Exposure", &Manager.renderer->exposure, .05f))
+        {
+        }
+
+        if (ImGui::Checkbox("Bloom", &Manager.renderer->bloom))
+        {
+        }
+      }
+
+
+
+      if (Manager.renderer->bloom == true)
+      {
+        ImGui::Indent();
+        ImGui::TextWrapped("Bright Buffer shows what part of the object will be bloomed if Bloom is ON.");
+
+        if (ImGui::Checkbox("Bright Buffer", &Manager.renderer->brightBuffer))
+        {
+        }
+        ImGui::Unindent();
+      }
+
+      /*if (ImGui::Checkbox("Lights On", &lightsOn))
       {
         if (lightsOn == false)
         {
@@ -538,35 +567,32 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         }
       }
 
-      if (ImGui::Checkbox("Bloom", &Manager.renderer->bloom))
-      {
-      }
-
-      if (ImGui::Checkbox("Uncharted Tone Mapping", &Manager.renderer->uncharted_tone_mapping))
-      {
-      }
-
-      if (ImGui::Checkbox("Tone Mapping", &Manager.renderer->exposure_tone_mapping))
-      {
-      }
-
-      if (Manager.renderer->exposure_tone_mapping == true)
-      {
-        ImGui::TextWrapped("Exposure only works for tone mapping");
-        if (ImGui::DragFloat("Exposure", &Manager.renderer->exposure, .05f))
-        {
-        }
-      }
+      */
 
       if (ImGui::Checkbox("Gamma Correction", &Manager.renderer->gamma))
       {
+      }
+
+      if (ImGui::Checkbox("Depth Toggle", &Manager.renderer->depthCopyToggle))
+      {
+      }
+
+      if (ImGui::Checkbox("Uncharted 2 Tone Mapping", &Manager.renderer->uncharted_tone_mapping))
+      {
+      }
+
+      if (Manager.renderer->uncharted_tone_mapping == true)
+      {
+        ImGui::TextWrapped("1) Set Center Object Material in the Mesh Component at about 380\n");
+        ImGui::TextWrapped("2) Enable Bloom\n");
+        ImGui::TextWrapped("3) Set Exposure to 2.5\n");
+        ImGui::TextWrapped("4) Disable Gamma Correction\n");
       }
 
 
     }
     ImGui::Unindent();
   }
-  ImGui::TextWrapped("Split Screen will show you what objects are using deffered rendering versus which objects are not.");
   ImGui::Spacing();
 
   //debug settings
@@ -579,14 +605,23 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       {
       }
 
-      if (ImGui::Checkbox("Square AABB", &Manager.debugRenderer->isSquareAABBOn))
+      if (Manager.debugRenderer->isAABBOn == true)
       {
+        ImGui::TextWrapped("Raycasts are enabled when AABB is activated. Mousing over an object that has an AABB will scale the object!");
       }
 
-      ImGui::TextWrapped("Levels are color coded where the deepest level is always the level color. Lowest level color is: Black");
+      /*if (ImGui::Checkbox("Square AABB", &Manager.debugRenderer->isSquareAABBOn))
+      {
+      }*/
+
       if (ImGui::Checkbox("Octree For Center Object", &Manager.debugRenderer->isSubObjectDrawOn))
       {
         Manager.debugRenderer->isAABBOn = true;
+      }
+
+      if (Manager.debugRenderer->isSubObjectDrawOn == true)
+      {
+        ImGui::TextWrapped("Levels are color coded where the deepest level is always the level color.\nLowest level color is: Black");
       }
 
       if (Manager.debugRenderer->isSubObjectDrawOn)
@@ -807,7 +842,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       ray.destination = ray_world;
       ray.origin = scene.eyePosition;
 
-      for (auto & mesh : scene.getMeshes())
+      for (auto& mesh : scene.getMeshes())
       {
         if (ray.RayBoxIntersection(mesh->getMeshBounds()) == true)
         {

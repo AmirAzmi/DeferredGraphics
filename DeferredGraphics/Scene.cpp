@@ -21,7 +21,7 @@ Creation date: January 4th , 2020
 #include "MovementBehavior.h"
 
 Scene::Scene(const int windowWidth, const int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(100.0f), cameraSpeed(3.0f),
-eyePosition(glm::vec3(0.0f, 0.0f, 10.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, -1.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
+eyePosition(glm::vec3(0.0f, 0.0f, 5.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, -1.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
 {
   windowDimension = getWindowDimension(windowWidth, windowHeight);
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);
@@ -66,7 +66,7 @@ void Scene::Init()
 
   //add a mesh to the component
   MeshHandle cube = std::make_shared<Mesh>("Resources/sphere.obj");
-  MeshHandle bunny = std::make_shared<Mesh>("Resources/bunny.obj");
+  MeshHandle bunny = std::make_shared<Mesh>("Resources/bunny_high_poly.obj");
   MeshHandle sphere = std::make_shared<Mesh>("Resources/sphere.obj");
   MeshHandle pitch = std::make_shared<Mesh>("Resources/pitch.obj");
 
@@ -81,7 +81,7 @@ void Scene::Init()
   MaterialHandle material3 = std::make_shared<Material>(textureShader);
 
   //Any material information needed
-  material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+  material->setVec4("diffuse_color", glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
   material->setFloat("specular_intensity", 1.0f);
   material2->setVec4("diffuse_color", glm::vec4(0.5f, 0.0f, 0.7f, 1.0f));
 
