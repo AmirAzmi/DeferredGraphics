@@ -6,7 +6,7 @@ Bounding Volume Hierarchy Memory Usage: 0
 
 Octree Information
 Octree On: 0
-Octree Levels: 0
+Octree Levels: 4
 Octree Draw Calls: 0
 Octree Memory Usage: 0
 
@@ -24,7 +24,7 @@ Is Gamma On: 1
 Is Exposure Tone Mapping On: 1
 Exposure Value: 1
 
-Debug Rendering System Frame Per Second: 0.0016
-Main Rendering System Frame Per Second: 7.7206
-Total Rendering System Frame Per Second: 7.7222
-Frame Per Second: 7.92925
+Debug Rendering System Frame Per Second: 9.7707
+Main Rendering System Frame Per Second: 5.386
+Total Rendering System Frame Per Second: 15.1567
+Frame Per Second: 10.1654

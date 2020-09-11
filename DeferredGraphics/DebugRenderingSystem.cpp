@@ -203,6 +203,15 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     }
   }
 
+  if (isBSPOn == true)
+  {
+    debugDrawID->UseShader();
+
+    int level = 7;
+    LinearAllocatorScope scope(linearAllocator);
+   // BSPTree = linearAllocator.TAllocate<BSP>(meshes);
+  }
+
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   auto end = std::chrono::high_resolution_clock::now();

@@ -4,6 +4,7 @@
 std::vector<glm::vec3> AABB::isContained(const glm::vec3* points, size_t size, const AABB& boundingVolume)
 {
   std::vector<glm::vec3> contained_points;
+  contained_points.reserve(128);
 
   for (int i = 0; i < size; ++i)
   {
