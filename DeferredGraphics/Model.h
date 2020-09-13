@@ -21,6 +21,8 @@ public:
   Model(std::string filepath);
   Model(std::string filepath, ModelType type);
 
+  void processNode(aiNode* node, const aiScene* scene);
+  Mesh processMesh(aiMesh* mesh, const aiScene* scene);
   std::vector<Mesh> meshes;
 };
 

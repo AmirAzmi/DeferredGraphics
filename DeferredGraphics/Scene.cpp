@@ -66,7 +66,7 @@ void Scene::Init()
 
   //add a mesh to the component
   ModelHandle cube = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
-  ModelHandle bunny = std::make_shared<Model>("Resources/bunny_high_poly.obj", ModelType::DEFAULT);
+  ModelHandle bunny = std::make_shared<Model>("Resources/bunny_high_poly.obj");
   ModelHandle sphere = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
   ModelHandle pitch = std::make_shared<Model>("Resources/pitch.obj", ModelType::DEFAULT);
 

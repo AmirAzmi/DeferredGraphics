@@ -22,12 +22,12 @@ Mesh::Mesh()
 
 Mesh::~Mesh()
 {
-  glDeleteBuffers(0, &posVBO);
-  glDeleteBuffers(0, &normsVBO);
-  glDeleteBuffers(0, &uvVBO);
-  glDeleteBuffers(0, &colorVBO);
-  glDeleteBuffers(0, &indexVBO);
-  glDeleteBuffers(0, &VAO);
+  /*glDeleteBuffers(1, &posVBO);
+  glDeleteBuffers(1, &normsVBO);
+  glDeleteBuffers(1, &uvVBO);
+  glDeleteBuffers(1, &colorVBO);
+  glDeleteBuffers(1, &indexVBO);
+  glDeleteBuffers(1, &VAO);*/
 }
 
 void Mesh::setupMesh()
@@ -57,7 +57,7 @@ void Mesh::setupMesh()
   //genereate the buffer that stores normal data from the vector of normal
   glGenBuffers(1, &colorVBO);
   glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3),
+  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec4),
     colors.data(), GL_STATIC_DRAW);
 
   //genereate the buffer that stores index data from the vector of indices
@@ -83,7 +83,7 @@ void Mesh::setupMesh()
   //enable colors data that will be transferred to the GPU
   glEnableVertexAttribArray(3);
   glBindBuffer(GL_ARRAY_BUFFER, getColorVBO());
-  glVertexAttribPointer(3, 3, GL_FLOAT, false, 0, (void*)0);
+  glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, (void*)0);
 
   //bind the index buffer that will be transferred to the GPU
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, getIndexVBO());

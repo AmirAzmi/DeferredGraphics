@@ -36,7 +36,6 @@ float remap(float min, float max, float imin, float imax, float v)
   return lerp(imin, imax, t);
 }
 
-
 namespace fs = std::filesystem;
 void Editor::init(GLFWwindow* window, const char* glslVersion)
 {
@@ -388,7 +387,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         {
           meshComponent = scene.getEntities()[i]->add<MeshComponent>();         
           meshComponent->entity = scene.getEntities()[i];
-          meshComponent->mesh = model_handles[0]; //4sphere
         }
       }
 

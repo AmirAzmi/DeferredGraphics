@@ -491,15 +491,15 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
 {
   if (mesh->getShader()->getDeffered() == isDeffered)
   {
-    //bind the program here and set the material for the shader    
-    mesh->getMaterial()->apply();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
     //first bind the vertex array object that you are using
 
-    for (auto & m : mesh->mesh->meshes)
+    for (auto& m : mesh->mesh->meshes)
     {
+      //bind the program here and set the material for the shader    
+      mesh->getMaterial()->apply();
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, texture);
+
       glBindVertexArray(m.getVAO());
 
       //object to world matrix

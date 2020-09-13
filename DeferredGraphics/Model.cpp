@@ -4,16 +4,84 @@ Model::Model(std::string filepath)
 {
 
   Assimp::Importer import;
-  const aiScene* scene = import.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs);
+  const aiScene* scene = import.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
   if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
   {
     std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
     return;
   }
+
   //directory = filepath.substr(0, filepath.find_last_of('/'));
 
-  //processNode(scene->mRootNode, scene);
+  processNode(scene->mRootNode, scene);
+}
+
+void Model::processNode(aiNode* node, const aiScene* scene)
+{
+  // process all the node's meshes (if any)
+  for (unsigned int i = 0; i < node->mNumMeshes; i++)
+  {
+    aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+    meshes.push_back(processMesh(mesh, scene));
+  }
+  // then do the same for each of its children
+  for (unsigned int i = 0; i < node->mNumChildren; i++)
+  {
+    processNode(node->mChildren[i], scene);
+  }
+}
+
+Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
+{
+  Mesh defaultMesh;
+
+  for (int i = 0; i < mesh->mNumVertices; ++i)
+  {
+    glm::vec3 vertex(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+    defaultMesh.vertices.push_back(vertex);
+  }
+
+  for (int i = 0; i < mesh->mNumVertices; ++i)
+  {
+    glm::vec3 normal(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+    defaultMesh.normals.push_back(normal);
+  }
+
+  for (int i = 0; i < mesh->mNumUVComponents[0]; ++i)
+  {
+    glm::vec2 uv(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+    defaultMesh.uv.push_back(uv);
+  }
+
+  for (int i = 0; i < mesh->mNumVertices; ++i)
+  {
+    unsigned int j = mesh->GetNumColorChannels();
+
+    if (j > 0)
+    {
+      glm::vec4 colors(mesh->mColors[0][i].r, mesh->mColors[0][i].g, mesh->mColors[0][i].b, mesh->mColors[0][i].a);
+      defaultMesh.colors.push_back(colors);
+    }
+    else
+    {
+      defaultMesh.colors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    }
+  }
+
+  for (int i = 0; i < mesh->mNumFaces; ++i)
+  {
+    for (int j = 0; j < mesh->mFaces[i].mNumIndices; ++j)
+    {
+      defaultMesh.indices.push_back(mesh->mFaces[i].mIndices[j]);
+
+      assert(mesh->mFaces[i].mIndices[j] < mesh->mNumVertices);
+    }
+  }
+
+  defaultMesh.setupMesh();
+
+  return defaultMesh;
 }
 
 Model::Model(std::string filepath, ModelType type)
@@ -276,7 +344,7 @@ Model::Model(std::string filepath, ModelType type)
   defaultMesh.colors.resize(defaultMesh.vertices.size());
   for (int i = 0; i < defaultMesh.colors.size(); ++i)
   {
-    defaultMesh.colors[i] = glm::vec3(1.0f, 1.0f, 1.0f);
+    defaultMesh.colors[i] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
   }
 
   defaultMesh.setupMesh();
