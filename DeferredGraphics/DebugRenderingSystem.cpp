@@ -5,7 +5,7 @@
 #include "MeshComponent.h"
 #include "Entity.h"
 
-static int height(BoundingVolumeHierarchy * root)
+static int height(BoundingVolumeHierarchy* root)
 {
   if (root == nullptr)
   {
@@ -39,7 +39,7 @@ DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int wi
   /*for (auto mesh : meshes)
   {
     mesh->vertices = mesh->getVec4Vertices();
-  }*/ 
+  }*/
 }
 
 DebugRenderingSystem::~DebugRenderingSystem()
@@ -79,7 +79,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
     //create octree for the center object, currently hard coded, planned to be for any object
     LinearAllocatorScope scope(linearAllocator);
-    OctreePerObject = linearAllocator.TAllocate<Octree>(meshes[0]->getMesh()->vertices);
+    OctreePerObject = linearAllocator.TAllocate<Octree>(meshes[0]->getMesh()->meshes[0].vertices);
     OctreePerObject->boundingVolume = meshes[0]->bounds;
 
     //object to world matrix for a bounding box using the bounding boxes center and size
@@ -87,7 +87,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     std::vector<glm::vec3> points_octree;
     points_octree.reserve(OctreePerObject->points.size());
 
-    for (auto & vertex : meshes[0]->getMesh()->vertices)
+    for (auto& vertex : meshes[0]->getMesh()->meshes[0].vertices)
     {
       points_octree.push_back(glm::vec3(ObjectToWorldOctree * glm::vec4(vertex, 1.0f)));
     }
@@ -209,7 +209,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
     int level = 7;
     LinearAllocatorScope scope(linearAllocator);
-   // BSPTree = linearAllocator.TAllocate<BSP>(meshes);
+    // BSPTree = linearAllocator.TAllocate<BSP>(meshes);
   }
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -226,12 +226,15 @@ void DebugRenderingSystem::drawAABB(const MeshComponentPtr mesh, Scene& scene, b
   //object to world matrix for a bounding box using the bounding boxes center and size
   glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
 
-  //get the world vertices and create an AABB on the go
-  for (int i = 0; i < mesh->getMesh()->vertices.size(); ++i)
+  for (auto & m : mesh->getMesh()->meshes)
   {
-    //get vec4 vertices from the mesh component and multiply them by object to woerk to get object to world verices
-    glm::vec3 temp = ObjectToWorld * glm::vec4(mesh->getMesh()->vertices[i], 1.0f);
-    bounds.Add(temp);
+    //get the world vertices and create an AABB on the go
+    for (int i = 0; i < m.vertices.size(); ++i)
+    {
+      //get vec4 vertices from the mesh component and multiply them by object to woerk to get object to world verices
+      glm::vec3 temp = ObjectToWorld * glm::vec4(m.vertices[i], 1.0f);
+      bounds.Add(temp);
+    }
   }
 
   //regular aabb
@@ -577,8 +580,8 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-     // octree->active_children |= (1 << 1);
-      //create the node for the first child
+      // octree->active_children |= (1 << 1);
+       //create the node for the first child
       octree->children[1] = octree->children[1]->createOctreeNode(boundingVolume1, points1/*, octree*/);
     }
 
@@ -593,8 +596,8 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-     // octree->active_children |= (1 << 2);
-      //create the node for the second child
+      // octree->active_children |= (1 << 2);
+       //create the node for the second child
       octree->children[2] = octree->children[2]->createOctreeNode(boundingVolume2, points2/*, octree*/);
     }
 
@@ -609,8 +612,8 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-     // octree->active_children |= (1 << 3);
-      //create the node for the 3rd child
+      // octree->active_children |= (1 << 3);
+       //create the node for the 3rd child
       octree->children[3] = octree->children[3]->createOctreeNode(boundingVolume3, points3/*, octree*/);
     }
 
@@ -625,8 +628,8 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-     // octree->active_children |= (1 << 4);
-      //create the node for the 4th child
+      // octree->active_children |= (1 << 4);
+       //create the node for the 4th child
       octree->children[4] = octree->children[4]->createOctreeNode(boundingVolume4, points4/*, octree*/);
     }
 
@@ -641,8 +644,8 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-    //  octree->active_children |= (1 << 5);
-      //create the node for the 5th child
+      //  octree->active_children |= (1 << 5);
+        //create the node for the 5th child
       octree->children[5] = octree->children[5]->createOctreeNode(boundingVolume5, points5/*, octree*/);
     }
 
@@ -657,8 +660,8 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-     // octree->active_children |= (1 << 6);
-      //create the node for the 6th child
+      // octree->active_children |= (1 << 6);
+       //create the node for the 6th child
       octree->children[6] = octree->children[6]->createOctreeNode(boundingVolume6, points6/*, octree*/);
     }
 
@@ -673,8 +676,8 @@ void DebugRenderingSystem::createOctree(Octree* octree, const glm::vec3* pointsF
     }
     else
     {
-     // octree->active_children |= (1 << 7);
-      //create the node for the last child
+      // octree->active_children |= (1 << 7);
+       //create the node for the last child
       octree->children[7] = octree->children[7]->createOctreeNode(boundingVolume7, points7/*, octree*/);
     }
 

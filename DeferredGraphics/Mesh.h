@@ -20,21 +20,6 @@ Creation date: January 4th , 2020
 #include "AABB.h"
 
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-enum ModelType
-{
-  DEFAULT,
-  ASSIMP
-};
-
-struct Texture
-{
-  unsigned int id;
-  std::string type;
-};
-
 class Mesh
 {
   //mesh data
@@ -44,7 +29,6 @@ class Mesh
   GLuint colorVBO;
   GLuint uvVBO;
   GLuint VAO;
-  std::string name;
 
 public:
   std::vector<glm::vec3> vertices = {};
@@ -55,9 +39,9 @@ public:
   std::vector<GLuint> indices = {};
   std::vector<GLuint> normal_indices = {};
 
+  std::string name;
 private:
   //model data 
-  std::vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
   std::vector<Mesh> meshes;
   std::string directory;
 
@@ -78,22 +62,13 @@ public:
   };
 
 private:
-  Mesh();
-
-  static glm::vec3 getValuesInBetweenWhiteSpacesVec3(const std::string line);
-  static glm::vec2 getValuesInBetweenWhiteSpacesVec2(const std::string line);
-  static std::vector<int> getUVFaceData(const std::string line);
-  static std::vector<int> getIndicesFaceData(const std::string line);
-  static std::vector<int> getNormalIndicesFaceData(const std::string line);
 
 public:
 
-  Mesh(const std::string filePath);
-  Mesh(const std::string filePath, ModelType type);
-  Mesh(float radius, int latitudeSlices, int longitudeSlices);
+  Mesh();
+  ~Mesh();
 
-  void processNode(aiNode* node, const aiScene* scene);
-  Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+  void setupMesh();
 
   inline GLuint getPosVBO()
   {
@@ -130,11 +105,16 @@ public:
     return name;
   }
 
-
   const std::vector<GLuint> getIndices();
   const std::vector<glm::vec3> getVertices();
   const std::vector<glm::vec3> getNormals();
 
 };
+
+static glm::vec3 getValuesInBetweenWhiteSpacesVec3(const std::string line);
+static glm::vec2 getValuesInBetweenWhiteSpacesVec2(const std::string line);
+static std::vector<int> getUVFaceData(const std::string line);
+static std::vector<int> getIndicesFaceData(const std::string line);
+static std::vector<int> getNormalIndicesFaceData(const std::string line);
 
 typedef std::shared_ptr<Mesh> MeshHandle;

@@ -65,10 +65,10 @@ void Scene::Init()
   /*********************************************************************************/
 
   //add a mesh to the component
-  MeshHandle cube = std::make_shared<Mesh>("Resources/sphere.obj");
-  MeshHandle bunny = std::make_shared<Mesh>("Resources/bunny_high_poly.obj");
-  MeshHandle sphere = std::make_shared<Mesh>("Resources/sphere.obj");
-  MeshHandle pitch = std::make_shared<Mesh>("Resources/pitch.obj");
+  ModelHandle cube = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
+  ModelHandle bunny = std::make_shared<Model>("Resources/bunny_high_poly.obj", ModelType::DEFAULT);
+  ModelHandle sphere = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
+  ModelHandle pitch = std::make_shared<Model>("Resources/pitch.obj", ModelType::DEFAULT);
 
   //declare the Resources/Shaders that will be used for this scene
   ShaderHandle gBuffer = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);

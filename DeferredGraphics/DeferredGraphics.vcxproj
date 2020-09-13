@@ -173,8 +173,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovementBehavior.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Raycast.cpp" />
     <ClCompile Include="RotationBehavior.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -209,8 +211,10 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="MovementBehavior.h" />
     <ClInclude Include="Octree.h" />
+    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Raycast.h" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="RotationBehavior.h" />

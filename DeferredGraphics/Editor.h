@@ -34,7 +34,7 @@ public:
   std::vector<std::string> filenames;
   std::vector<std::string> shader_filenames;
   std::vector<std::string> mesh_name;
-  std::vector<MeshHandle> mesh_handles;
+  std::vector<ModelHandle> model_handles;
   std::vector<std::string> shader_name;
   std::vector<ShaderHandle> shader_handles;
 

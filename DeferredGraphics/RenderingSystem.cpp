@@ -453,7 +453,7 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
     if (splitScreen == false && brightBuffer == false)
     {
       glBlitFramebuffer(0, 0, windowWidth, windowHeight, 0, 0, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-    }   
+    }
     else if (splitScreen == true)
     {
       glBlitFramebuffer(0, 0, windowWidth, windowHeight, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
@@ -497,29 +497,33 @@ void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     //first bind the vertex array object that you are using
-    glBindVertexArray(mesh->getMesh()->getVAO());
 
-    //object to world matrix
-    glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
+    for (auto & m : mesh->mesh->meshes)
+    {
+      glBindVertexArray(m.getVAO());
 
-    //object to world matrix sent to the GPU called "object_to_world"
-    GLint umodel_matrix = glGetUniformLocation(mesh->getShader()->getProgramID(), "object_to_world");
-    glUniformMatrix4fv(umodel_matrix, 1, false, &ObjectToWorld[0][0]);
+      //object to world matrix
+      glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
 
-    //normal matrix sent to the GPU called "normal_matrix"
-    GLint unormal_matrix = glGetUniformLocation(mesh->getShader()->getProgramID(), "normal_matrix");
-    glUniformMatrix4fv(unormal_matrix, 1, false, &(glm::transpose(glm::inverse(ObjectToWorld)))[0][0]);
+      //object to world matrix sent to the GPU called "object_to_world"
+      GLint umodel_matrix = glGetUniformLocation(mesh->getShader()->getProgramID(), "object_to_world");
+      glUniformMatrix4fv(umodel_matrix, 1, false, &ObjectToWorld[0][0]);
 
-    //send the variables "perspective_matrix" and "view matrix" onto the GPU
-    projectionMatrixID = glGetUniformLocation(mesh->getShader()->getProgramID(), "perspective_matrix");
-    viewMatrixID = glGetUniformLocation(mesh->getShader()->getProgramID(), "view_matrix");
+      //normal matrix sent to the GPU called "normal_matrix"
+      GLint unormal_matrix = glGetUniformLocation(mesh->getShader()->getProgramID(), "normal_matrix");
+      glUniformMatrix4fv(unormal_matrix, 1, false, &(glm::transpose(glm::inverse(ObjectToWorld)))[0][0]);
 
-    //get the projection and view matrix from the scene set it as a variables for the GPU
-    glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
-    glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
+      //send the variables "perspective_matrix" and "view matrix" onto the GPU
+      projectionMatrixID = glGetUniformLocation(mesh->getShader()->getProgramID(), "perspective_matrix");
+      viewMatrixID = glGetUniformLocation(mesh->getShader()->getProgramID(), "view_matrix");
 
-    //draw the objects with the mesh components
-    glDrawElements(GL_TRIANGLES, (GLsizei)mesh->getMesh()->getIndices().size(), GL_UNSIGNED_INT, 0);
+      //get the projection and view matrix from the scene set it as a variables for the GPU
+      glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
+      glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
+
+      //draw the objects with the mesh components
+      glDrawElements(GL_TRIANGLES, (GLsizei)m.getIndices().size(), GL_UNSIGNED_INT, 0);
+    }
   }
 }
 
@@ -577,7 +581,7 @@ void RenderingSystem::DrawQuad()
 
 void RenderingSystem::DrawTextures(GLuint textureID, const unsigned posX, const unsigned posY, const unsigned windowWidth, const unsigned windowHeight)
 {
-  
+
   glDisable(GL_DEPTH_TEST);
 
   //set the viewport

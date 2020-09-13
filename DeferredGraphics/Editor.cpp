@@ -22,7 +22,7 @@ Creation date: January 4th , 2020
 
 float lerp(float a, float b, float t)
 {
-  return (1.0 - t) * a + b * t;
+  return (1.0f - t) * a + b * t;
 }
 
 float invLerp(float a, float b, float v)
@@ -99,8 +99,8 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   for (int i = 0; i < mesh_name.size(); ++i)
   {
     std::cout << mesh_name[i] << std::endl;
-    MeshHandle mesh = std::make_shared<Mesh>(mesh_name[i]);
-    mesh_handles.push_back(mesh);
+    ModelHandle mesh = std::make_shared<Model>(mesh_name[i], ModelType::DEFAULT);
+    model_handles.push_back(mesh);
   }
 
   //reuse this buffer 
@@ -209,7 +209,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   ImGui::Begin("Inspector");
   if (ImGui::InputText("Search", buffer_size, sizeof(buffer_size)))
   {
-    int size = std::strlen(buffer_size);
+    size_t size = std::strlen(buffer_size);
 
     for (int i = 0; i < size; ++i)
     {
@@ -283,25 +283,30 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       }
 
       MeshComponentPtr meshComponent = scene.getEntities()[i]->get<MeshComponent>();
+
       if (meshComponent)
       {
         ImGui::Separator();
+
         if (ImGui::TreeNode("Mesh Component"))
         {
-          ImGui::Text("Number of Vertices: %i", meshComponent->getMesh()->vertices.size());
-          //second parameter can be the mesh name if i had a mesh name id 
-          if (ImGui::BeginCombo("Mesh List", meshComponent->getMesh()->getName().c_str()))
+          for (auto & m : meshComponent->getMesh()->meshes)
           {
-            for (int i = 0; i < mesh_name.size(); ++i)
+            ImGui::Text("Number of Vertices: %i", m.vertices.size());
+            //second parameter can be the mesh name if i had a mesh name id 
+            if (ImGui::BeginCombo("Mesh List", m.getName().c_str()))
             {
-              if (ImGui::Selectable(mesh_name[i].c_str()))
+              for (int i = 0; i < mesh_name.size(); ++i)
               {
-                meshComponent->mesh = mesh_handles[i];
+                if (ImGui::Selectable(mesh_name[i].c_str()))
+                {
+                  meshComponent->mesh = model_handles[i];
 
+                }
               }
+              ImGui::EndCombo();
             }
 
-            ImGui::EndCombo();
           }
 
           //add changing of mesh here
@@ -381,8 +386,9 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::Button("Add Mesh Component"))
         {
-          meshComponent = scene.getEntities()[i]->add<MeshComponent>();
+          meshComponent = scene.getEntities()[i]->add<MeshComponent>();         
           meshComponent->entity = scene.getEntities()[i];
+          meshComponent->mesh = model_handles[0]; //4sphere
         }
       }
 

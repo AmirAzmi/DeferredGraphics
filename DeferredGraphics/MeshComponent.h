@@ -13,7 +13,7 @@ Creation date: January 4th , 2020
 
 #pragma once
 #include <glm/glm/glm.hpp>
-#include "Mesh.h"
+#include "Model.h"
 #include "Material.h"
 #include "EngineTypes.h"
 
@@ -24,7 +24,7 @@ public:
 
   EntityPtr entity;       //8 bytes
   AABB bounds;            //24 bytes (2 * vec3)
-  MeshHandle mesh;        //8 bytes
+  ModelHandle mesh;        //8 bytes
   MaterialHandle material;//8 bytes
   ShaderHandle shader;    //8 bytes
   std::string name;       //32 bytes
@@ -33,14 +33,14 @@ public:
 
   MeshComponent()
   {
-    mesh = std::make_shared<Mesh>("Resources/sphere.obj");
+    mesh = std::make_shared<Model>("Resources/sphere.obj");
     shader = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
     material = std::make_shared<Material>(shader);
     material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
     material->setFloat("specular_intensity", 1.0f);
   }
 
-  MeshComponent(EntityPtr entity, MeshHandle meshHandle, ShaderHandle shaderHandle, MaterialHandle materialHandle) :entity(entity), mesh(meshHandle), shader(shaderHandle), material(materialHandle)
+  MeshComponent(EntityPtr entity, ModelHandle meshHandle, ShaderHandle shaderHandle, MaterialHandle materialHandle) :entity(entity), mesh(meshHandle), shader(shaderHandle), material(materialHandle)
   {
     bounds.Empty();
   }
@@ -53,7 +53,7 @@ public:
     return entity;
   }
 
-  MeshHandle getMesh()
+  ModelHandle getMesh()
   {
     return mesh;
   }
@@ -71,19 +71,6 @@ public:
   AABB getMeshBounds()
   {
     return bounds;
-  }
-
-
-  std::vector<glm::vec4> getVec4Vertices()
-  {
-    vertices.clear();
-    //convert vertices to vec4
-    for (int i = 0; i < this->getMesh()->getVertices().size(); ++i)
-    {
-      vertices.push_back(glm::vec4(getMesh()->getVertices()[i].x, getMesh()->getVertices()[i].y, getMesh()->getVertices()[i].z, 1.0f));
-    }
-
-    return vertices;
   }
 };
 
