@@ -103,10 +103,10 @@ glm::mat4 Quaternion::quaternionToMatrix()
 
   //TODO::save by not doingt he transpose
   return glm::transpose(glm::mat4(
-    1 - (2 * std::pow(y, 2)) - (2 * std::pow(z, 2)), (2 * x * y) - (2 * w * z)                      , (2 * x * z) + (2 * w * y)                       , 0,
-    (2 * x * y) + (2 * w * z)                      , 1 - (2 * std::pow(x, 2)) - (2 * std::pow(z, 2)), (2 * y * z) - (2 * w * x)                       , 0,
-    (2 * x * z) - (2 * w * y)                      , (2 * y * z) + (2 * w * x)                      , 1 - (2 * std::pow(x, 2)) - (2 * std::pow(y, 2)) , 0,
-    0                                              , 0                                              , 0                                               , 1));
+    1 - (2 * (std::pow(y, 2) + std::pow(z, 2))), 2 * (x * y - w * z)                        , 2 * (x * z + w * y)                        , 0,
+    2 * (x * y +  w * z)                       , 1 - (2 * (std::pow(x, 2) + std::pow(z, 2))), 2 * (y * z -  w * x)                       , 0,
+    2 * (x * z -  w * y)                       , 2 * (y * z + w * x)                        , 1 - (2 * (std::pow(x, 2) + std::pow(y, 2))), 0,
+    0                                          , 0                                          , 0                                          , 1));
 }
 
 float Quaternion::magnitudeQuaternionSquared()
