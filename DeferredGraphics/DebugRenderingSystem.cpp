@@ -35,11 +35,6 @@ DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int wi
 
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
-
-  /*for (auto mesh : meshes)
-  {
-    mesh->vertices = mesh->getVec4Vertices();
-  }*/
 }
 
 DebugRenderingSystem::~DebugRenderingSystem()
@@ -83,7 +78,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     OctreePerObject->boundingVolume = meshes[0]->bounds;
 
     //object to world matrix for a bounding box using the bounding boxes center and size
-    glm::mat4 ObjectToWorldOctree = glm::translate(meshes[0]->getEntityPtr()->position) * glm::rotate(meshes[0]->getEntityPtr()->angle, meshes[0]->getEntityPtr()->axisOfRotation) * glm::scale(meshes[0]->getEntityPtr()->scale);
+    glm::mat4 ObjectToWorldOctree = meshes[0]->getEntityPtr()->getObjectToWorld();
     std::vector<glm::vec3> points_octree;
     points_octree.reserve(OctreePerObject->points.size());
 
@@ -224,7 +219,7 @@ void DebugRenderingSystem::drawAABB(const MeshComponentPtr mesh, Scene& scene, b
   bounds.Empty();
 
   //object to world matrix for a bounding box using the bounding boxes center and size
-  glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
+  glm::mat4 ObjectToWorld = mesh->getEntityPtr()->getObjectToWorld();
 
   for (auto & m : mesh->getMesh()->meshes)
   {
@@ -303,7 +298,7 @@ void DebugRenderingSystem::drawAABB(const MeshComponentPtr mesh, Scene& scene, b
 
   glLineWidth(2);
   glBindVertexArray(boundingBoxVAOID);
-  glDrawElements(GL_LINES, cubeIndices.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_LINES, (GLsizei)cubeIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
 void DebugRenderingSystem::drawAABB(const AABB bounds, Scene& scene)
@@ -364,11 +359,11 @@ void DebugRenderingSystem::drawAABB(const AABB bounds, Scene& scene)
 
   glLineWidth(2);
   glBindVertexArray(boundingBoxVAOID);
-  glDrawElements(GL_LINES, cubeIndices.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_LINES, (GLsizei)cubeIndices.size(), GL_UNSIGNED_INT, 0);
 
 }
 
-void DebugRenderingSystem::drawOctree(Octree* child, int level, Scene& scene)
+void DebugRenderingSystem::drawOctree(Octree* child, float level, Scene& scene)
 {
 
   if (level < 0)

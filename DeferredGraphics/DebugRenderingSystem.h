@@ -111,7 +111,7 @@ class DebugRenderingSystem
   void drawAABB(const MeshComponentPtr mesh,Scene& scene, bool isSquareAABB);
   void drawAABB(const AABB bounds, Scene& scene);
   void drawBS(const MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);
-  void drawOctree(Octree * root, int level, Scene & scene);
+  void drawOctree(Octree * root, float level, Scene & scene);
   void drawLevelOrderAABB(BoundingVolumeHierarchy * root, int level, Scene & scene);
   void printLevelOrderAABB(BoundingVolumeHierarchy * root, Scene & scene);
   void printLevelOrderAABBIter(BoundingVolumeHierarchy * root, Scene & scene);

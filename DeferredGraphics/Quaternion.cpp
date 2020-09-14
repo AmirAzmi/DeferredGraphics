@@ -98,6 +98,17 @@ Quaternion& Quaternion::projection(Quaternion& b)
   return *this;
 }
 
+glm::mat4 Quaternion::quaternionToMatrix()
+{
+
+  //TODO::save by not doingt he transpose
+  return glm::transpose(glm::mat4(
+    1 - (2 * std::pow(y, 2)) - (2 * std::pow(z, 2)), (2 * x * y) - (2 * w * z)                      , (2 * x * z) + (2 * w * y)                       , 0,
+    (2 * x * y) + (2 * w * z)                      , 1 - (2 * std::pow(x, 2)) - (2 * std::pow(z, 2)), (2 * y * z) - (2 * w * x)                       , 0,
+    (2 * x * z) - (2 * w * y)                      , (2 * y * z) + (2 * w * x)                      , 1 - (2 * std::pow(x, 2)) - (2 * std::pow(y, 2)) , 0,
+    0                                              , 0                                              , 0                                               , 1));
+}
+
 float Quaternion::magnitudeQuaternionSquared()
 {
   return w * w + x * x + y * y + z * z; //sqrtf is a heavy operation but cant be avoided
@@ -114,4 +125,15 @@ void Quaternion::negateQuaternion()
   x *= -1.0f;
   y *= -1.0f;
   z *= -1.0f;
+}
+
+void Quaternion::setToRotatAboutAxis(glm::vec3& axis, float theta)
+{
+  float thetaOver2 = theta * 0.5f;
+  this->w = cosf(thetaOver2);
+
+  float sinThetaOver2 = sinf(thetaOver2);
+  this->x = axis.x * sinThetaOver2;
+  this->y = axis.y * sinThetaOver2;
+  this->z = axis.z * sinThetaOver2;
 }

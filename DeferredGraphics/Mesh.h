@@ -18,6 +18,7 @@ Creation date: January 4th , 2020
 #include <string>
 #include <fstream>
 #include "AABB.h"
+#include "Material.h"
 
 
 class Mesh
@@ -40,28 +41,14 @@ public:
   std::vector<GLuint> normal_indices = {};
 
   std::string name;
+
+  MaterialHandle material;//8 bytes
+  ShaderHandle shader;    //8 bytes
+
 private:
   //model data 
   std::vector<Mesh> meshes;
   std::string directory;
-
-public:
-
-  struct FaceTemp
-  {
-    int vt;
-    int uv;
-    int norm;
-  };
-
-  struct Face
-  {
-    glm::vec3 vertex_position_indices;
-    glm::vec3 vertex_normal_indices;
-    glm::vec3 vertex_texture_coordinate_indices;
-  };
-
-private:
 
 public:
 

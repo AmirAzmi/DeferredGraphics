@@ -289,7 +289,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
         if (ImGui::TreeNode("Mesh Component"))
         {
-          for (auto & m : meshComponent->getMesh()->meshes)
+          for (auto& m : meshComponent->getMesh()->meshes)
           {
             ImGui::Text("Number of Vertices: %i", m.vertices.size());
             //second parameter can be the mesh name if i had a mesh name id 
@@ -308,67 +308,54 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
           }
 
-          //add changing of mesh here
-          if (ImGui::BeginCombo("Shader List", " + Shader"))
+          for (auto& mesh : meshComponent->mesh->meshes)
           {
-            for (int i = 0; i < shader_name.size(); i += 2)
+            if (mesh.material)
             {
-              if (ImGui::Selectable(shader_name[i].c_str()))
+              if (ImGui::TreeNode("Material"))
               {
-                meshComponent->shader = shader_handles[i];
-              }
-            }
-
-            ImGui::EndCombo();
-          }
-
-          std::shared_ptr<Material> material = meshComponent->getMaterial();
-
-          if (material)
-          {
-            if (ImGui::TreeNode("Material"))
-            {
-              for (auto& b : material->bools)
-              {
-                if (ImGui::Checkbox(b.first.c_str(), &b.second))
+                for (auto& b : mesh.material->bools)
                 {
-                }
-              }
-              for (auto& v : material->floats)
-              {
-                if (ImGui::DragFloat(v.first.c_str(), &v.second, .1f))
-                {
-                }
-              }
-
-              for (auto& v2 : material->vec2s)
-              {
-                if (ImGui::DragFloat3(v2.first.c_str(), &v2.second.x, .1f))
-                {
-                }
-              }
-
-              for (auto& v3 : material->vec3s)
-              {
-                if (ImGui::DragFloat3(v3.first.c_str(), &v3.second.x, .1f))
-                {
-                }
-              }
-
-              for (auto& v4 : material->vec4s)
-              {
-                if (v4.first == "diffuse_color")
-                {
-                  if (ImGui::ColorEdit3("Diffuse Color", &v4.second.x, ImGuiColorEditFlags_::ImGuiColorEditFlags_HDR))
+                  if (ImGui::Checkbox(b.first.c_str(), &b.second))
                   {
                   }
                 }
-                else if (ImGui::DragFloat4(v4.first.c_str(), &v4.second.x, .1f))
+                for (auto& v : mesh.material->floats)
                 {
+                  if (ImGui::DragFloat(v.first.c_str(), &v.second, .1f))
+                  {
+                  }
                 }
-              }
 
-              ImGui::TreePop();
+                for (auto& v2 : mesh.material->vec2s)
+                {
+                  if (ImGui::DragFloat3(v2.first.c_str(), &v2.second.x, .1f))
+                  {
+                  }
+                }
+
+                for (auto& v3 : mesh.material->vec3s)
+                {
+                  if (ImGui::DragFloat3(v3.first.c_str(), &v3.second.x, .1f))
+                  {
+                  }
+                }
+
+                for (auto& v4 : mesh.material->vec4s)
+                {
+                  if (v4.first == "diffuse_color")
+                  {
+                    if (ImGui::ColorEdit3("Diffuse Color", &v4.second.x, ImGuiColorEditFlags_::ImGuiColorEditFlags_HDR))
+                    {
+                    }
+                  }
+                  else if (ImGui::DragFloat4(v4.first.c_str(), &v4.second.x, .1f))
+                  {
+                  }
+                }
+
+                ImGui::TreePop();
+              }
             }
           }
 
@@ -385,7 +372,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::Button("Add Mesh Component"))
         {
-          meshComponent = scene.getEntities()[i]->add<MeshComponent>();         
+          meshComponent = scene.getEntities()[i]->add<MeshComponent>();
           meshComponent->entity = scene.getEntities()[i];
         }
       }

@@ -25,8 +25,8 @@ public:
   EntityPtr entity;       //8 bytes
   AABB bounds;            //24 bytes (2 * vec3)
   ModelHandle mesh;        //8 bytes
-  MaterialHandle material;//8 bytes
-  ShaderHandle shader;    //8 bytes
+  //MaterialHandle material;//8 bytes
+  //ShaderHandle shader;    //8 bytes
   std::string name;       //32 bytes
   //-------------------------------
   //total: ?? bytes
@@ -34,13 +34,13 @@ public:
   MeshComponent()
   {
     mesh = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
-    shader = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
+    /*shader = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
     material = std::make_shared<Material>(shader);
     material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-    material->setFloat("specular_intensity", 1.0f);
+    material->setFloat("specular_intensity", 1.0f);*/
   }
 
-  MeshComponent(EntityPtr entity, ModelHandle meshHandle, ShaderHandle shaderHandle, MaterialHandle materialHandle) :entity(entity), mesh(meshHandle), shader(shaderHandle), material(materialHandle)
+  MeshComponent(EntityPtr entity, ModelHandle meshHandle) :entity(entity), mesh(meshHandle)
   {
     bounds.Empty();
   }
@@ -58,7 +58,7 @@ public:
     return mesh;
   }
 
-  MaterialHandle getMaterial()
+  /*MaterialHandle getMaterial()
   {
     return material;
   }
@@ -66,7 +66,7 @@ public:
   ShaderHandle getShader()
   {
     return shader;
-  }
+  }*/
 
   AABB getMeshBounds()
   {

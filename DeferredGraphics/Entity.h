@@ -17,6 +17,7 @@ Creation date: January 4th , 2020
 #include <utility>
 #include "EngineTypes.h"
 #include "Scene.h"
+#include "Quaternion.h"
 
 class Behavior;
 
@@ -33,6 +34,15 @@ public:
   float angle;
   float currentPosition;
   std::vector<BehaviorPtr> behaviors; // The list of behaviors attached to this entity.
+  glm::mat4 objectToWorld;
+
+  glm::mat4 getObjectToWorld()
+  {
+    Quaternion q(axisOfRotation, glm::radians(angle));
+
+    return glm::translate(position) * q.quaternionToMatrix() * glm::scale(scale);
+    //return glm::translate(position) * glm::rotate(glm::radians(angle), axisOfRotation) * glm::scale(scale);
+  }
 
   Entity(std::string name, Scene& scene);
 

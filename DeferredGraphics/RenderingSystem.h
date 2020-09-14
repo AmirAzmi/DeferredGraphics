@@ -21,6 +21,12 @@ Creation date: January 4th , 2020
 #include "Scene.h"
 #include "LightComponent.h"
 
+struct DrawItem
+{
+  Mesh * mesh;
+  glm::mat4 objectToWorld;
+};
+
 class RenderingSystem
 {
   //projection and view matrix ID
@@ -114,7 +120,7 @@ public:
   RenderingSystem(const int windowWidth, const int windowHeight);
   ~RenderingSystem();
   void Update(Scene& scene, const int windowWidth, const int windowHeight);
-  void Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered);
+  void Draw(DrawItem mesh, Scene& scene, bool isDeffered);
   void DrawQuad();
   void DrawTextures(GLuint textureID, const unsigned posX, const unsigned posY, const unsigned windowWidth, const unsigned windowHeight);
 };

@@ -80,20 +80,27 @@ void Scene::Init()
   MaterialHandle material2 = std::make_shared<Material>(forwardRenderer);
   MaterialHandle material3 = std::make_shared<Material>(textureShader);
 
-  //Any material information needed
-  material->setVec4("diffuse_color", glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-  material->setFloat("specular_intensity", 1.0f);
+  for (auto& m : bunny->meshes)
+  {
+    m.material = material;
+    m.shader = gBuffer;
+
+    //Any material information needed
+    m.material->setVec4("diffuse_color", glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    m.material->setFloat("specular_intensity", 1.0f);
+  }
+
   material2->setVec4("diffuse_color", glm::vec4(0.5f, 0.0f, 0.7f, 1.0f));
 
   //create the Entity ptr
   EntityPtr centerObject = addEntity("Center Object");
 
-  glm::vec3 offset(0,-1.5f,4);
+  glm::vec3 offset(0, -1.5f, 4);
   //centerObject->addBehavior<CameraPossessBehavior>(offset);
   //centerObject->addBehavior<MovementBehavior>();
 
   //add a mesh component pointer to the object with the setup from the prelims
-  MeshComponentPtr meshComp = centerObject->add<MeshComponent>(centerObject, bunny, gBuffer, material);
+  MeshComponentPtr meshComp = centerObject->add<MeshComponent>(centerObject, bunny);
   LightComponentPtr lightComp = centerObject->add<LightComponent>();
 
   //manipulate the properties of the object by getting it from the component
@@ -113,8 +120,14 @@ void Scene::Init()
     EntityPtr object = addEntity(str);
 
     //add a mesh component pointer to the object with the setup from the prelims
-    MeshComponentPtr meshComp2 = object->add<MeshComponent>(object, cube, textureShader, material3);
+    MeshComponentPtr meshComp2 = object->add<MeshComponent>(object, cube);
     //lightComp = object->add<LightComponent>();
+
+    for (auto& m : meshComp2->mesh->meshes)
+    {
+      m.material = material3;
+      m.shader = textureShader;
+    }
 
     //manipulate the properties of the object by getting it from the component
     meshComp2->getEntityPtr()->scale = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -127,7 +140,7 @@ void Scene::Init()
   }
 }
 
-void Scene::PreRender(int windowWidth, int windowHeight,float delta_time)
+void Scene::PreRender(int windowWidth, int windowHeight, float delta_time)
 {
   //setup the initial view and projection matrices
   projectionMatrix = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, nearDistance, farDistance);

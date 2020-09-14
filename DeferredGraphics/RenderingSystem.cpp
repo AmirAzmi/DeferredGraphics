@@ -258,10 +258,25 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   //gets all the current mesh components in th scene
   std::vector<LightComponentPtr>& lights = scene.getLights();
 
+  std::vector<DrawItem> items;
+
+  //for all mesh  components
+  for (auto& m : meshes)
+  {
+    //for each mesh in the vector of meshes per model
+    for (auto& j : m->mesh->meshes)
+    {
+      DrawItem item;
+      item.mesh = &j;
+      item.objectToWorld = m->getEntityPtr()->getObjectToWorld();
+      items.push_back(item);
+    }
+  }
+
   //Geometry Pass
   //------------------------------------------------------------
   //first it sorts the list where the values from getDeffered are put into buckets
-  auto iterator_to_forward_list = std::partition(meshes.begin(), meshes.end(), [](MeshComponentPtr mesh) {return mesh->getShader()->getDeffered(); });
+  auto iterator_to_forward_list = std::partition(items.begin(), items.end(), [](DrawItem item) {return item.mesh->shader->getDeffered(); });
 
   //bind the g framebuffer
   glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBOID);
@@ -278,8 +293,7 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   //first ans save the lighting pass for the when we bind the lighting FBO
   //write objects to the currently binded frame buffer and fills in the data of position, normals, and color/specular
   //which can now be used for the next shader and draw calls
-  std::for_each(meshes.begin(), iterator_to_forward_list, [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, true); });
-
+  std::for_each(items.begin(), iterator_to_forward_list, [&scene, this](DrawItem item) {Draw(item, scene, true); });
 
   //set the active textures to be displayed on the quad with the geometry
   //so what is happening here is we are binding the textures we stored from the g buffer
@@ -352,7 +366,7 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   forwardLightingShaderID->setVec3("view_position", scene.getEyePosition());
 
   //draw forward objects next
-  std::for_each(iterator_to_forward_list, meshes.end(), [&scene, this](MeshComponentPtr mesh) {Draw(mesh, scene, false); });
+  std::for_each(iterator_to_forward_list, items.end(), [&scene, this](DrawItem item) {Draw(item, scene, false); });
 
   //read the data that was written from drawing the quad and use it as uniforms for the shader
   glActiveTexture(GL_TEXTURE0);
@@ -487,43 +501,38 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   rendering_sytem_elapsed_time = end - start;
 }
 
-void RenderingSystem::Draw(MeshComponentPtr mesh, Scene& scene, bool isDeffered)
+void RenderingSystem::Draw(DrawItem item, Scene& scene, bool isDeffered)
 {
-  if (mesh->getShader()->getDeffered() == isDeffered)
+  if (item.mesh->shader->getDeffered() == isDeffered)
   {
-    //first bind the vertex array object that you are using
+    //bind the program here and set the material for the shader    
+    item.mesh->material->apply();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
-    for (auto& m : mesh->mesh->meshes)
-    {
-      //bind the program here and set the material for the shader    
-      mesh->getMaterial()->apply();
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, texture);
+    glBindVertexArray(item.mesh->getVAO());
 
-      glBindVertexArray(m.getVAO());
+    //object to world matrix
+    glm::mat4 ObjectToWorld = item.objectToWorld;
 
-      //object to world matrix
-      glm::mat4 ObjectToWorld = glm::translate(mesh->getEntityPtr()->position) * glm::rotate(mesh->getEntityPtr()->angle, mesh->getEntityPtr()->axisOfRotation) * glm::scale(mesh->getEntityPtr()->scale);
+    //object to world matrix sent to the GPU called "object_to_world"
+    GLint umodel_matrix = glGetUniformLocation(item.mesh->shader->getProgramID(), "object_to_world");
+    glUniformMatrix4fv(umodel_matrix, 1, false, &ObjectToWorld[0][0]);
 
-      //object to world matrix sent to the GPU called "object_to_world"
-      GLint umodel_matrix = glGetUniformLocation(mesh->getShader()->getProgramID(), "object_to_world");
-      glUniformMatrix4fv(umodel_matrix, 1, false, &ObjectToWorld[0][0]);
+    //normal matrix sent to the GPU called "normal_matrix"
+    GLint unormal_matrix = glGetUniformLocation(item.mesh->shader->getProgramID(), "normal_matrix");
+    glUniformMatrix4fv(unormal_matrix, 1, false, &(glm::transpose(glm::inverse(ObjectToWorld)))[0][0]);
 
-      //normal matrix sent to the GPU called "normal_matrix"
-      GLint unormal_matrix = glGetUniformLocation(mesh->getShader()->getProgramID(), "normal_matrix");
-      glUniformMatrix4fv(unormal_matrix, 1, false, &(glm::transpose(glm::inverse(ObjectToWorld)))[0][0]);
+    //send the variables "perspective_matrix" and "view matrix" onto the GPU
+    projectionMatrixID = glGetUniformLocation(item.mesh->shader->getProgramID(), "perspective_matrix");
+    viewMatrixID = glGetUniformLocation(item.mesh->shader->getProgramID(), "view_matrix");
 
-      //send the variables "perspective_matrix" and "view matrix" onto the GPU
-      projectionMatrixID = glGetUniformLocation(mesh->getShader()->getProgramID(), "perspective_matrix");
-      viewMatrixID = glGetUniformLocation(mesh->getShader()->getProgramID(), "view_matrix");
+    //get the projection and view matrix from the scene set it as a variables for the GPU
+    glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
+    glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
 
-      //get the projection and view matrix from the scene set it as a variables for the GPU
-      glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
-      glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
-
-      //draw the objects with the mesh components
-      glDrawElements(GL_TRIANGLES, (GLsizei)m.getIndices().size(), GL_UNSIGNED_INT, 0);
-    }
+    //draw the objects with the mesh components
+    glDrawElements(GL_TRIANGLES, (GLsizei)item.mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
   }
 }
 

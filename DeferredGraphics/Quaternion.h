@@ -5,6 +5,7 @@ class Quaternion
 {
   float x, y, z, w;
 
+  public:
   Quaternion()
   {
 
@@ -13,9 +14,9 @@ class Quaternion
   Quaternion(float w, float x, float y, float z):w(w), x(x), y(y), z(z)
   {
   }
+
   Quaternion(glm::vec3 & axis, float angle)
   {
-    angle = glm::radians(angle);
     w = cosf(0.5f * angle);
 
     float thetaOver2 = sinf(0.5f * angle);
@@ -35,6 +36,7 @@ class Quaternion
   Quaternion& conjugate();
   Quaternion& inverse();
   Quaternion& projection(Quaternion& b);
+  glm::mat4 quaternionToMatrix();
   float magnitudeQuaternionSquared();
   float dotProduct(Quaternion& b);
   void negateQuaternion();
