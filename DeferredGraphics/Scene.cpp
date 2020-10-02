@@ -66,7 +66,7 @@ void Scene::Init()
 
   //add a mesh to the component
   ModelHandle cube = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
-  ModelHandle bunny = std::make_shared<Model>("Resources/bunny_high_poly.obj");
+  ModelHandle bunny = std::make_shared<Model>("Resources/gh_sample_animation.fbx");
   ModelHandle sphere = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
   ModelHandle pitch = std::make_shared<Model>("Resources/pitch.obj", ModelType::DEFAULT);
 
@@ -150,7 +150,7 @@ void Scene::PreRender(int windowWidth, int windowHeight, float delta_time)
   for (EntityPtr entity : getEntities())
   {
     //updates the behaviors for all entities
-    entity->onFrameBegin(delta_time);
+    entity->onFrameBegin(delta_time * timeScale);
   }
 }
 
@@ -160,7 +160,7 @@ void Scene::Render(float delta_time)
   for (int i = 0; i < getEntities().size(); ++i)
   {
     //updates the entity behaviors
-    getEntities()[i]->update(delta_time);
+    getEntities()[i]->update(delta_time * timeScale);
   }
 }
 
@@ -168,7 +168,7 @@ void Scene::PostRender(float delta_time)
 {
   for (EntityPtr entity : getEntities())
   {
-    entity->onFrameEnd(delta_time);
+    entity->onFrameEnd(delta_time * timeScale);
   }
 }
 

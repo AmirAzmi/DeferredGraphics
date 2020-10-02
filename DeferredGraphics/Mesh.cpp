@@ -69,6 +69,11 @@ void Mesh::setupMesh()
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(glm::uint), indices.data(), GL_STATIC_DRAW);
 
+  glGenBuffers(1, &boneVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, boneVBO);
+  glBufferData(GL_ARRAY_BUFFER, bones.size() * sizeof(bones[0]),
+    bones.data(), GL_STATIC_DRAW);
+
   //enable position data that will be transferred to the GPU
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, getPosVBO());
@@ -89,7 +94,31 @@ void Mesh::setupMesh()
   glBindBuffer(GL_ARRAY_BUFFER, getColorVBO());
   glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, (void*)0);
 
+  glEnableVertexAttribArray(4);
+  glBindBuffer(GL_ARRAY_BUFFER, boneVBO);
+  glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+
+  glEnableVertexAttribArray(5);
+  glBindBuffer(GL_ARRAY_BUFFER, boneVBO);
+  glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
+
   //bind the index buffer that will be transferred to the GPU
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, getIndexVBO());
 }
 
+void VertexBoneData::AddBoneData(int BoneID, float Weight)
+{
+  for (int i = 0; i < (sizeof(IDs) / sizeof(IDs[0])); i++)
+  {
+    if (Weights[i] == 0.0)
+    {
+
+      IDs[i] = BoneID;
+      Weights[i] = Weight;
+      return;
+    }
+  }
+
+  // should never get here - more bones than we have space for
+  assert(0);
+}

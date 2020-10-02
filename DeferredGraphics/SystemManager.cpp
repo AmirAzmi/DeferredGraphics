@@ -20,9 +20,9 @@ void SystemManager::Init(Scene & scene, const int windowWidth, const int windowH
   debugRenderer = new DebugRenderingSystem(scene, windowWidth, windowHeight);
 }
 
-void SystemManager::Update(Scene& scene, const int windowWidth, const int windowHeight)
+void SystemManager::Update(Scene& scene, const int windowWidth, const int windowHeight, float dt)
 {
-  renderer->Update(scene, windowWidth, windowHeight);
+  renderer->Update(scene, windowWidth, windowHeight, dt);
   debugRenderer->Update(scene, windowWidth, windowHeight);
 }
 

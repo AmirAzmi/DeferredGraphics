@@ -25,6 +25,8 @@ struct DrawItem
 {
   Mesh * mesh;
   glm::mat4 objectToWorld;
+  glm::mat4 boneTransform[64];
+  unsigned boneSize = 0;
 };
 
 class RenderingSystem
@@ -119,7 +121,7 @@ public:
 
   RenderingSystem(const int windowWidth, const int windowHeight);
   ~RenderingSystem();
-  void Update(Scene& scene, const int windowWidth, const int windowHeight);
+  void Update(Scene& scene, const int windowWidth, const int windowHeight, float dt);
   void Draw(DrawItem mesh, Scene& scene, bool isDeffered);
   void DrawQuad();
   void DrawTextures(GLuint textureID, const unsigned posX, const unsigned posY, const unsigned windowWidth, const unsigned windowHeight);

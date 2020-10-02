@@ -247,7 +247,7 @@ RenderingSystem::~RenderingSystem()
 }
 
 //update the mesh components of the entities
-void RenderingSystem::Update(Scene& scene, const int windowWidth, const int windowHeight)
+void RenderingSystem::Update(Scene& scene, const int windowWidth, const int windowHeight, float dt)
 {
   auto start = std::chrono::high_resolution_clock::now();
 
@@ -258,17 +258,36 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   //gets all the current mesh components in th scene
   std::vector<LightComponentPtr>& lights = scene.getLights();
 
+  //for all mesh  components
+  for (auto& m : meshes)
+  {
+    if (m->mesh->m_pScene != nullptr)
+    {
+      m->mesh->BoneTransform(m->m_AnimationTime, m->currentAnimation);
+      m->m_AnimationTime += (dt * scene.timeScale);
+    }
+  }
+
   std::vector<DrawItem> items;
 
   //for all mesh  components
   for (auto& m : meshes)
   {
     //for each mesh in the vector of meshes per model
-    for (auto& j : m->mesh->meshes)
+    for(int j = 0; j < m->mesh->meshes.size(); ++j)
     {
       DrawItem item;
-      item.mesh = &j;
+
+      item.mesh = &m->mesh->meshes[j];
+
       item.objectToWorld = m->getEntityPtr()->getObjectToWorld();
+
+      for (int k = 0; k < m->mesh->m_BoneInfo.size(); ++k)
+      {
+        item.boneTransform[k] = m->mesh->m_BoneInfo[k].FinalTransformation;
+      }
+
+      item.boneSize = m->mesh->m_BoneInfo.size();
       items.push_back(item);
     }
   }
@@ -288,12 +307,21 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
 
   //use the shader that needs the information of the position, normals, and color/specular
   gBufferShaderID->UseShader();
-
+ 
   //draw deffered objects first well in this case draw only the geometry of the deffered objects
-  //first ans save the lighting pass for the when we bind the lighting FBO
+  //first and save the lighting pass for the when we bind the lighting FBO
   //write objects to the currently binded frame buffer and fills in the data of position, normals, and color/specular
   //which can now be used for the next shader and draw calls
-  std::for_each(items.begin(), iterator_to_forward_list, [&scene, this](DrawItem item) {Draw(item, scene, true); });
+  std::for_each(items.begin(), iterator_to_forward_list, [&scene, this](DrawItem item) 
+  {
+    //normal matrix sent to the GPU called "normal_matrix"
+    GLint bone_matrix = glGetUniformLocation(gBufferShaderID->getProgramID(), "final_bone_output");
+    assert(bone_matrix != -1);
+
+    glUniformMatrix4fv(bone_matrix, item.boneSize, false, &item.boneTransform[0][0].x);
+
+    Draw(item, scene, true); 
+  });
 
   //set the active textures to be displayed on the quad with the geometry
   //so what is happening here is we are binding the textures we stored from the g buffer

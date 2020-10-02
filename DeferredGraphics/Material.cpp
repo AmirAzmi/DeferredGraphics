@@ -43,6 +43,11 @@ void Material::setVec4(const std::string& name, glm::vec4 value)
   vec4s[name] = value;
 }
 
+void Material::setMat4(const std::string& name, glm::mat4 value)
+{
+  mat4s[name] = value;
+}
+
 void Material::apply()
 {
   shader->UseShader();
@@ -75,6 +80,11 @@ void Material::apply()
   for (auto& val : floats)
   {
     shader->setFloat(val.first, val.second);
+  }
+
+  for (auto& val : mat4s)
+  {
+    shader->setMat4(val.first, val.second);
   }
 
 }

@@ -98,7 +98,20 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
   for (int i = 0; i < mesh_name.size(); ++i)
   {
     std::cout << mesh_name[i] << std::endl;
-    ModelHandle mesh = std::make_shared<Model>(mesh_name[i], ModelType::DEFAULT);
+    ModelHandle mesh;
+
+    std::size_t iterator = mesh_name[i].find_last_of(".");
+
+    if (mesh_name[i].substr(iterator + 1) == "fbx")
+    {
+      mesh = std::make_shared<Model>(mesh_name[i]);
+    }
+    else
+    {
+
+      mesh = std::make_shared<Model>(mesh_name[i], ModelType::DEFAULT);
+    }
+
     model_handles.push_back(mesh);
   }
 
@@ -286,7 +299,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       if (meshComponent)
       {
         ImGui::Separator();
-
         if (ImGui::TreeNode("Mesh Component"))
         {
           for (auto& m : meshComponent->getMesh()->meshes)
@@ -359,6 +371,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
             }
           }
 
+
           if (ImGui::Button("Remove Mesh Component"))
           {
             scene.getEntities()[i]->remove<MeshComponent>();
@@ -366,6 +379,39 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
           ImGui::TreePop();
         }
+
+        ImGui::Separator();
+        ImGui::Indent();
+        if (ImGui::TreeNode("Animation Information"))
+        {
+          if (meshComponent->mesh->m_pScene != nullptr)
+          {
+            ImGui::Separator();
+
+            if (ImGui::BeginCombo("Animation List", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str()))
+            {
+              for (int i = 0; i < meshComponent->mesh->m_pScene->mNumAnimations; ++i)
+              {
+                if (ImGui::Selectable(meshComponent->mesh->m_pScene->mAnimations[i]->mName.C_Str()))
+                {
+                  meshComponent->currentAnimation = i;
+                  meshComponent->m_AnimationTime = 0.0f;
+                }
+              }
+              ImGui::EndCombo();
+            }
+
+            ImGui::TextWrapped("Current Animation Name: %s", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str());
+            ImGui::TextWrapped("Number of Meshes on Model: %i", meshComponent->mesh->m_pScene->mNumMeshes);
+            ImGui::TextWrapped("Number of Animations of Model: %i", meshComponent->mesh->m_pScene->mNumAnimations);
+            ImGui::TextWrapped("Animation Duration: %f", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mDuration);
+            ImGui::TextWrapped("Animation Ticks Per Second: %f", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mTicksPerSecond);
+            ImGui::TextWrapped("Animation Channel Count: %i", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mNumChannels);
+
+          }
+          ImGui::TreePop();
+        }
+        ImGui::Unindent();
       }
       else
       {
@@ -458,6 +504,11 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
   //Settings Window
   ImGui::Begin("Settings");
+
+  if (ImGui::DragFloat("Time Scale", &scene.timeScale, 0.01f, 0.0f, 10.0f))
+  {
+  }
+
   ImGui::TextWrapped("WASD moves the camera left, right, in, and out.");
   ImGui::Spacing();
   ImGui::TextWrapped("Q and E move up and down.");

@@ -137,6 +137,12 @@ void Shader::setVec4(const std::string& name, glm::vec4 value)
 }
 
 
+void Shader::setMat4(const std::string& name, glm::mat4 value)
+{
+  glUniform4fv(glGetUniformLocation(programID, name.c_str()), 1, &value[0][0]);
+}
+
+
 void Shader::UseShader()
 {
   glUseProgram(programID);

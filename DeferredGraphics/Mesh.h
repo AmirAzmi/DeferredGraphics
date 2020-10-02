@@ -20,6 +20,15 @@ Creation date: January 4th , 2020
 #include "AABB.h"
 #include "Material.h"
 
+#define NUM_BONES_PER_VEREX 4
+
+struct VertexBoneData
+{
+  unsigned IDs[NUM_BONES_PER_VEREX];
+  float Weights[NUM_BONES_PER_VEREX];
+
+  void AddBoneData(int BoneID, float Weight);
+};
 
 class Mesh
 {
@@ -29,6 +38,7 @@ class Mesh
   GLuint indexVBO;
   GLuint colorVBO;
   GLuint uvVBO;
+  GLuint boneVBO;
   GLuint VAO;
 
 public:
@@ -36,6 +46,7 @@ public:
   std::vector<glm::vec3> normals = {};
   std::vector<glm::vec4> colors = {};
   std::vector<glm::vec2> uv = {};
+  std::vector<VertexBoneData> bones = {};
 
   std::vector<GLuint> indices = {};
   std::vector<GLuint> normal_indices = {};
@@ -55,7 +66,7 @@ public:
   Mesh();
   ~Mesh();
 
-  void setupMesh();
+  void setupMesh();   
 
   inline GLuint getPosVBO()
   {
@@ -95,6 +106,8 @@ public:
   const std::vector<GLuint> getIndices();
   const std::vector<glm::vec3> getVertices();
   const std::vector<glm::vec3> getNormals();
+
+  glm::mat4 BoneTransform(float TimeInSeconds, std::vector<glm::mat4>& Transforms);
 
 };
 

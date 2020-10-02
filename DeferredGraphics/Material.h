@@ -28,6 +28,7 @@ public:
   std::map<std::string, glm::vec2> vec2s;
   std::map<std::string, glm::vec3> vec3s;
   std::map<std::string, glm::vec4> vec4s;
+  std::map<std::string, glm::mat4> mat4s;
 
   public:
 
@@ -42,6 +43,7 @@ public:
   void setVec2(const std::string& name, glm::vec2 value);
   void setVec3(const std::string& name, glm::vec3 value);
   void setVec4(const std::string& name, glm::vec4 value);
+  void setMat4(const std::string& name, glm::mat4 value);
 
   void apply();
 };

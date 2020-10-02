@@ -28,6 +28,8 @@ public:
   //MaterialHandle material;//8 bytes
   //ShaderHandle shader;    //8 bytes
   std::string name;       //32 bytes
+  float m_AnimationTime = 0.0f;
+  int currentAnimation = 0;
   //-------------------------------
   //total: ?? bytes
 

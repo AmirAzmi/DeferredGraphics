@@ -142,7 +142,7 @@ int main()
   }
   else
   {
-    std::cout << " oof you fucked";
+    std::cout << " oof you have messed up";
   }
 
   JsonValue level = jsonParser::toJson(VertexShaderCode);
@@ -209,7 +209,7 @@ int main()
     scene.Render(dt);
 
     //update the objects in the scene aka the rendering of objects
-    systems.Update(scene, windowWidth, windowHeight);
+    systems.Update(scene, windowWidth, windowHeight, dt);
 
     //Call Imguie::End and other post render information
     ImGuiEditor.postRender();

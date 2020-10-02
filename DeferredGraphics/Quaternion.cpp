@@ -101,7 +101,7 @@ Quaternion& Quaternion::projection(Quaternion& b)
 glm::mat4 Quaternion::quaternionToMatrix()
 {
 
-  //TODO::save by not doingt he transpose
+  //TODO::save by not doing the transpose
   return glm::transpose(glm::mat4(
     1 - (2 * (std::pow(y, 2) + std::pow(z, 2))), 2 * (x * y - w * z)                        , 2 * (x * z + w * y)                        , 0,
     2 * (x * y +  w * z)                       , 1 - (2 * (std::pow(x, 2) + std::pow(z, 2))), 2 * (y * z -  w * x)                       , 0,

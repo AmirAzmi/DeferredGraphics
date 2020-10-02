@@ -34,6 +34,7 @@ public:
 
   glm::mat4 screenToWorld;
 
+  float timeScale = 1.0f;
   float cameraSpeed;
   glm::vec3 upDirection;
   float nearDistance;
