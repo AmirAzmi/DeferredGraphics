@@ -5,14 +5,17 @@
 class BezierFollowBehavior : public Behavior
 {
 public:
+  Bezier bezier;
   glm::vec4 C0{0,0,1,1};
   glm::vec4 C1{3,3,1,1};
   glm::vec4 C2{5,0,1,1};
   glm::vec4 C3{8,3,1,1};
-  Bezier bezier;
   int FrameCount = 0; //144 is 1 second
   int NumbeOfFramesToPlay = 144;
   bool ResetFrameCount = false;
+  bool EaseInOn = false;
+  bool EaseOutOn = false;
+  bool EaseInOutOn = false;
   bool FrameStep = false;
 
 

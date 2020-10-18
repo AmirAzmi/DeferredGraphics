@@ -13,22 +13,48 @@ void BezierFollowBehavior::inspect()
   ImGui::DragFloat4("Control Point 2: ", &C2.x);
   ImGui::DragFloat4("Control Point 3: ", &C3.x);
 
+  ImGui::Checkbox("Ease In", &EaseInOn);
+  ImGui::Checkbox("Ease Out", &EaseOutOn);
+  ImGui::Checkbox("Ease In Out", &EaseInOutOn);
   ImGui::Checkbox("Reset FrameCount", &ResetFrameCount);
 }
 
 void BezierFollowBehavior::Update(float delta_time)
 {
+  //draw points
+  //draw curve
+
+  float t = delta_time * FrameCount;
+
   UpdateControlPoints();
 
   if (ResetFrameCount == true)
   {
     FrameCount = 0;
-    owner->position = bezier.GetCurrentPosition(delta_time * FrameCount);
+    owner->position = bezier.GetCurrentPosition(t);
   }
 
   if (FrameCount <= NumbeOfFramesToPlay && ResetFrameCount == false)
   {
-    owner->position = bezier.GetCurrentPosition(delta_time * FrameCount);
+    //apply ease in here
+    if (EaseInOn)
+    {
+      t = t * t * t;
+    }
+
+
+    if (EaseOutOn)
+    {
+      t = 1 - std::pow(1 - t, 3);
+    }
+
+    if (EaseInOutOn)
+    {
+      t = t < 0.5 ? 4 * t * t * t : 1 - std::pow(-2 * t + 2, 3) / 2;
+    }
+
+    owner->position = bezier.GetCurrentPosition(t);
+    //update owner rotation
 
     FrameCount += 1;
   }
