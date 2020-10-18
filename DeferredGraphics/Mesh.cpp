@@ -122,3 +122,34 @@ void VertexBoneData::AddBoneData(int BoneID, float Weight)
   // should never get here - more bones than we have space for
   assert(0);
 }
+
+void VertexBoneData::AddBoneData(GLint prevBoneID, GLuint BoneID, glm::vec3 pos, glm::vec3 pos2)
+{
+  VertexBoneData bd;
+  bd.IDs[0] = prevBoneID;
+  bd.Weights[0] = 1.0f;
+  //if this is the root, it has no previous bone
+  if (prevBoneID == -1)
+  {
+    //bd.weights[0] = 0.0f;
+    bd.IDs[0] = BoneID;
+  }
+
+  bones.push_back(bd);
+
+  //add the position
+  positions.push_back(pos[0]);
+  positions.push_back(pos[1]);
+  positions.push_back(pos[2]);
+
+  VertexBoneData bd2;
+  bd2.IDs[0] = BoneID;
+  bd2.Weights[0] = 1.0f;
+  bones.push_back(bd2);
+  //should aslo add end position
+  //temp end position is pos + 1.0y
+  positions.push_back(pos2[0]);
+  positions.push_back(pos2[1]);
+  positions.push_back(pos2[2]);
+
+}

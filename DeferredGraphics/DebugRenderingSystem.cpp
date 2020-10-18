@@ -32,6 +32,7 @@ DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int wi
 {
   debugDrawID = std::make_shared <Shader>("Resources/Shaders/debugDraw.vert", "Resources/Shaders/debugDraw.frag", false);
   sphereDebugDrawID = std::make_shared <Shader>("Resources/Shaders/sphereDebugDraw.vert", "Resources/Shaders/sphereDebugDraw.frag", false);
+  gBufferShaderID = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
 
   // gets all the current mesh components in th scene
   std::vector<MeshComponentPtr>& meshes = scene.getMeshes();
@@ -79,6 +80,7 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
 
     //object to world matrix for a bounding box using the bounding boxes center and size
     glm::mat4 ObjectToWorldOctree = meshes[0]->getEntityPtr()->getObjectToWorld();
+
     std::vector<glm::vec3> points_octree;
     points_octree.reserve(OctreePerObject->points.size());
 
@@ -221,7 +223,7 @@ void DebugRenderingSystem::drawAABB(const MeshComponentPtr mesh, Scene& scene, b
   //object to world matrix for a bounding box using the bounding boxes center and size
   glm::mat4 ObjectToWorld = mesh->getEntityPtr()->getObjectToWorld();
 
-  for (auto & m : mesh->getMesh()->meshes)
+  for (auto& m : mesh->getMesh()->meshes)
   {
     //get the world vertices and create an AABB on the go
     for (int i = 0; i < m.vertices.size(); ++i)

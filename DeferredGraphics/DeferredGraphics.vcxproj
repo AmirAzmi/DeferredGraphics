@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Behavior.cpp" />
+    <ClCompile Include="BezierFollowBehavior.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="BoundingVolumeHierarchy.cpp" />
     <ClCompile Include="BSP.cpp" />
@@ -188,6 +189,8 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Behavior.h" />
+    <ClInclude Include="Bezier.h" />
+    <ClInclude Include="BezierFollowBehavior.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="BoundingVolumeHierarchy.h" />
     <ClInclude Include="BSP.h" />

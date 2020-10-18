@@ -38,6 +38,8 @@ class RenderingSystem
   //gBuffer ID and FBO ID
   GLuint gBufferFBOID;
 public:
+
+  GLuint globalVAOID;
   GLuint gPositionID;
   GLuint gNormalID;
   GLuint gColorSpecID;
@@ -117,12 +119,15 @@ public:
   bool splitScreen = false;
   bool depthCopyToggle = true;
   bool brightBuffer = false;
+  bool drawBonesOn = false;
   std::chrono::duration<double, std::milli> rendering_sytem_elapsed_time;
 
   RenderingSystem(const int windowWidth, const int windowHeight);
   ~RenderingSystem();
   void Update(Scene& scene, const int windowWidth, const int windowHeight, float dt);
   void Draw(DrawItem mesh, Scene& scene, bool isDeffered);
+
+  void drawBones(Scene& scene);
   void DrawQuad();
   void DrawTextures(GLuint textureID, const unsigned posX, const unsigned posY, const unsigned windowWidth, const unsigned windowHeight);
 };

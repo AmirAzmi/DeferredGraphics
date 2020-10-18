@@ -1,6 +1,6 @@
 #include "Model.h"
 
-static glm::mat4 convertToGLM(aiMatrix4x4 mat)
+glm::mat4 convertToGLM(aiMatrix4x4 mat)
 {
   glm::mat4 matrix;
 
@@ -56,7 +56,8 @@ static glm::mat4 convertToGLM(aiMatrix3x3 mat)
 
 Model::Model(std::string filepath)
 {
-  m_pScene = m_Importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_LimitBoneWeights);
+  m_pScene = m_Importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | 
+    aiProcess_LimitBoneWeights);
   tranformInv = convertToGLM(m_pScene->mRootNode->mTransformation.Inverse());
 
   if (!m_pScene || m_pScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_pScene->mRootNode)
@@ -76,7 +77,7 @@ void Model::BoneTransform(float TimeInSeconds, int currentAnimation)
   glm::mat4 Identity(1);
 
   float TicksPerSecond = m_pScene->mAnimations[currentAnimation]->mTicksPerSecond != 0 ?
-    m_pScene->mAnimations[currentAnimation]->mTicksPerSecond : 30.0f;
+    m_pScene->mAnimations[currentAnimation]->mTicksPerSecond : 60.0f;
   float TimeInTicks = TimeInSeconds * TicksPerSecond;
   float AnimationTime = fmod(TimeInTicks, m_pScene->mAnimations[currentAnimation]->mDuration);
 
@@ -213,7 +214,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     }
     else
     {
-       defaultMesh.uv.push_back(glm::vec2(0,0));
+      defaultMesh.uv.push_back(glm::vec2(0, 0));
     }
   }
 
@@ -866,3 +867,61 @@ std::vector<int> getNormalIndicesFaceData(const std::string line)
   return normal_indices;
 
 }
+
+void Model::getSkeletonRec(aiNode* pNode, glm::mat4x4 parentTransform, glm::vec3 startPosition, int prevID, bool recThroughSkeleton)
+{
+  //bones are joints, we draw lines that connect them - we need previous
+  //positionand this position
+  std::string NodeName(pNode->mName.data);
+  glm::mat4x4 nodeTransformation = convertToGLM(pNode->mTransformation);
+  //pAnimation->mChannels[0]->mNodeName
+  //mat4x4 res1;
+  glm::mat4x4 res(1);
+  glm::vec3 pos;
+  pos[0] = startPosition[0];
+  pos[1] = startPosition[1];
+  pos[2] = startPosition[2];
+
+  res = parentTransform * nodeTransformation;
+
+  int ID = -1;
+  std::string cName = NodeName.substr(NodeName.find_last_of("_") + 1);
+  if (m_BoneMapping.find(NodeName) != m_BoneMapping.end() || cName == "end")
+  {
+    if (cName == "end")
+    {
+      ID = prevID;
+    }
+    else
+    {
+      ID = m_BoneMapping[NodeName];
+    }
+
+    recThroughSkeleton = true;
+    pos[0] = res[3][0];
+    pos[1] = res[3][1];
+    pos[2] = res[3][2];
+
+
+    skeletonBones.AddBoneData(prevID, ID, startPosition, pos);
+  }
+
+  if (recThroughSkeleton) 
+  {
+    for (GLuint i = 0; i < pNode->mNumChildren; i++) 
+    {
+
+      getSkeletonRec(pNode->mChildren[i], res, pos, ID, recThroughSkeleton);
+    }
+  }
+  else
+  {
+    glm::mat4x4 I(1);
+
+    for (GLuint i = 0; i < pNode->mNumChildren; i++)
+    {
+      getSkeletonRec(pNode->mChildren[i], I, pos, ID, recThroughSkeleton);
+    }
+  }
+}
+

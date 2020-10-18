@@ -93,7 +93,7 @@ template<typename T>
 inline T* Entity::get()
 {
   //get the pointer type of that component
-  return pointers.get<T*>().pointer;
+  return pointers.get<T*>().pointer; //calls tuple get which can only get unique types
 }
 
 //remove components from the entity

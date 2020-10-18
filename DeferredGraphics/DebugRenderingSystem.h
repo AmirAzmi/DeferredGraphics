@@ -35,6 +35,10 @@ class DebugRenderingSystem
     2,6
   };
 
+  //Bone data
+  //GLuint skeletonVAOID = 0;
+  //GLuint skeletonVBOID = 0;
+
   //Bounding Sphere data
   GLuint boundingSphereVAOID = 0;
   GLuint boundingSphereVBOID;
@@ -55,6 +59,7 @@ class DebugRenderingSystem
   //shader used for rendering the lines
   ShaderHandle debugDrawID;
   ShaderHandle sphereDebugDrawID;
+  ShaderHandle gBufferShaderID;
 
   public:
   DebugRenderingSystem(Scene & scene, int windowWidth, int windowHeight);
@@ -72,6 +77,9 @@ class DebugRenderingSystem
 
   //draw the OBJ Vertices once
   bool isBSOn = false;
+
+  //draw bones
+  bool isBonesOn = true;
 
   //draw BVH
   bool isBVHOn = false;

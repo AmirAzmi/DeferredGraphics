@@ -17,6 +17,9 @@ Creation date: January 4th , 2020
 #include <memory>
 #include <string>
 #include <fstream>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 #include "AABB.h"
 #include "Material.h"
 
@@ -26,8 +29,10 @@ struct VertexBoneData
 {
   unsigned IDs[NUM_BONES_PER_VEREX];
   float Weights[NUM_BONES_PER_VEREX];
-
+  std::vector<VertexBoneData> bones;
+  std::vector<float> positions;
   void AddBoneData(int BoneID, float Weight);
+  void AddBoneData(GLint prevBoneID, GLuint BoneID, glm::vec3 pos, glm::vec3 pos2);
 };
 
 class Mesh
@@ -91,6 +96,11 @@ public:
   inline GLuint getUVBO()
   {
     return uvVBO;
+  }
+
+  inline GLuint getBonesVBO()
+  {
+    return boneVBO;
   }
 
   GLuint getVAO()

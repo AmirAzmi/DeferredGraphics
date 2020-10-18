@@ -32,6 +32,9 @@ RenderingSystem::RenderingSystem(const int windowWidth, const int windowHeight) 
   splitScreenShaderID = std::make_shared<Shader>("Resources/Shaders/gBufferViewer.vert", "Resources/Shaders/gBufferViewer.frag", false);
   finalColorID = std::make_shared<Shader>("Resources/Shaders/FinalColorOut.vert", "Resources/Shaders/FinalColorOut.frag", false);
 
+  //generate global VAO
+  glGenVertexArrays(1, &globalVAOID);
+
   //generate the first ssbo
   glGenBuffers(2, &ssboID[0]);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboID[0]);
@@ -249,6 +252,8 @@ RenderingSystem::~RenderingSystem()
 //update the mesh components of the entities
 void RenderingSystem::Update(Scene& scene, const int windowWidth, const int windowHeight, float dt)
 {
+  glBindVertexArray(globalVAOID);
+
   auto start = std::chrono::high_resolution_clock::now();
 
   glDepthFunc(GL_LEQUAL);
@@ -263,8 +268,12 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   {
     if (m->mesh->m_pScene != nullptr)
     {
-      m->mesh->BoneTransform(m->m_AnimationTime, m->currentAnimation);
-      m->m_AnimationTime += (dt * scene.timeScale);
+      if (m->mesh->m_pScene->HasAnimations() == true)
+      {
+        m->mesh->BoneTransform(m->m_AnimationTime, m->currentAnimation);
+
+        m->m_AnimationTime += (dt * scene.timeScale);
+      }
     }
   }
 
@@ -274,7 +283,7 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   for (auto& m : meshes)
   {
     //for each mesh in the vector of meshes per model
-    for(int j = 0; j < m->mesh->meshes.size(); ++j)
+    for (int j = 0; j < m->mesh->meshes.size(); ++j)
     {
       DrawItem item;
 
@@ -307,21 +316,28 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
 
   //use the shader that needs the information of the position, normals, and color/specular
   gBufferShaderID->UseShader();
- 
+
   //draw deffered objects first well in this case draw only the geometry of the deffered objects
   //first and save the lighting pass for the when we bind the lighting FBO
   //write objects to the currently binded frame buffer and fills in the data of position, normals, and color/specular
   //which can now be used for the next shader and draw calls
-  std::for_each(items.begin(), iterator_to_forward_list, [&scene, this](DrawItem item) 
+  std::for_each(items.begin(), iterator_to_forward_list, [&scene, this](DrawItem item)
   {
-    //normal matrix sent to the GPU called "normal_matrix"
+
     GLint bone_matrix = glGetUniformLocation(gBufferShaderID->getProgramID(), "final_bone_output");
     assert(bone_matrix != -1);
-
     glUniformMatrix4fv(bone_matrix, item.boneSize, false, &item.boneTransform[0][0].x);
 
-    Draw(item, scene, true); 
+    //pass in to check if the bone has an animation ro not
+    gBufferShaderID->setInt("bone_size", item.boneSize);
+
+    Draw(item, scene, true);
   });
+
+  if (drawBonesOn == true)
+  {
+    drawBones(scene);
+  }
 
   //set the active textures to be displayed on the quad with the geometry
   //so what is happening here is we are binding the textures we stored from the g buffer
@@ -538,7 +554,38 @@ void RenderingSystem::Draw(DrawItem item, Scene& scene, bool isDeffered)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glBindVertexArray(item.mesh->getVAO());
+    glBindVertexArray(globalVAOID);
+
+    //enable position data that will be transferred to the GPU
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, item.mesh->getPosVBO());
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    //enable normals data that will be transferred to the GPU
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, item.mesh->getNormsVBO());
+    glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (void*)0);
+
+    //enable UV data that will be transferred to the GPU
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, item.mesh->getUVBO());
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    //enable colors data that will be transferred to the GPU
+    glEnableVertexAttribArray(3);
+    glBindBuffer(GL_ARRAY_BUFFER, item.mesh->getColorVBO());
+    glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, (void*)0);
+
+    glEnableVertexAttribArray(4);
+    glBindBuffer(GL_ARRAY_BUFFER, item.mesh->getBonesVBO());
+    glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+
+    glEnableVertexAttribArray(5);
+    glBindBuffer(GL_ARRAY_BUFFER, item.mesh->getBonesVBO());
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
+
+    //bind the index buffer that will be transferred to the GPU
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, item.mesh->getIndexVBO());
 
     //object to world matrix
     glm::mat4 ObjectToWorld = item.objectToWorld;
@@ -561,6 +608,97 @@ void RenderingSystem::Draw(DrawItem item, Scene& scene, bool isDeffered)
 
     //draw the objects with the mesh components
     glDrawElements(GL_TRIANGLES, (GLsizei)item.mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
+  }
+}
+
+void RenderingSystem::drawBones(Scene& scene)
+{
+
+  std::vector<MeshComponentPtr> modelList = scene.getMeshes();
+
+  for (auto& model : modelList)
+  {
+    if (model->mesh->m_pScene != nullptr)
+    {
+      if (model->mesh->m_pScene->HasAnimations() == true)
+      {
+
+        model->mesh->skeletonBones.positions.clear();
+        model->mesh->skeletonBones.bones.clear();
+
+        glm::vec3 start = model->entity->position;
+
+        glm::mat4 identity(1);
+        //grab position data
+        model->mesh->getSkeletonRec(model->mesh->m_pScene->mRootNode, /*convertToGLM(model->mesh->m_pScene->mRootNode->mTransformation)*/ identity, start, -1, false);
+
+        for (auto& mesh : model->mesh->meshes)
+        {
+          //VBO
+          GLuint positionsVBO;
+          GLuint bonesVBO;
+          //bind mesh
+          glBindVertexArray(globalVAOID);
+
+          //generate the vertex and index buffers for the quad
+          glGenBuffers(1, &positionsVBO);
+          glGenBuffers(1, &bonesVBO);
+
+          //enable position data that will be transferred to the GPU from the quad vertices
+          glEnableVertexAttribArray(0);
+          glBindBuffer(GL_ARRAY_BUFFER, positionsVBO);
+          glBufferData(GL_ARRAY_BUFFER, model->mesh->skeletonBones.positions.size() * sizeof(float), model->mesh->skeletonBones.positions.data(), GL_STATIC_DRAW);
+          glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+          glEnableVertexAttribArray(4);
+          glBindBuffer(GL_ARRAY_BUFFER, bonesVBO);
+          glBufferData(GL_ARRAY_BUFFER, model->mesh->skeletonBones.bones.size() * sizeof(VertexBoneData), model->mesh->skeletonBones.bones.data(), GL_STATIC_DRAW);
+
+          //enable position data that will be transferred to the GPU
+          /*glEnableVertexAttribArray(0);
+          glBindBuffer(GL_ARRAY_BUFFER, mesh.getPosVBO());
+          glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);*/
+
+          //enable normals data that will be transferred to the GPU
+          glEnableVertexAttribArray(1);
+          glBindBuffer(GL_ARRAY_BUFFER, mesh.getNormsVBO());
+          glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (void*)0);
+
+          //enable UV data that will be transferred to the GPU
+          glEnableVertexAttribArray(2);
+          glBindBuffer(GL_ARRAY_BUFFER, mesh.getUVBO());
+          glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+          //enable colors data that will be transferred to the GPU
+          glEnableVertexAttribArray(3);
+          glBindBuffer(GL_ARRAY_BUFFER, mesh.getColorVBO());
+          glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, (void*)0);
+
+          glEnableVertexAttribArray(4);
+          glBindBuffer(GL_ARRAY_BUFFER, bonesVBO);
+          glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+
+          glEnableVertexAttribArray(5);
+          glBindBuffer(GL_ARRAY_BUFFER, bonesVBO);
+          glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
+
+          //bind the index buffer that will be transferred to the GPU
+          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getIndexVBO());
+
+          //send the variables "perspective_matrix" and "view matrix" onto the GPU
+          projectionMatrixID = glGetUniformLocation(gBufferShaderID->getProgramID(), "perspective_matrix");
+          viewMatrixID = glGetUniformLocation(gBufferShaderID->getProgramID(), "view_matrix");
+
+          //get the projection and view matrix from the scene set it as a variables for the GPU
+          glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
+          glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
+
+          glLineWidth(2);        
+          //draw the objects with the mesh components
+          glDrawArrays(GL_LINES, 0, model->mesh->skeletonBones.positions.size());
+        }
+      }
+    }
   }
 }
 

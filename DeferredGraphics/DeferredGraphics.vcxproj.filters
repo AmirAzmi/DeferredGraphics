@@ -46,6 +46,9 @@
     <Filter Include="Source Files\Memory">
       <UniqueIdentifier>{dde923a4-a42f-4467-b36b-ff8233b3a09c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Math">
+      <UniqueIdentifier>{c22f0ad6-e0f1-4e74-a9ea-497b9bbb0ff6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -146,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BezierFollowBehavior.cpp">
+      <Filter>Source Files\Behavior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +267,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bezier.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="BezierFollowBehavior.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

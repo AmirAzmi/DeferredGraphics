@@ -23,7 +23,7 @@ struct TypeList
 {
   //struct that contains types, put all my types int T
   template<template<typename...> typename T>
-  using apply = T<Types...>;
+  using apply = T<Types...>; //VectorTuple<MeshComponentPtr, LightComponentPtr>
 
   //how many types i got in my componentlist
   static constexpr auto size = sizeof...(Types);

@@ -30,12 +30,19 @@ uniform mat4 perspective_matrix;
 uniform mat4 normal_matrix;
 uniform mat4 final_bone_output[MAX_BONES];
 
+uniform int bone_size;
+
 void main()
 {
-    mat4 BoneTransform = final_bone_output[BoneIDs[0]] * Weights[0];
+  mat4 BoneTransform = mat4(1);
+
+  if(bone_size != 0)
+  {
+    BoneTransform = final_bone_output[BoneIDs[0]] * Weights[0];
     BoneTransform += final_bone_output[BoneIDs[1]] * Weights[1];
     BoneTransform += final_bone_output[BoneIDs[2]] * Weights[2];
     BoneTransform += final_bone_output[BoneIDs[3]] * Weights[3];
+  }
 
   world_position = vec3(object_to_world * BoneTransform * vec4(aPos, 1.0f));
   world_normal_position = vec3(normal_matrix * vec4(aNormal, 0.0f)); 

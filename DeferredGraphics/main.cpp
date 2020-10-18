@@ -50,6 +50,7 @@ extern "C" {
 
 int main()
 {
+
   /*Assimp::Importer importer;
   const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
   */
@@ -89,6 +90,7 @@ int main()
 
   // Open a window and create its OpenGL context
   window = glfwCreateWindow(mode->width, mode->height, "Trifrost Engine", nullptr, nullptr);
+
   if (window == nullptr)
   {
     fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 4.0 compatible.\n");
@@ -103,7 +105,8 @@ int main()
 
 
   glewExperimental = static_cast<GLboolean>(true); // Needed for core profile
-  if (glewInit() != GLEW_OK)
+  GLenum glew_error_code = glewInit();
+  if (glew_error_code != GLEW_OK)
   {
     fprintf(stderr, "Failed to initialize GLEW\n");
     glfwTerminate();
@@ -130,34 +133,37 @@ int main()
   ImGuiEditor.init(window, glsl_version);
 
   //JSON testing
-  // Read the Vertex Shader code from the file
-  std::string VertexShaderCode;
-  std::ifstream VertexShaderStream("Resources\\Json\\Empty.area.json", std::ios::in);
-  if (VertexShaderStream.is_open())
   {
-    std::string Line;
-    while (getline(VertexShaderStream, Line))
-      VertexShaderCode += "\n" + Line;
-    VertexShaderStream.close();
-  }
-  else
-  {
-    std::cout << " oof you have messed up";
-  }
+    //JSON testing
+    // Read the Vertex Shader code from the file
+    std::string VertexShaderCode;
+    std::ifstream VertexShaderStream("Resources\\Json\\Empty.area.json", std::ios::in);
+    if (VertexShaderStream.is_open())
+    {
+      std::string Line;
+      while (getline(VertexShaderStream, Line))
+        VertexShaderCode += "\n" + Line;
+      VertexShaderStream.close();
+    }
+    else
+    {
+      std::cout << " oof you have messed up";
+    }
 
-  JsonValue level = jsonParser::toJson(VertexShaderCode);
+    JsonValue level = jsonParser::toJson(VertexShaderCode);
 
-  if (std::holds_alternative<JsonObjectPtr>(level))
-  {
-    JsonObjectPtr& stuff = std::get<JsonObjectPtr>(level);
-    JsonArrayPtr& listOfEntities = std::get<JsonArrayPtr>(stuff->jsonObjects["entities"]);
-    JsonObjectPtr& first_entity = std::get<JsonObjectPtr>(listOfEntities->jsonArrays[0]);
-    JsonObjectPtr& componenets = std::get<JsonObjectPtr>(first_entity->jsonObjects["components"]);
-    JsonObjectPtr& sprite_data = std::get<JsonObjectPtr>(componenets->jsonObjects["Sprite"]);
-    std::string& material = std::get<std::string>(sprite_data->jsonObjects["material"]);
+    if (std::holds_alternative<JsonObjectPtr>(level))
+    {
+      JsonObjectPtr& stuff = std::get<JsonObjectPtr>(level);
+      JsonArrayPtr& listOfEntities = std::get<JsonArrayPtr>(stuff->jsonObjects["entities"]);
+      JsonObjectPtr& first_entity = std::get<JsonObjectPtr>(listOfEntities->jsonArrays[0]);
+      JsonObjectPtr& componenets = std::get<JsonObjectPtr>(first_entity->jsonObjects["components"]);
+      JsonObjectPtr& sprite_data = std::get<JsonObjectPtr>(componenets->jsonObjects["Sprite"]);
+      std::string& material = std::get<std::string>(sprite_data->jsonObjects["material"]);
 
-    std::cout << material;
+      std::cout << material;
 
+    }
   }
 
   do

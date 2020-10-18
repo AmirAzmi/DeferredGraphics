@@ -301,18 +301,20 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::TreeNode("Mesh Component"))
         {
-          for (auto& m : meshComponent->getMesh()->meshes)
+          for(int m = 0; m < meshComponent->getMesh()->meshes.size(); ++m)
           {
-            ImGui::Text("Number of Vertices: %i", m.vertices.size());
+            ImGui::Text("Number of Vertices: %i", meshComponent->getMesh()->meshes[m].vertices.size());
+            std::string MeshL("Mesh List ");
+            std::string mlStr = std::to_string(m);
+            MeshL.append(mlStr);
             //second parameter can be the mesh name if i had a mesh name id 
-            if (ImGui::BeginCombo("Mesh List", m.getName().c_str()))
+            if (ImGui::BeginCombo(MeshL.c_str(), meshComponent->getMesh()->meshes[m].getName().c_str()))
             {
               for (int i = 0; i < mesh_name.size(); ++i)
               {
                 if (ImGui::Selectable(mesh_name[i].c_str()))
                 {
                   meshComponent->mesh = model_handles[i];
-
                 }
               }
               ImGui::EndCombo();
@@ -320,40 +322,42 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
           }
 
-          for (auto& mesh : meshComponent->mesh->meshes)
+          for (int j = 0; j < meshComponent->mesh->meshes.size(); ++j)
           {
-            if (mesh.material)
+            if (meshComponent->mesh->meshes[j].material)
             {
-              if (ImGui::TreeNode("Material"))
+              std::string Mat("Material ");
+              std::string numberAsString = std::to_string(j);
+              Mat.append(numberAsString);
+
+              if (ImGui::TreeNode(Mat.c_str()))
               {
-                for (auto& b : mesh.material->bools)
+ 
+                for (auto& b : meshComponent->mesh->meshes[j].material->bools)
                 {
                   if (ImGui::Checkbox(b.first.c_str(), &b.second))
                   {
                   }
                 }
-                for (auto& v : mesh.material->floats)
+                for (auto& v : meshComponent->mesh->meshes[j].material->floats)
                 {
                   if (ImGui::DragFloat(v.first.c_str(), &v.second, .1f))
                   {
                   }
                 }
-
-                for (auto& v2 : mesh.material->vec2s)
+                for (auto& v2 : meshComponent->mesh->meshes[j].material->vec2s)
                 {
                   if (ImGui::DragFloat3(v2.first.c_str(), &v2.second.x, .1f))
                   {
                   }
                 }
-
-                for (auto& v3 : mesh.material->vec3s)
+                for (auto& v3 : meshComponent->mesh->meshes[j].material->vec3s)
                 {
                   if (ImGui::DragFloat3(v3.first.c_str(), &v3.second.x, .1f))
                   {
                   }
                 }
-
-                for (auto& v4 : mesh.material->vec4s)
+                for (auto& v4 : meshComponent->mesh->meshes[j].material->vec4s)
                 {
                   if (v4.first == "diffuse_color")
                   {
@@ -386,28 +390,34 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         {
           if (meshComponent->mesh->m_pScene != nullptr)
           {
-            ImGui::Separator();
-
-            if (ImGui::BeginCombo("Animation List", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str()))
+            if (meshComponent->mesh->m_pScene->HasAnimations() == true)
             {
-              for (int i = 0; i < meshComponent->mesh->m_pScene->mNumAnimations; ++i)
+              ImGui::Separator();
+
+              if (ImGui::BeginCombo("Animation List", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str()))
               {
-                if (ImGui::Selectable(meshComponent->mesh->m_pScene->mAnimations[i]->mName.C_Str()))
+                for (int i = 0; i < meshComponent->mesh->m_pScene->mNumAnimations; ++i)
                 {
-                  meshComponent->currentAnimation = i;
-                  meshComponent->m_AnimationTime = 0.0f;
+                  if (ImGui::Selectable(meshComponent->mesh->m_pScene->mAnimations[i]->mName.C_Str()))
+                  {
+                    meshComponent->currentAnimation = i;
+                    meshComponent->m_AnimationTime = 0.0f;
+                  }
                 }
+                ImGui::EndCombo();
               }
-              ImGui::EndCombo();
+
+              if (ImGui::Checkbox("Show Bones", &Manager.renderer->drawBonesOn))
+              {
+              }
+
+              ImGui::TextWrapped("Current Animation Name: %s", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str());
+              ImGui::TextWrapped("Number of Meshes on Model: %i", meshComponent->mesh->m_pScene->mNumMeshes);
+              ImGui::TextWrapped("Number of Animations of Model: %i", meshComponent->mesh->m_pScene->mNumAnimations);
+              ImGui::TextWrapped("Animation Duration: %f", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mDuration);
+              ImGui::TextWrapped("Animation Ticks Per Second: %f", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mTicksPerSecond);
+              ImGui::TextWrapped("Animation Channel Count: %i", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mNumChannels);
             }
-
-            ImGui::TextWrapped("Current Animation Name: %s", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str());
-            ImGui::TextWrapped("Number of Meshes on Model: %i", meshComponent->mesh->m_pScene->mNumMeshes);
-            ImGui::TextWrapped("Number of Animations of Model: %i", meshComponent->mesh->m_pScene->mNumAnimations);
-            ImGui::TextWrapped("Animation Duration: %f", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mDuration);
-            ImGui::TextWrapped("Animation Ticks Per Second: %f", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mTicksPerSecond);
-            ImGui::TextWrapped("Animation Channel Count: %i", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mNumChannels);
-
           }
           ImGui::TreePop();
         }
@@ -794,7 +804,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       ImGui::Text("# of draws %i", Manager.debugRenderer->bvh_draw_calls);
       ImGui::EndTable();
     }
-
 
     if (ImGui::BeginTable("Table3", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
     {

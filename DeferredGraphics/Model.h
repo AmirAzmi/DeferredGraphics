@@ -16,15 +16,17 @@ enum class ModelType
 
 class Model
 {
+public:
 private:
   struct BoneInfo
   {
     glm::mat4 BoneOffset;
     glm::mat4 FinalTransformation;
 
-    BoneInfo() :BoneOffset{ 1 }, FinalTransformation{1}
+    BoneInfo() :BoneOffset{ 1 }, FinalTransformation{ 1 }
     {
     }
+
   };
 
 public:
@@ -36,7 +38,7 @@ public:
   Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
   void BoneTransform(float TimeInSeconds, int currentAnimation);
-  void ReadNodeHeirarchy(float animationTime, aiNode * node, glm::mat4 parent, int currentAnimation);
+  void ReadNodeHeirarchy(float animationTime, aiNode* node, glm::mat4 parent, int currentAnimation);
 
   const aiScene* m_pScene;
   Assimp::Importer m_Importer;
@@ -46,8 +48,13 @@ public:
   std::map<std::string, int> m_BoneMapping;
   std::vector<BoneInfo> m_BoneInfo;
   int m_NumBones = 0;
+
+  VertexBoneData skeletonBones;
+  std::vector<float> positions;
+  void getSkeletonRec(aiNode* pNode, glm::mat4x4 parentTransform, glm::vec3 startPosition, int prevID, bool recThroughSkeleton);
 };
 
+glm::mat4 convertToGLM(aiMatrix4x4 mat);
 static int FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
 static int FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
 static int FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);

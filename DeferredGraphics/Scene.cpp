@@ -19,8 +19,9 @@ Creation date: January 4th , 2020
 #include "RotationBehavior.h"
 #include "CameraPossessBehavior.h"
 #include "MovementBehavior.h"
+#include "BezierFollowBehavior.h"
 
-Scene::Scene(const int windowWidth, const int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(100.0f), cameraSpeed(3.0f),
+Scene::Scene(const int windowWidth, const int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(10000.0f), cameraSpeed(3.0f),
 eyePosition(glm::vec3(0.0f, 0.0f, 5.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, -1.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
 {
   windowDimension = getWindowDimension(windowWidth, windowHeight);
@@ -66,8 +67,9 @@ void Scene::Init()
 
   //add a mesh to the component
   ModelHandle cube = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
+  //ModelHandle bunny = std::make_shared<Model>("Resources/sphere.obj");
   ModelHandle bunny = std::make_shared<Model>("Resources/gh_sample_animation.fbx");
-  ModelHandle sphere = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
+  ModelHandle sphere = std::make_shared<Model>("Resources/bunny.obj");
   ModelHandle pitch = std::make_shared<Model>("Resources/pitch.obj", ModelType::DEFAULT);
 
   //declare the Resources/Shaders that will be used for this scene
@@ -77,6 +79,7 @@ void Scene::Init()
 
   //add a material(s) to the component
   MaterialHandle material = std::make_shared<Material>(gBuffer);
+  MaterialHandle material4 = std::make_shared<Material>(gBuffer);
   MaterialHandle material2 = std::make_shared<Material>(forwardRenderer);
   MaterialHandle material3 = std::make_shared<Material>(textureShader);
 
@@ -86,7 +89,7 @@ void Scene::Init()
     m.shader = gBuffer;
 
     //Any material information needed
-    m.material->setVec4("diffuse_color", glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    m.material->setVec4("diffuse_color", glm::vec4(0.3f, 1.0f, 0.3f, 1.0f));
     m.material->setFloat("specular_intensity", 1.0f);
   }
 
@@ -94,17 +97,32 @@ void Scene::Init()
 
   //create the Entity ptr
   EntityPtr centerObject = addEntity("Center Object");
+  //EntityPtr bun = addEntity("Bunny Object");
 
   glm::vec3 offset(0, -1.5f, 4);
   //centerObject->addBehavior<CameraPossessBehavior>(offset);
-  //centerObject->addBehavior<MovementBehavior>();
+  //centerObject->addBehavior<RotationBehavior>();
+  centerObject->addBehavior<BezierFollowBehavior>();
+
+  for (auto& g : sphere->meshes)
+  {
+    g.material = material4;
+    g.shader = gBuffer;
+
+    //Any material information needed
+    g.material->setVec4("diffuse_color", glm::vec4(0.3f, 1.0f, 0.3f, 1.0f));
+    g.material->setFloat("specular_intensity", 1.0f);
+  }
+
 
   //add a mesh component pointer to the object with the setup from the prelims
   MeshComponentPtr meshComp = centerObject->add<MeshComponent>(centerObject, bunny);
+  //MeshComponentPtr meshComp3 = bun->add<MeshComponent>(bun, sphere);
+
   LightComponentPtr lightComp = centerObject->add<LightComponent>();
 
   //manipulate the properties of the object by getting it from the component
-  meshComp->getEntityPtr()->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+  meshComp->getEntityPtr()->scale = glm::vec3(0.01f, 0.01f, 0.01f);
   meshComp->getEntityPtr()->angle = 0;
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
