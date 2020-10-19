@@ -10,12 +10,17 @@ public:
   glm::vec4 C1{3,3,1,1};
   glm::vec4 C2{5,0,1,1};
   glm::vec4 C3{8,3,1,1};
+
+  std::vector<glm::vec3> positions;
+
   int FrameCount = 0; //144 is 1 second
   int NumbeOfFramesToPlay = 144;
+  bool DrawCL = false;
   bool ResetFrameCount = false;
   bool EaseInOn = false;
   bool EaseOutOn = false;
   bool EaseInOutOn = false;
+  bool Loop = false;
   bool FrameStep = false;
 
 

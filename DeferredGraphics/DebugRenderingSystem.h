@@ -35,6 +35,11 @@ class DebugRenderingSystem
     2,6
   };
 
+  //Points data
+  GLuint pointsVAOID = 0;
+  GLuint pointsVBOID;
+  std::vector<glm::vec3> Points;
+
   //Bone data
   //GLuint skeletonVAOID = 0;
   //GLuint skeletonVBOID = 0;
@@ -65,7 +70,8 @@ class DebugRenderingSystem
   DebugRenderingSystem(Scene & scene, int windowWidth, int windowHeight);
   ~DebugRenderingSystem();
   void Update(Scene& scene, int windowWidth, int windowHeight);
-
+  //draw points
+  bool isDrawPointsOn = false;
   //check for AABB
   bool isAABBOn = false;
 
@@ -116,6 +122,9 @@ class DebugRenderingSystem
     float distance;
   };
 
+  void savePoints(std::vector<glm::vec3> points);
+  void drawPoints(std::vector<glm::vec3> points, Scene& scene);
+  void drawLines(std::vector<glm::vec4> points, Scene& scene);
   void drawAABB(const MeshComponentPtr mesh,Scene& scene, bool isSquareAABB);
   void drawAABB(const AABB bounds, Scene& scene);
   void drawBS(const MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);

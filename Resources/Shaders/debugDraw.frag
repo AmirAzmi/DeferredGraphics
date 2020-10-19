@@ -13,6 +13,7 @@ Creation date: January 4th , 2020
 #version 440 core
 
 out vec4 color;
+in vec4 fragment_color;
 uniform float level;
 uniform bool octree;
 
@@ -64,8 +65,10 @@ void main()
   if(octree == true)
   {
     color = setColor(level); 
-  }else
+  }
+  else
   {
-    color = vec4(0.0f,0.0f,0.0f,1.0f);
+  
+      color = fragment_color;
   }
 }

@@ -49,6 +49,9 @@
     <Filter Include="Header Files\Math">
       <UniqueIdentifier>{c22f0ad6-e0f1-4e74-a9ea-497b9bbb0ff6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{4944391e-30e4-4347-8b72-32388f05a759}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -144,14 +147,14 @@
     <ClCompile Include="MovementBehavior.cpp">
       <Filter>Source Files\Behavior</Filter>
     </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BezierFollowBehavior.cpp">
       <Filter>Source Files\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -263,9 +266,6 @@
     <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Quaternion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -274,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="BezierFollowBehavior.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Header Files\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

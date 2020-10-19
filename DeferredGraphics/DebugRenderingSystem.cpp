@@ -209,10 +209,65 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     // BSPTree = linearAllocator.TAllocate<BSP>(meshes);
   }
 
+  if (isDrawPointsOn == true)
+  {
+    drawPoints(Points, scene);
+    Points.clear();
+  }
+
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   auto end = std::chrono::high_resolution_clock::now();
   rendering_sytem_elapsed_time = end - start;
+}
+
+
+void DebugRenderingSystem::savePoints(std::vector<glm::vec3> points)
+{
+  Points.insert(Points.end(), points.begin(), points.end());
+}
+
+void DebugRenderingSystem::drawPoints(std::vector<glm::vec3> points, Scene& scene)
+{
+  if (pointsVAOID == 0)
+  {
+    //generate the vao for the cube
+    glGenVertexArrays(1, &pointsVAOID);
+
+    //generate the vertex and index buffers for the quad
+    glGenBuffers(1, &pointsVBOID);
+
+    //bind the VAO for transferring of data to the GPU
+    glBindVertexArray(pointsVAOID);
+
+    //enable position data that will be transferred to the GPU from the quad vertices
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, pointsVBOID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * points.size(), points.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  }
+
+  debugDrawID->UseShader();
+  debugDrawID->setInt("last_index", points.size());
+
+  glBindVertexArray(pointsVAOID);
+
+  //bind the buffers the object needs to be used for drawing the cube
+  glBindBuffer(GL_ARRAY_BUFFER, pointsVBOID);
+
+  //to update the buffer when it is live
+  glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * points.size(), points.data(), GL_STATIC_DRAW);
+
+  //send the variables "perspective_matrix" and "view matrix" onto the GPU
+  projectionMatrixID = glGetUniformLocation(debugDrawID->getProgramID(), "perspective_matrix");
+  viewMatrixID = glGetUniformLocation(debugDrawID->getProgramID(), "view_matrix");
+
+  //get the projection and view matrix from the scene set it as a variables for the GPU
+  glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
+  glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
+
+  glPointSize(15);
+  glDrawArrays(GL_POINTS, 0, points.size());
 }
 
 void DebugRenderingSystem::drawAABB(const MeshComponentPtr mesh, Scene& scene, bool isSquareAABB)

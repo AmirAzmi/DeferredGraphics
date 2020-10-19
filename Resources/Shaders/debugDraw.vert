@@ -14,13 +14,23 @@ Creation date: January 4th , 2020
 layout (location = 0) in vec3 aPos;
 
 out vec3 world_position;
-
+out vec4 fragment_color; 
 uniform mat4 view_matrix;
 uniform mat4 perspective_matrix;
+uniform int last_index;
 
 void main()
 {
   world_position = vec3(vec4(aPos, 1.0f));
+
+  if(gl_VertexID < 5 || gl_VertexID == last_index - 1)
+  {
+    fragment_color = vec4(0.0f, 0.0f, 0.0f, 1.0f); 
+  }
+  else
+  {
+    fragment_color = vec4(1.0f, 1.0f, 1.0f, 1.0f); 
+  }
 
   gl_Position = perspective_matrix * view_matrix * vec4(world_position, 1.0f);
 }

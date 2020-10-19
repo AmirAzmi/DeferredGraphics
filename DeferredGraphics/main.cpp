@@ -34,6 +34,7 @@ float lastY = windowHeight / 2;
 float yaw = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
 float pitch = 0.0f;
 bool firstMouse = true;
+DebugRenderingSystem* debugSystem;
 
 
 void processInput(GLFWwindow* window, Scene& scene, float dt);
@@ -125,6 +126,7 @@ int main()
   //initialize the systems the scene will be using
   SystemManager systems;
   systems.Init(scene, windowWidth, windowHeight);
+  debugSystem = systems.debugRenderer;
 
   //initialize the imgui editor
   Editor ImGuiEditor(scene, systems);
