@@ -1,21 +1,24 @@
 #pragma once
 #include <glm/glm/glm.hpp>
+#include <cmath>
+#include <algorithm>
+#include <iostream>
 
 class Quaternion
 {
+public:
   float x, y, z, w;
 
-  public:
   Quaternion()
   {
 
   }
 
-  Quaternion(float w, float x, float y, float z):w(w), x(x), y(y), z(z)
+  Quaternion(float w, float x, float y, float z) :w(w), x(x), y(y), z(z)
   {
   }
 
-  Quaternion(glm::vec3 & axis, float angle)
+  Quaternion(const glm::vec3& axis, float angle)
   {
     w = cosf(0.5f * angle);
 
@@ -25,24 +28,46 @@ class Quaternion
     z = axis.z * thetaOver2;
   }
 
-  const Quaternion operator+(const Quaternion& b) const;
-  const Quaternion operator-(const Quaternion& b) const;
-  const Quaternion operator*(const Quaternion& b); //quaternion cross product
-  const Quaternion operator*(float scalar);
+  Quaternion operator+(const Quaternion& b) const;
+  Quaternion operator-(const Quaternion& b) const;
+  Quaternion operator*(const Quaternion& b) const; //quaternion cross product
+  Quaternion operator*(float scalar) const;
   Quaternion operator/(float scalar);
 
   //operations
   Quaternion& normalized();
   Quaternion& conjugate();
   Quaternion& inverse();
-  Quaternion& projection(Quaternion& b);
+  Quaternion& projection(const Quaternion& b);
   glm::mat4 quaternionToMatrix();
   float magnitudeQuaternionSquared();
-  float dotProduct(Quaternion& b);
+  float dotProduct(const Quaternion& b) const;
   void negateQuaternion();
   void setToRotatAboutX(float theta);
   void setToRotatAboutY(float theta);
   void setToRotatAboutZ(float theta);
-  void setToRotatAboutAxis(glm::vec3& axis, float theta);
+  Quaternion& setToRotatAboutAxis(const glm::vec3& axis, float theta);
+  static Quaternion Slerp(const Quaternion& a, const Quaternion& b, float time);
+  float Angle(Quaternion& a, Quaternion& b);
+
+
 };
+
+template<class T>
+const T& clamp(const T& x, const T& upper, const T& lower);
+
+template<class T>
+const T& clamp(const T& x, const T& upper, const T& lower)
+{
+  return std::min(upper, std::max(x, lower));
+}
+
+static std::ostream& operator<<(std::ostream& os, const Quaternion& quat)
+{
+  os << "w: " << quat.w << " x: " << quat.x << " y: " << quat.y << " z: " << quat.z;
+  return os;
+}
+
+Quaternion operator*(float scalar, const Quaternion& a);
+Quaternion Slerp(const Quaternion& a, const Quaternion& b, float time);
 

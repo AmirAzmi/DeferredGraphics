@@ -23,14 +23,9 @@ void main()
 {
   world_position = vec3(vec4(aPos, 1.0f));
 
-  if(gl_VertexID < 5 || gl_VertexID == last_index - 1)
-  {
-    fragment_color = vec4(0.0f, 0.0f, 0.0f, 1.0f); 
-  }
-  else
-  {
-    fragment_color = vec4(1.0f, 1.0f, 1.0f, 1.0f); 
-  }
+
+  fragment_color = vec4(1.0f, 1.0f, 1.0f, 1.0f); 
+  
 
   gl_Position = perspective_matrix * view_matrix * vec4(world_position, 1.0f);
 }

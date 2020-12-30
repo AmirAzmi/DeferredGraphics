@@ -301,7 +301,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         ImGui::Separator();
         if (ImGui::TreeNode("Mesh Component"))
         {
-          for(int m = 0; m < meshComponent->getMesh()->meshes.size(); ++m)
+          for (int m = 0; m < meshComponent->getMesh()->meshes.size(); ++m)
           {
             ImGui::Text("Number of Vertices: %i", meshComponent->getMesh()->meshes[m].vertices.size());
             std::string MeshL("Mesh List ");
@@ -332,7 +332,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
               if (ImGui::TreeNode(Mat.c_str()))
               {
- 
+
                 for (auto& b : meshComponent->mesh->meshes[j].material->bools)
                 {
                   if (ImGui::Checkbox(b.first.c_str(), &b.second))
@@ -410,6 +410,12 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
               if (ImGui::Checkbox("Show Bones", &Manager.renderer->drawBonesOn))
               {
               }
+
+              /*float Ticks = (float)meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mTicksPerSecond;
+
+              if (ImGui::DragFloat("Ticks Per Second", &Ticks))
+              {
+              }*/
 
               ImGui::TextWrapped("Current Animation Name: %s", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str());
               ImGui::TextWrapped("Number of Meshes on Model: %i", meshComponent->mesh->m_pScene->mNumMeshes);
@@ -554,6 +560,10 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     ImGui::Indent();
     if (Manager.renderer != nullptr)
     {
+    
+      if (ImGui::DragFloat("Animation Delta Time", &Manager.renderer->animation_delta_time))
+      {
+      }
 
       if (ImGui::Checkbox("Split Screen", &Manager.renderer->splitScreen))
       {

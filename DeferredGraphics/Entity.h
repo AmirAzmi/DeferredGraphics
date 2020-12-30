@@ -34,10 +34,11 @@ public:
   float angle;
   float currentPosition;
   std::vector<BehaviorPtr> behaviors; // The list of behaviors attached to this entity.
+  Quaternion q;
 
   glm::mat4 getObjectToWorld()
   {
-    Quaternion q(axisOfRotation, glm::radians(angle));
+    q.setToRotatAboutAxis(axisOfRotation, glm::radians(angle));
     q.normalized();
 
     return glm::translate(position) * q.quaternionToMatrix() * glm::scale(scale);

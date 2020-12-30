@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "Line.h"
 #include "AABB.h"
 #include "BoundingSphere.h"
 #include "BoundingVolumeHierarchy.h"
@@ -35,6 +36,11 @@ class DebugRenderingSystem
     2,6
   };
 
+  //Lines data
+  GLuint lineVAOID = 0;
+  GLuint lineVBOID;
+  std::vector<Line> Lines;
+
   //Points data
   GLuint pointsVAOID = 0;
   GLuint pointsVBOID;
@@ -65,13 +71,19 @@ class DebugRenderingSystem
   ShaderHandle debugDrawID;
   ShaderHandle sphereDebugDrawID;
   ShaderHandle gBufferShaderID;
+  ShaderHandle lineDebugShaderID;
 
   public:
   DebugRenderingSystem(Scene & scene, int windowWidth, int windowHeight);
   ~DebugRenderingSystem();
   void Update(Scene& scene, int windowWidth, int windowHeight);
+
   //draw points
   bool isDrawPointsOn = false;
+
+  //draw lines
+  bool isDrawLinesOn = false;
+
   //check for AABB
   bool isAABBOn = false;
 
@@ -124,7 +136,8 @@ class DebugRenderingSystem
 
   void savePoints(std::vector<glm::vec3> points);
   void drawPoints(std::vector<glm::vec3> points, Scene& scene);
-  void drawLines(std::vector<glm::vec4> points, Scene& scene);
+  void saveLines(std::vector<Line> lines);
+  void drawLines(std::vector<Line> lines, Scene& scene);
   void drawAABB(const MeshComponentPtr mesh,Scene& scene, bool isSquareAABB);
   void drawAABB(const AABB bounds, Scene& scene);
   void drawBS(const MeshComponentPtr mesh, Scene& scene, BoundingSphere::BoundingSphereCalculationType type);

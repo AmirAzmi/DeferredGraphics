@@ -20,6 +20,8 @@ Creation date: January 4th , 2020
 #include "CameraPossessBehavior.h"
 #include "MovementBehavior.h"
 #include "BezierFollowBehavior.h"
+#include "InverseKinematicsBehavior.h"
+#include "ClothBehavior.h"
 
 Scene::Scene(const int windowWidth, const int windowHeight) :fov(90.0f), nearDistance(0.1f), farDistance(10000.0f), cameraSpeed(3.0f),
 eyePosition(glm::vec3(0.0f, 0.0f, 5.0f)), cameraDirection(glm::vec3(0.0f, 0.0f, -1.0f)), upDirection(glm::vec3(0.0f, 1.0f, 0.0f))
@@ -66,7 +68,7 @@ void Scene::Init()
   /*********************************************************************************/
 
   //add a mesh to the component
-  ModelHandle cube = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
+  ModelHandle cube = std::make_shared<Model>("Resources/cube2.obj", ModelType::DEFAULT);
   //ModelHandle bunny = std::make_shared<Model>("Resources/sphere.obj");
   ModelHandle bunny = std::make_shared<Model>("Resources/gh_sample_animation.fbx");
   ModelHandle sphere = std::make_shared<Model>("Resources/bunny.obj");
@@ -103,6 +105,8 @@ void Scene::Init()
   //centerObject->addBehavior<CameraPossessBehavior>(offset);
   //centerObject->addBehavior<RotationBehavior>();
   centerObject->addBehavior<BezierFollowBehavior>();
+  //centerObject->addBehavior<InverseKinematicsBehavior>();
+  //centerObject->addBehavior<ClothBehavior>();
 
   for (auto& g : sphere->meshes)
   {
@@ -126,8 +130,27 @@ void Scene::Init()
   meshComp->getEntityPtr()->angle = 0;
   meshComp->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
+  //add objects to the list
+  EntityPtr object = addEntity("Plane");
+
+  //add a mesh component pointer to the object with the setup from the prelims
+  MeshComponentPtr meshComp2 = object->add<MeshComponent>(object, cube);
+  //lightComp = object->add<LightComponent>();
+
+  for (auto& m : meshComp2->mesh->meshes)
+  {
+    m.material = material3;
+    m.shader = textureShader;
+  }
+
+  //manipulate the properties of the object by getting it from the component
+  meshComp2->getEntityPtr()->scale = glm::vec3(8.0f, 1.0f, 5.0f);
+  meshComp2->getEntityPtr()->angle = 0;
+  meshComp2->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
+
+
   //create 8 objects
-  for (int i = 0; i < 8; ++i)
+  /*for (int i = 0; i < 8; ++i)
   {
     //set the name of each object that is added
     std::string numberAsString = std::to_string(i + 1);
@@ -155,7 +178,7 @@ void Scene::Init()
 
     //add behiavor to all 8 objects
     object->addBehavior<RotationBehavior>();
-  }
+  }*/
 }
 
 void Scene::PreRender(int windowWidth, int windowHeight, float delta_time)

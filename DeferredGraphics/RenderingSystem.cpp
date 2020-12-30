@@ -272,7 +272,8 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
       {
         m->mesh->BoneTransform(m->m_AnimationTime, m->currentAnimation);
 
-        m->m_AnimationTime += (dt * scene.timeScale);
+        //affects the speed of the animation
+        m->m_AnimationTime += (animation_delta_time * scene.timeScale);
       }
     }
   }

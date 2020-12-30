@@ -31,6 +31,7 @@ static int height(BoundingVolumeHierarchy* root)
 DebugRenderingSystem::DebugRenderingSystem(Scene& scene, int windowWidth, int windowHeight) : projectionMatrixID(-1), viewMatrixID(-1)
 {
   debugDrawID = std::make_shared <Shader>("Resources/Shaders/debugDraw.vert", "Resources/Shaders/debugDraw.frag", false);
+  lineDebugShaderID = std::make_shared<Shader>("Resources/Shaders/LineDebugDraw.vert", "Resources/Shaders/LineDebugDraw.frag", false);
   sphereDebugDrawID = std::make_shared <Shader>("Resources/Shaders/sphereDebugDraw.vert", "Resources/Shaders/sphereDebugDraw.frag", false);
   gBufferShaderID = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
 
@@ -215,6 +216,13 @@ void DebugRenderingSystem::Update(Scene& scene, int windowWidth, int windowHeigh
     Points.clear();
   }
 
+
+  if (isDrawLinesOn == true)
+  {
+    drawLines(Lines, scene);
+    Lines.clear();
+  }
+
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   auto end = std::chrono::high_resolution_clock::now();
@@ -226,6 +234,12 @@ void DebugRenderingSystem::savePoints(std::vector<glm::vec3> points)
 {
   Points.insert(Points.end(), points.begin(), points.end());
 }
+
+void DebugRenderingSystem::saveLines(std::vector<Line> lines)
+{
+  Lines.insert(Lines.end(), lines.begin(), lines.end());
+}
+
 
 void DebugRenderingSystem::drawPoints(std::vector<glm::vec3> points, Scene& scene)
 {
@@ -266,8 +280,53 @@ void DebugRenderingSystem::drawPoints(std::vector<glm::vec3> points, Scene& scen
   glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
   glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
 
-  glPointSize(15);
+  glPointSize(5);
   glDrawArrays(GL_POINTS, 0, points.size());
+}
+
+void DebugRenderingSystem::drawLines(std::vector<Line> lines, Scene& scene)
+{
+  if (lineVAOID == 0)
+  {
+    //generate the vao for the cube
+    glGenVertexArrays(1, &lineVAOID);
+
+    //generate the vertex and index buffers for the quad
+    glGenBuffers(1, &lineVBOID);
+
+    //bind the VAO for transferring of data to the GPU
+    glBindVertexArray(lineVAOID);
+
+    //enable position data that will be transferred to the GPU from the quad vertices
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, lineVBOID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Line) * lines.size(), lines.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Line) / 2, (void*)0);
+
+    //enable color data that will be transferred to the GPU from the quad vertices
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Line) / 2, (const void *)offsetof(Line, color_start));
+  }
+
+  lineDebugShaderID->UseShader();
+
+  glBindVertexArray(lineVAOID);
+
+  //bind the buffers the object needs to be used for drawing the cube
+  glBindBuffer(GL_ARRAY_BUFFER, lineVBOID);
+
+  //to update the buffer when it is live
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Line) * lines.size(), lines.data(), GL_STATIC_DRAW);
+
+  //send the variables "perspective_matrix" and "view matrix" onto the GPU
+  projectionMatrixID = glGetUniformLocation(lineDebugShaderID->getProgramID(), "perspective_matrix");
+  viewMatrixID = glGetUniformLocation(lineDebugShaderID->getProgramID(), "view_matrix");
+
+  //get the projection and view matrix from the scene set it as a variables for the GPU
+  glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
+  glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
+
+  glDrawArrays(GL_LINES, 0, lines.size() * 2);
 }
 
 void DebugRenderingSystem::drawAABB(const MeshComponentPtr mesh, Scene& scene, bool isSquareAABB)

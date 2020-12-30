@@ -52,6 +52,12 @@
     <Filter Include="Source Files\Math">
       <UniqueIdentifier>{4944391e-30e4-4347-8b72-32388f05a759}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Animations">
+      <UniqueIdentifier>{6954648a-0080-48b4-9a8e-2aeaf78957e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Animations">
+      <UniqueIdentifier>{9048de47-6945-44d8-9431-7f1ffcacf1eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -155,6 +161,18 @@
     </ClCompile>
     <ClCompile Include="Quaternion.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ClothBehavior.cpp">
+      <Filter>Source Files\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>Source Files\Animations</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="InverseKinematicsBehavior.cpp">
+      <Filter>Source Files\Behavior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,11 +290,23 @@
     <ClInclude Include="Bezier.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="BezierFollowBehavior.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Quaternion.h">
       <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="BezierFollowBehavior.h">
+      <Filter>Header Files\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="ClothBehavior.h">
+      <Filter>Header Files\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>Header Files\Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Header Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="InverseKinematicsBehavior.h">
+      <Filter>Header Files\Behavior</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -343,6 +373,12 @@
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="..\Resources\Shaders\texture.vert">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\LineDebugDraw.frag">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\LineDebugDraw.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

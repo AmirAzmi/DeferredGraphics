@@ -111,6 +111,8 @@ private:
 
 
 public:    
+
+  float animation_delta_time = 1.0 / 144.0;
   float exposure = 1.0f;
   bool bloom = false;
   bool gamma = true;

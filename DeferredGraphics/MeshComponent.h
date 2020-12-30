@@ -35,7 +35,7 @@ public:
 
   MeshComponent()
   {
-    mesh = std::make_shared<Model>("Resources/sphere.obj", ModelType::DEFAULT);
+    mesh = std::make_shared<Model>("Resources/sphere.obj");
     /*shader = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
     material = std::make_shared<Material>(shader);
     material->setVec4("diffuse_color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));

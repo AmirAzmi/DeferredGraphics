@@ -1,7 +1,7 @@
 #include "Quaternion.h"
 
 // adding two quaternions
-const Quaternion Quaternion::operator+(const Quaternion & b) const
+Quaternion Quaternion::operator+(const Quaternion & b) const
 {
   Quaternion c;
   c.w = this->w + b.w;
@@ -13,7 +13,7 @@ const Quaternion Quaternion::operator+(const Quaternion & b) const
 }
 
 //subtractiong two qauternions
-const Quaternion Quaternion::operator-(const Quaternion& b) const
+Quaternion Quaternion::operator-(const Quaternion& b) const
 {
   Quaternion c;
   c.w = this->w - b.w;
@@ -25,7 +25,7 @@ const Quaternion Quaternion::operator-(const Quaternion& b) const
 }
 
 //cross product of quaternions
-const Quaternion Quaternion::operator*(const Quaternion& b)
+Quaternion Quaternion::operator*(const Quaternion& b) const
 {
   Quaternion c;
 
@@ -38,9 +38,9 @@ const Quaternion Quaternion::operator*(const Quaternion& b)
 }
 
 //scaling a quaternion
-const Quaternion Quaternion::operator*(float scalar)
+Quaternion Quaternion::operator*(float scalar) const
 {
-  Quaternion b;
+  Quaternion b(*this);
 
   b.w *= scalar;
   b.x *= scalar;
@@ -87,7 +87,7 @@ Quaternion& Quaternion::inverse()
 
 }
 
-Quaternion& Quaternion::projection(Quaternion& b)
+Quaternion& Quaternion::projection(const Quaternion& b)
 {
   const float dot = dotProduct(b);
   w = dot * b.w;
@@ -114,7 +114,7 @@ float Quaternion::magnitudeQuaternionSquared()
   return w * w + x * x + y * y + z * z; //sqrtf is a heavy operation but cant be avoided
 }
 
-float Quaternion::dotProduct(Quaternion& b)
+float Quaternion::dotProduct(const Quaternion& b) const
 {
   return w * b.w + x * b.x + y * b.y + z * b.z;
 }
@@ -127,7 +127,7 @@ void Quaternion::negateQuaternion()
   z *= -1.0f;
 }
 
-void Quaternion::setToRotatAboutAxis(glm::vec3& axis, float theta)
+Quaternion & Quaternion::setToRotatAboutAxis(const glm::vec3& axis, float theta)
 {
   float thetaOver2 = theta * 0.5f;
   this->w = cosf(thetaOver2);
@@ -136,4 +136,48 @@ void Quaternion::setToRotatAboutAxis(glm::vec3& axis, float theta)
   this->x = axis.x * sinThetaOver2;
   this->y = axis.y * sinThetaOver2;
   this->z = axis.z * sinThetaOver2;
+
+  return *this;
 }
+
+Quaternion operator*(float scalar, const Quaternion& a)
+{
+  return a.operator*(scalar);
+}
+
+Quaternion Slerp(const Quaternion& a, const Quaternion& b, float time)
+{
+  const float omega = acosf(clamp(a.dotProduct(b), -1.0f, 1.0f));
+  const float sin_inv = 1.0f / sinf(omega);
+
+  return sinf((1.0f - time) * omega) * sin_inv * a + sin(time * omega) * sin_inv * b;
+}
+
+Quaternion Quaternion::Slerp(const Quaternion& a,const Quaternion& b, float time)
+{
+  const float omega = acosf(clamp(a.dotProduct(b), -1.0f, 1.0f));
+  const float sin_inv = 1.0f / sinf(omega);
+
+  return (1.0f - time) * a + time * b;
+   
+  //return sinf((1.0f - time) * omega) * sin_inv * a + sin(time * omega) * sin_inv * b;
+}
+
+float Quaternion::Angle(Quaternion& a, Quaternion& b)
+{
+  {
+    Quaternion inv = a.inverse();
+    Quaternion res = b * inv;
+
+    //CLOSE ENOUGH
+    if (acosf(res.w) * 2.0f > 3.14f)// * 57.2957795f; // To degrees!;
+    {
+      return 6.28f - acosf(res.w) * 2.0f;
+    }
+    else
+    {
+      return acosf(res.w) * 2.0f;
+    }
+  }
+}
+
