@@ -181,6 +181,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovementBehavior.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="PrimitiveRenderer.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Raycast.cpp" />
     <ClCompile Include="RotationBehavior.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="MovementBehavior.h" />
     <ClInclude Include="Octree.h" />
+    <ClInclude Include="PrimitiveRenderer.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Raycast.h" />
     <ClInclude Include="RenderingSystem.h" />

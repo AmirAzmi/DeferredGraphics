@@ -15,7 +15,7 @@ Creation date: January 4th , 2020
 
 #include "Behavior.h"
 
-Entity::Entity(std::string name, Scene& scene):name(name), scene(scene), axisOfRotation(0,0,1), scale(1,1,1), angle(0.0f)
+Entity::Entity(std::string name, Scene& scene):name(name), scene(scene), axisOfRotation(0,0,1), scale(1,1,1), angle(0.0f), parent(nullptr), children()
 {
 }
 
@@ -50,7 +50,10 @@ Entity::~Entity()
     delete behavior;
   }
 
-  behaviors.clear();
+  for (auto child : children)
+  {
+    delete child;
+  }
 }
 
 BehaviorPtr Entity::addBehaviorImpl(BehaviorPtr behavior)

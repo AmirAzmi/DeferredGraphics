@@ -13,6 +13,7 @@ Creation date: January 4th , 2020
 #pragma once
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtx/transform.hpp>
+#include "PrimitiveRenderer.h"
 #include "TemplateUtils.h"
 #include "EngineTypes.h"
 
@@ -24,6 +25,7 @@ class Scene
 
 
 public:
+  PrimitiveRenderer primRenderer;
   glm::mat4 projectionMatrix;
   glm::mat4 viewMatrix;
   glm::mat4 newProjectionMatrix;
@@ -66,7 +68,7 @@ public:
   void Render(float delta_time);
   void PostRender(float delta_time);
 
-  EntityPtr addEntity(std::string name);
+  EntityPtr addEntity(std::string name, EntityPtr parent = nullptr);
   EntityPtr findEntity(std::string name);
   void removeEntity(std::string name);
 

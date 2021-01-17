@@ -297,7 +297,9 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
         item.boneTransform[k] = m->mesh->m_BoneInfo[k].FinalTransformation;
       }
 
+
       item.boneSize = m->mesh->m_BoneInfo.size();
+
       items.push_back(item);
     }
   }
@@ -324,14 +326,6 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   //which can now be used for the next shader and draw calls
   std::for_each(items.begin(), iterator_to_forward_list, [&scene, this](DrawItem item)
   {
-
-    GLint bone_matrix = glGetUniformLocation(gBufferShaderID->getProgramID(), "final_bone_output");
-    assert(bone_matrix != -1);
-    glUniformMatrix4fv(bone_matrix, item.boneSize, false, &item.boneTransform[0][0].x);
-
-    //pass in to check if the bone has an animation ro not
-    gBufferShaderID->setInt("bone_size", item.boneSize);
-
     Draw(item, scene, true);
   });
 
@@ -591,6 +585,15 @@ void RenderingSystem::Draw(DrawItem item, Scene& scene, bool isDeffered)
     //object to world matrix
     glm::mat4 ObjectToWorld = item.objectToWorld;
 
+    GLint bone_matrix = glGetUniformLocation(item.mesh->shader->getProgramID(), "final_bone_output");
+
+    if (bone_matrix != -1)
+    {
+      glUniformMatrix4fv(bone_matrix, item.boneSize, false, &item.boneTransform[0][0].x);
+    }
+
+    //pass in to check if the bone has an animation ro not
+    item.mesh->shader->setInt("bone_size", item.boneSize);
     //object to world matrix sent to the GPU called "object_to_world"
     GLint umodel_matrix = glGetUniformLocation(item.mesh->shader->getProgramID(), "object_to_world");
     glUniformMatrix4fv(umodel_matrix, 1, false, &ObjectToWorld[0][0]);
@@ -694,7 +697,7 @@ void RenderingSystem::drawBones(Scene& scene)
           glUniformMatrix4fv(projectionMatrixID, 1, false, &scene.getProjectionMatrix()[0][0]);
           glUniformMatrix4fv(viewMatrixID, 1, false, &scene.getViewMatrix()[0][0]);
 
-          glLineWidth(2);        
+          glLineWidth(2);
           //draw the objects with the mesh components
           glDrawArrays(GL_LINES, 0, model->mesh->skeletonBones.positions.size());
         }

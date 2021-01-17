@@ -59,6 +59,8 @@ const glm::mat4 Scene::getScreenToWorld()
 
 void Scene::Init()
 {
+  primRenderer.createRectPrism(glm::vec3(1.0f, 1.0f, 1.0f), *this);
+
   /*********************************************************************************/
   //setup the preliminaries to the mesh component
   // ->add a mesh to the component
@@ -68,11 +70,11 @@ void Scene::Init()
   /*********************************************************************************/
 
   //add a mesh to the component
-  ModelHandle cube = std::make_shared<Model>("Resources/cube2.obj", ModelType::DEFAULT);
+  ModelHandle cube = std::make_shared<Model>("Resources/cube2.obj");
   //ModelHandle bunny = std::make_shared<Model>("Resources/sphere.obj");
   ModelHandle bunny = std::make_shared<Model>("Resources/gh_sample_animation.fbx");
   ModelHandle sphere = std::make_shared<Model>("Resources/bunny.obj");
-  ModelHandle pitch = std::make_shared<Model>("Resources/pitch.obj", ModelType::DEFAULT);
+  ModelHandle pitch = std::make_shared<Model>("Resources/pitch.obj");
 
   //declare the Resources/Shaders that will be used for this scene
   ShaderHandle gBuffer = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
@@ -81,9 +83,9 @@ void Scene::Init()
 
   //add a material(s) to the component
   MaterialHandle material = std::make_shared<Material>(gBuffer);
-  MaterialHandle material4 = std::make_shared<Material>(gBuffer);
   MaterialHandle material2 = std::make_shared<Material>(forwardRenderer);
   MaterialHandle material3 = std::make_shared<Material>(textureShader);
+  MaterialHandle material4 = std::make_shared<Material>(gBuffer);
 
   for (auto& m : bunny->meshes)
   {
@@ -132,6 +134,18 @@ void Scene::Init()
 
   //add objects to the list
   EntityPtr object = addEntity("Plane");
+  EntityPtr child_of_object = addEntity("Child Plane", object);
+  MeshComponentPtr meshComp3 = child_of_object->add<MeshComponent>(child_of_object, cube);
+  for (auto& m : meshComp3->mesh->meshes)
+  {
+    m.material = material;
+    m.shader = gBuffer;
+  }
+
+  //manipulate the properties of the object by getting it from the component
+  meshComp3->getEntityPtr()->scale = glm::vec3(3.0f, 5.0f, 5.0f);
+  meshComp3->getEntityPtr()->angle = 45.0f;
+  meshComp3->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
   //add a mesh component pointer to the object with the setup from the prelims
   MeshComponentPtr meshComp2 = object->add<MeshComponent>(object, cube);
@@ -139,8 +153,8 @@ void Scene::Init()
 
   for (auto& m : meshComp2->mesh->meshes)
   {
-    m.material = material3;
-    m.shader = textureShader;
+    m.material = material;
+    m.shader = gBuffer;
   }
 
   //manipulate the properties of the object by getting it from the component
@@ -213,8 +227,18 @@ void Scene::PostRender(float delta_time)
   }
 }
 
-EntityPtr Scene::addEntity(std::string name)
+EntityPtr Scene::addEntity(std::string name, EntityPtr parent)
 {
+  if (parent != nullptr)
+  {
+    EntityPtr child = new Entity(name, *this);
+    parent->children.push_back(child);
+    child->parent = parent;
+
+    //return the entity since we know its at the back
+    return parent->children.back();
+  }
+
   //add the entity with the given name
   ListOfEntities.push_back(new Entity(name, *this));
 
@@ -250,7 +274,6 @@ void Scene::removeEntity(std::string name)
     //look for the first specified entity
     if (ListOfEntities[i]->name == name)
     {
-      //ask shareef
       if (ListOfEntities[i]->get<MeshComponent>() != nullptr)
       {
         ListOfEntities[i]->remove<MeshComponent>();

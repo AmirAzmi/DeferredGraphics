@@ -20,20 +20,282 @@ Creation date: January 4th , 2020
 #include <Imgui/imgui_internal.h>
 #include "Behavior.h"
 
-float lerp(float a, float b, float t)
+static float lerp(float a, float b, float t)
 {
   return (1.0f - t) * a + b * t;
 }
 
-float invLerp(float a, float b, float v)
+static float invLerp(float a, float b, float v)
 {
   return  (v - a) / (b - a);
 }
 
-float remap(float min, float max, float imin, float imax, float v)
+static float remap(float min, float max, float imin, float imax, float v)
 {
   float t = invLerp(min, max, v);
   return lerp(imin, imax, t);
+}
+
+static void ReadChildren(std::vector<Entity*> entities, Scene& scene, SystemManager& Manager, std::string search_word)
+{
+  //transform component
+  for (int i = 0; i < entities.size(); ++i)
+  {
+    const std::string& name = scene.getEntities()[i]->name;
+
+    if (!search_word.empty())
+    {
+      std::string lower_str;
+
+      for (int j = 0; j < name.size(); ++j)
+      {
+        lower_str.push_back(std::tolower(name[j]));
+      }
+
+      if (lower_str.find(search_word) == std::string::npos)
+      {
+        continue;
+      }
+    }
+
+    ImGui::PushID(i);
+    if (ImGui::CollapsingHeader(entities[i]->name.c_str()))
+    {
+      ImGui::Indent();
+      if (ImGui::TreeNode("Transform"))
+      {
+        //ImGui::Text("Number of Vertices: %f", &entities.getEntities()[i]->get<>);
+        if (ImGui::DragFloat3("Position:", &entities[i]->position.x, .1f))
+        {
+        }
+
+        if (ImGui::DragFloat3("Axis of Rotation:", &entities[i]->axisOfRotation.x, .1f))
+        {
+        }
+
+        if (ImGui::DragFloat("Rotation:", &entities[i]->angle, .1f))
+        {
+        }
+
+        if (ImGui::DragFloat3("Scale:", &entities[i]->scale.x, .1f))
+        {
+        }
+
+        ImGui::TreePop();
+      }
+
+      MeshComponentPtr meshComponent = entities[i]->get<MeshComponent>();
+
+      if (meshComponent)
+      {
+        ImGui::Separator();
+        if (ImGui::TreeNode("Mesh Component"))
+        {
+          for (int j = 0; j < meshComponent->mesh->meshes.size(); ++j)
+          {
+            if (meshComponent->mesh->meshes[j].material)
+            {
+              std::string Mat("Material ");
+              std::string numberAsString = std::to_string(j);
+              Mat.append(numberAsString);
+
+              if (ImGui::TreeNode(Mat.c_str()))
+              {
+
+                for (auto& b : meshComponent->mesh->meshes[j].material->bools)
+                {
+                  if (ImGui::Checkbox(b.first.c_str(), &b.second))
+                  {
+                  }
+                }
+                for (auto& v : meshComponent->mesh->meshes[j].material->floats)
+                {
+                  if (ImGui::DragFloat(v.first.c_str(), &v.second, .1f))
+                  {
+                  }
+                }
+                for (auto& v2 : meshComponent->mesh->meshes[j].material->vec2s)
+                {
+                  if (ImGui::DragFloat3(v2.first.c_str(), &v2.second.x, .1f))
+                  {
+                  }
+                }
+                for (auto& v3 : meshComponent->mesh->meshes[j].material->vec3s)
+                {
+                  if (ImGui::DragFloat3(v3.first.c_str(), &v3.second.x, .1f))
+                  {
+                  }
+                }
+                for (auto& v4 : meshComponent->mesh->meshes[j].material->vec4s)
+                {
+                  if (v4.first == "diffuse_color")
+                  {
+                    if (ImGui::ColorEdit3("Diffuse Color", &v4.second.x, ImGuiColorEditFlags_::ImGuiColorEditFlags_HDR))
+                    {
+                    }
+                  }
+                  else if (ImGui::DragFloat4(v4.first.c_str(), &v4.second.x, .1f))
+                  {
+                  }
+                }
+
+                ImGui::TreePop();
+              }
+            }
+          }
+
+
+          if (ImGui::Button("Remove Mesh Component"))
+          {
+            entities[i]->remove<MeshComponent>();
+          }
+
+          ImGui::TreePop();
+          ImGui::Separator();
+          ImGui::Indent();
+          if (ImGui::TreeNode("Animation Information"))
+          {
+            if (meshComponent->mesh->m_pScene != nullptr)
+            {
+              if (meshComponent->mesh->m_pScene->HasAnimations() == true)
+              {
+                ImGui::Separator();
+
+                if (ImGui::BeginCombo("Animation List", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str()))
+                {
+                  for (int i = 0; i < meshComponent->mesh->m_pScene->mNumAnimations; ++i)
+                  {
+                    if (ImGui::Selectable(meshComponent->mesh->m_pScene->mAnimations[i]->mName.C_Str()))
+                    {
+                      meshComponent->currentAnimation = i;
+                      meshComponent->m_AnimationTime = 0.0f;
+                    }
+                  }
+                  ImGui::EndCombo();
+                }
+
+                if (ImGui::Checkbox("Show Bones", &Manager.renderer->drawBonesOn))
+                {
+                }
+
+                /*float Ticks = (float)meshComponent->mesh->m_pentities->mAnimations[meshComponent->currentAnimation]->mTicksPerSecond;
+
+                if (ImGui::DragFloat("Ticks Per Second", &Ticks))
+                {
+                }*/
+
+                ImGui::TextWrapped("Current Animation Name: %s", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str());
+                ImGui::TextWrapped("Number of Meshes on Model: %i", meshComponent->mesh->m_pScene->mNumMeshes);
+                ImGui::TextWrapped("Number of Animations of Model: %i", meshComponent->mesh->m_pScene->mNumAnimations);
+                ImGui::TextWrapped("Animation Duration: %f", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mDuration);
+                ImGui::TextWrapped("Animation Ticks Per Second: %f", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mTicksPerSecond);
+                ImGui::TextWrapped("Animation Channel Count: %i", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mNumChannels);
+              }
+            }
+            ImGui::TreePop();
+          }
+          ImGui::Unindent();
+        }
+
+      }
+      else
+      {
+        ImGui::Separator();
+        if (ImGui::Button("Add Mesh Component"))
+        {
+          meshComponent = entities[i]->add<MeshComponent>();
+          meshComponent->entity = entities[i];
+        }
+      }
+
+      LightComponentPtr lightComponent = entities[i]->get<LightComponent>();
+      if (lightComponent)
+      {
+        ImGui::Separator();
+        if (ImGui::TreeNode("Light Component"))
+        {
+          if (ImGui::DragFloat3("Diffuse:", &lightComponent->light.diffuseColor.x, .1f, 0.0f, 1000.0f))
+          {
+          }
+
+          if (ImGui::DragFloat3("Position:", &lightComponent->light.position.x, .1f))
+          {
+          }
+
+          if (ImGui::DragFloat3("Specular Color:", &lightComponent->light.specularColor.x, .1f, 0.0f, 10.0f))
+          {
+          }
+
+          if (ImGui::DragFloat("Specular Exponent:", &lightComponent->light.specularExponent, .1f, 0.001f, 1000.0f))
+          {
+          }
+
+          if (ImGui::DragFloat("Attenuation Linear:", &lightComponent->light.linear, .1f))
+          {
+          }
+          if (ImGui::DragFloat("Attenuation Quadratic:", &lightComponent->light.quadratic, .1f))
+          {
+          }
+
+          ImGui::Separator();
+          if (ImGui::Button("Remove Light Component"))
+          {
+            entities[i]->remove<LightComponent>();
+          }
+
+          ImGui::TreePop();
+        }
+      }
+      else
+      {
+        ImGui::Separator();
+        if (ImGui::Button("Add Light Component"))
+        {
+          lightComponent = entities[i]->add<LightComponent>();
+          lightComponent->light.position = entities[i]->position;
+        }
+      }
+
+      std::vector<BehaviorPtr> behaviorList = entities[i]->behaviors;
+
+      ImGui::Separator();
+      if (ImGui::TreeNode("Behaviors"))
+      {
+        if (!behaviorList.empty())
+        {
+          for (auto& behave : behaviorList)
+          {
+            if (ImGui::CollapsingHeader(behave->name().c_str()))
+            {
+              behave->inspect();
+            }
+          }
+        }
+
+        ImGui::TreePop();
+      }
+
+      ImGui::Separator();
+      if (ImGui::Button("Remove Entity"))
+      {
+        scene.removeEntity(entities[i]->name);
+      }
+
+      ImGui::Unindent();
+
+      ImGui::Indent();
+      for (int j = 0; j < entities[i]->children.size(); ++j)
+      {
+        ImGui::NewLine();
+        //ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Header, ImVec4(1,0,0,1));
+        ReadChildren(entities[i]->children, scene, Manager, search_word);
+        //ImGui::PopStyleColor();
+      }
+
+      ImGui::Unindent();
+    }
+    ImGui::PopID();
+  }
 }
 
 namespace fs = std::filesystem;
@@ -109,7 +371,7 @@ void Editor::init(GLFWwindow* window, const char* glslVersion)
     else
     {
 
-      mesh = std::make_shared<Model>(mesh_name[i], ModelType::DEFAULT);
+      mesh = std::make_shared<Model>(mesh_name[i]);
     }
 
     model_handles.push_back(mesh);
@@ -229,6 +491,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     }
   }
 
+
   std::string search_word(buffer_size);//cast char * to string
 
   if (!search_word.empty())
@@ -242,6 +505,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     }
   }
 
+
   if (ImGui::Button("Add Entity"))
   {
     default_name_count++;
@@ -249,7 +513,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   }
 
   //transform component
-  for (int i = 0; i < scene.getEntities().size(); ++i)
+  /*for (int i = 0; i < scene.getEntities().size(); ++i)
   {
     const std::string& name = scene.getEntities()[i]->name;
 
@@ -307,7 +571,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
             std::string MeshL("Mesh List ");
             std::string mlStr = std::to_string(m);
             MeshL.append(mlStr);
-            //second parameter can be the mesh name if i had a mesh name id 
+            //second parameter can be the mesh name if i had a mesh name id
             if (ImGui::BeginCombo(MeshL.c_str(), meshComponent->getMesh()->meshes[m].getName().c_str()))
             {
               for (int i = 0; i < mesh_name.size(); ++i)
@@ -375,7 +639,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
             }
           }
 
-
           if (ImGui::Button("Remove Mesh Component"))
           {
             scene.getEntities()[i]->remove<MeshComponent>();
@@ -410,12 +673,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
               if (ImGui::Checkbox("Show Bones", &Manager.renderer->drawBonesOn))
               {
               }
-
-              /*float Ticks = (float)meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mTicksPerSecond;
-
-              if (ImGui::DragFloat("Ticks Per Second", &Ticks))
-              {
-              }*/
 
               ImGui::TextWrapped("Current Animation Name: %s", meshComponent->mesh->m_pScene->mAnimations[meshComponent->currentAnimation]->mName.C_Str());
               ImGui::TextWrapped("Number of Meshes on Model: %i", meshComponent->mesh->m_pScene->mNumMeshes);
@@ -507,20 +764,24 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
       }
 
       ImGui::Separator();
-
       if (ImGui::Button("Remove Entity"))
       {
         scene.removeEntity(scene.getEntities()[i]->name);
       }
+
       ImGui::Unindent();
     }
     ImGui::PopID();
-  }
+  }*/
+
+  ReadChildren(scene.getEntities(), scene, Manager, search_word);
   ImGui::End();
 
+
+
+  //-------------------------------------------------------------------------------
   //Settings Window
   ImGui::Begin("Settings");
-
   if (ImGui::DragFloat("Time Scale", &scene.timeScale, 0.01f, 0.0f, 10.0f))
   {
   }
@@ -560,7 +821,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
     ImGui::Indent();
     if (Manager.renderer != nullptr)
     {
-    
+
       if (ImGui::DragFloat("Animation Delta Time", &Manager.renderer->animation_delta_time))
       {
       }
@@ -604,32 +865,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
         }
         ImGui::Unindent();
       }
-
-      /*if (ImGui::Checkbox("Lights On", &lightsOn))
-      {
-        if (lightsOn == false)
-        {
-          for (int i = 0; i < scene.getEntities().size(); ++i)
-          {
-            if (scene.getEntities().back()->get<LightComponent>() != nullptr)
-            {
-              scene.getEntities()[i]->get<LightComponent>()->light.diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
-            }
-          }
-        }
-        else
-        {
-          for (int i = 0; i < scene.getEntities().size(); ++i)
-          {
-            if (scene.getEntities().back()->get<LightComponent>() != nullptr)
-            {
-              scene.getEntities()[i]->get<LightComponent>()->light.diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
-            }
-          }
-        }
-      }
-
-      */
 
       if (ImGui::Checkbox("Gamma Correction", &Manager.renderer->gamma))
       {

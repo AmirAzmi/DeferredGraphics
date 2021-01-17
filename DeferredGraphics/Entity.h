@@ -23,9 +23,12 @@ class Behavior;
 
 class Entity
 {
-  ComponentPointerLists pointers;
-
 public:
+  Entity* parent;
+  std::vector<Entity*> children;
+  std::vector<BehaviorPtr> behaviors; // The list of behaviors attached to this entity.
+  ComponentPointerLists pointers;
+  Quaternion q;
   Scene& scene;
   std::string name;
   glm::vec3 position;
@@ -33,8 +36,6 @@ public:
   glm::vec3 scale;
   float angle;
   float currentPosition;
-  std::vector<BehaviorPtr> behaviors; // The list of behaviors attached to this entity.
-  Quaternion q;
 
   glm::mat4 getObjectToWorld()
   {
@@ -102,7 +103,7 @@ template<typename T>
 inline void Entity::remove()
 {
   //grab the adress of the component
-  T * pointer = pointers.get<T*>().pointer;
+  T* pointer = pointers.get<T*>().pointer;
 
   //grab the list of that specific component
   auto& list = scene.ListOfTypes.get<T*>();
