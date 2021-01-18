@@ -85,7 +85,6 @@ static void ReadChildren(std::vector<Entity*> entities, Scene& scene, SystemMana
       }
 
       MeshComponentPtr meshComponent = entities[i]->get<MeshComponent>();
-
       if (meshComponent)
       {
         ImGui::Separator();
@@ -144,7 +143,6 @@ static void ReadChildren(std::vector<Entity*> entities, Scene& scene, SystemMana
             }
           }
 
-
           if (ImGui::Button("Remove Mesh Component"))
           {
             entities[i]->remove<MeshComponent>();
@@ -196,7 +194,6 @@ static void ReadChildren(std::vector<Entity*> entities, Scene& scene, SystemMana
           }
           ImGui::Unindent();
         }
-
       }
       else
       {
@@ -280,18 +277,18 @@ static void ReadChildren(std::vector<Entity*> entities, Scene& scene, SystemMana
       {
         scene.removeEntity(entities[i]->name);
       }
-
       ImGui::Unindent();
 
       ImGui::Indent();
-      for (int j = 0; j < entities[i]->children.size(); ++j)
+
+      ImGui::NewLine();
+      ImGui::TextWrapped("Children: %i", entities[i]->children.size());
+      for (int j = 0; j < entities.size(); ++j)
       {
-        ImGui::NewLine();
         //ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Header, ImVec4(1,0,0,1));
-        ReadChildren(entities[i]->children, scene, Manager, search_word);
+        ReadChildren(entities[j]->children, scene, Manager, search_word);
         //ImGui::PopStyleColor();
       }
-
       ImGui::Unindent();
     }
     ImGui::PopID();
@@ -1001,7 +998,6 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
 
     if (ImGui::BeginTable("Table", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable))
     {
-
       ImGui::TableNextRow();
       ImGui::TableSetColumnIndex(0);
       ImGui::Text("Temp Memory Usage");

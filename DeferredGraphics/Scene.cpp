@@ -134,18 +134,6 @@ void Scene::Init()
 
   //add objects to the list
   EntityPtr object = addEntity("Plane");
-  EntityPtr child_of_object = addEntity("Child Plane", object);
-  MeshComponentPtr meshComp3 = child_of_object->add<MeshComponent>(child_of_object, cube);
-  for (auto& m : meshComp3->mesh->meshes)
-  {
-    m.material = material;
-    m.shader = gBuffer;
-  }
-
-  //manipulate the properties of the object by getting it from the component
-  meshComp3->getEntityPtr()->scale = glm::vec3(3.0f, 5.0f, 5.0f);
-  meshComp3->getEntityPtr()->angle = 45.0f;
-  meshComp3->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
   //add a mesh component pointer to the object with the setup from the prelims
   MeshComponentPtr meshComp2 = object->add<MeshComponent>(object, cube);
@@ -162,6 +150,34 @@ void Scene::Init()
   meshComp2->getEntityPtr()->angle = 0;
   meshComp2->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
+
+  EntityPtr child_of_object = addEntity("Child Plane", object);
+  MeshComponentPtr meshComp3 = child_of_object->add<MeshComponent>(child_of_object, cube);
+  for (auto& m : meshComp3->mesh->meshes)
+  {
+    m.material = material;
+    m.shader = gBuffer;
+  }
+
+  //manipulate the properties of the object by getting it from the component
+  meshComp3->getEntityPtr()->scale = glm::vec3(3.0f, 5.0f, 5.0f);
+  meshComp3->getEntityPtr()->angle = 45.0f;
+  meshComp3->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
+
+
+  EntityPtr child_of_object2 = addEntity("Child Plane 2", object);
+  MeshComponentPtr meshComp4 = child_of_object2->add<MeshComponent>(child_of_object2, cube);
+
+  for (auto& m : meshComp4->mesh->meshes)
+  {
+    m.material = material;
+    m.shader = gBuffer;
+  }
+
+  //manipulate the properties of the object by getting it from the component
+  meshComp4->getEntityPtr()->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+  meshComp4->getEntityPtr()->angle = 120.0f;
+  meshComp4->getEntityPtr()->axisOfRotation = glm::vec3(0.0f, 1.0f, 0.0f);
 
   //create 8 objects
   /*for (int i = 0; i < 8; ++i)

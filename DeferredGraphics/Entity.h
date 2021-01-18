@@ -28,21 +28,35 @@ public:
   std::vector<Entity*> children;
   std::vector<BehaviorPtr> behaviors; // The list of behaviors attached to this entity.
   ComponentPointerLists pointers;
-  Quaternion q;
   Scene& scene;
   std::string name;
   glm::vec3 position;
   glm::vec3 axisOfRotation;
   glm::vec3 scale;
+  glm::mat4 objectToWorld; //world space
+  glm::mat4 localToWorld; //local space
   float angle;
   float currentPosition;
 
   glm::mat4 getObjectToWorld()
   {
-    q.setToRotatAboutAxis(axisOfRotation, glm::radians(angle));
+    Quaternion q;
+    q.setToRotatAboutAxis(glm::normalize(axisOfRotation), glm::radians(angle));
     q.normalized();
 
-    return glm::translate(position) * q.quaternionToMatrix() * glm::scale(scale);
+    localToWorld = glm::translate(position) * q.quaternionToMatrix() * glm::scale(scale);
+
+    if (parent == nullptr)
+    {
+      objectToWorld = localToWorld;
+    }
+    else
+    {
+      objectToWorld = parent->objectToWorld * localToWorld;
+    }
+
+    return objectToWorld;
+
     //return glm::translate(position) * glm::rotate(glm::radians(angle), axisOfRotation) * glm::scale(scale);
   }
 
