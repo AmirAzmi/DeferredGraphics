@@ -27,7 +27,7 @@ class Editor
 public:
   ImVec2 sceneDimension;
   bool lightsOn = true;
-  unsigned default_name_count = 0;
+  int default_name_count = 0;
   char buffer_size[256] = {0};
   uint8_t counter = 0;
   std::array<float, 256> arr;

@@ -27,14 +27,14 @@ public:
   Entity* parent;
   std::vector<Entity*> children;
   std::vector<BehaviorPtr> behaviors; // The list of behaviors attached to this entity.
+  std::string name;
   ComponentPointerLists pointers;
   Scene& scene;
-  std::string name;
+  glm::mat4 objectToWorld; //world space
+  glm::mat4 localToWorld; //local space
   glm::vec3 position;
   glm::vec3 axisOfRotation;
   glm::vec3 scale;
-  glm::mat4 objectToWorld; //world space
-  glm::mat4 localToWorld; //local space
   float angle;
   float currentPosition;
 

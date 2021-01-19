@@ -41,7 +41,7 @@ static void ReadChildren(std::vector<Entity*> entities, Scene& scene, SystemMana
   //transform component
   for (int i = 0; i < entities.size(); ++i)
   {
-    const std::string& name = scene.getEntities()[i]->name;
+    const std::string& name = entities[i]->name;
 
     if (!search_word.empty())
     {
@@ -281,14 +281,18 @@ static void ReadChildren(std::vector<Entity*> entities, Scene& scene, SystemMana
 
       ImGui::Indent();
 
+      if (ImGui::Button("Add Child Entity"))
+      {
+        scene.addEntity("child name " + std::to_string(entities[i]->children.size()), entities[i]);
+      }
+
       ImGui::NewLine();
       ImGui::TextWrapped("Children: %i", entities[i]->children.size());
-      for (int j = 0; j < entities.size(); ++j)
-      {
-        //ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Header, ImVec4(1,0,0,1));
-        ReadChildren(entities[j]->children, scene, Manager, search_word);
-        //ImGui::PopStyleColor();
-      }
+
+      //ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Header, ImVec4(1,0,0,1));
+      ReadChildren(entities[i]->children, scene, Manager, search_word);
+      //ImGui::PopStyleColor();
+      
       ImGui::Unindent();
     }
     ImGui::PopID();

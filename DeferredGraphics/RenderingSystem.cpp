@@ -25,12 +25,12 @@ RenderingSystem::RenderingSystem(const int windowWidth, const int windowHeight) 
 {
   //set the deffered lighting shader that should be used
   defferedLightingShaderID = std::make_shared<Shader>("Resources/Shaders/defferedLightingPass.vert", "Resources/Shaders/defferedLightingPass.frag", true);
-  forwardLightingShaderID = std::make_shared<Shader>("Resources/Shaders/forwardLightingPass.vert", "Resources/Shaders/forwardLightingPass.frag", false);
-  gBufferShaderID = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
-  colorAndBrightShaderID = std::make_shared<Shader>("Resources/Shaders/ColorAndBright.vert", "Resources/Shaders/ColorAndBright.frag", true);
-  bloomFinalID = std::make_shared<Shader>("Resources/Shaders/FinalBloom.vert", "Resources/Shaders/FinalBloom.frag", true);
-  splitScreenShaderID = std::make_shared<Shader>("Resources/Shaders/gBufferViewer.vert", "Resources/Shaders/gBufferViewer.frag", false);
-  finalColorID = std::make_shared<Shader>("Resources/Shaders/FinalColorOut.vert", "Resources/Shaders/FinalColorOut.frag", false);
+  forwardLightingShaderID  = std::make_shared<Shader>("Resources/Shaders/forwardLightingPass.vert", "Resources/Shaders/forwardLightingPass.frag", false);
+  gBufferShaderID          = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
+  colorAndBrightShaderID   = std::make_shared<Shader>("Resources/Shaders/ColorAndBright.vert", "Resources/Shaders/ColorAndBright.frag", true);
+  bloomFinalID             = std::make_shared<Shader>("Resources/Shaders/FinalBloom.vert", "Resources/Shaders/FinalBloom.frag", true);
+  splitScreenShaderID      = std::make_shared<Shader>("Resources/Shaders/gBufferViewer.vert", "Resources/Shaders/gBufferViewer.frag", false);
+  finalColorID             = std::make_shared<Shader>("Resources/Shaders/FinalColorOut.vert", "Resources/Shaders/FinalColorOut.frag", false);
 
   //generate global VAO
   glGenVertexArrays(1, &globalVAOID);
