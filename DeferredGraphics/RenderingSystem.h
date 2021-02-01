@@ -111,7 +111,7 @@ private:
 
 
 public:    
-
+  int itemsSize = 0;
   float animation_delta_time = 1.0 / 144.0;
   float exposure = 1.0f;
   bool bloom = false;
@@ -128,6 +128,7 @@ public:
   ~RenderingSystem();
   void Update(Scene& scene, const int windowWidth, const int windowHeight, float dt);
   void Draw(DrawItem mesh, Scene& scene, bool isDeffered);
+  void CalculateAABB(MeshComponentPtr mesh);
 
   void drawBones(Scene& scene);
   void DrawQuad();

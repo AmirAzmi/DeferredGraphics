@@ -48,13 +48,18 @@ std::vector<LightComponentPtr>& Scene::getLights()
 
 const glm::mat4 Scene::ScreenToWorld()
 {
-  glm::mat4 screen_to_world = viewMatrix * projectionMatrix;
+  glm::mat4 screen_to_world = projectionMatrix * viewMatrix;
   return glm::inverse(screen_to_world);
 }
 
 const glm::mat4 Scene::getScreenToWorld()
 {
   return screenToWorld;
+}
+
+const glm::mat4 Scene::getViewProject()
+{
+  return  projectionMatrix * viewMatrix;
 }
 
 void Scene::Init()

@@ -177,10 +177,12 @@
     <ClCompile Include="LinearAllocator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="Memory.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovementBehavior.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="PrimitiveRenderer.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Raycast.cpp" />
@@ -221,11 +223,13 @@
     <ClInclude Include="Line.h" />
     <ClInclude Include="LinearAllocator.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MovementBehavior.h" />
     <ClInclude Include="Octree.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="PrimitiveRenderer.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Raycast.h" />

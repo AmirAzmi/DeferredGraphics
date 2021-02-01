@@ -1,5 +1,5 @@
-#include "AABB.h"
 #include <algorithm>
+#include "AABB.h"
 
 std::vector<glm::vec3> AABB::isContained(const glm::vec3* points, size_t size, const AABB& boundingVolume)
 {

@@ -61,6 +61,7 @@ public:
   std::vector<LightComponentPtr>& getLights();
   const glm::mat4 ScreenToWorld();
   const glm::mat4 getScreenToWorld();
+  const glm::mat4 getViewProject();
  
 
   void Init();

@@ -783,6 +783,7 @@ void Editor::Render(Scene& scene, SystemManager& Manager)
   //-------------------------------------------------------------------------------
   //Settings Window
   ImGui::Begin("Settings");
+  ImGui::TextWrapped("Number of Objects Visible: %i", Manager.renderer->itemsSize);
   if (ImGui::DragFloat("Time Scale", &scene.timeScale, 0.01f, 0.0f, 10.0f))
   {
   }

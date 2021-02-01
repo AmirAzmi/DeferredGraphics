@@ -16,21 +16,25 @@ Creation date: January 4th , 2020
 
 #include <iostream>
 #include <algorithm>
+#include <array>
+#include <glm/glm/gtc/matrix_access.hpp >
 #include "RenderingSystem.h"
 #include "MeshComponent.h"
 #include "EngineTypes.h"
 #include "Entity.h"
 
+#include "Plane.h"
+
 RenderingSystem::RenderingSystem(const int windowWidth, const int windowHeight) :projectionMatrixID(-1), viewMatrixID(-1)
 {
   //set the deffered lighting shader that should be used
   defferedLightingShaderID = std::make_shared<Shader>("Resources/Shaders/defferedLightingPass.vert", "Resources/Shaders/defferedLightingPass.frag", true);
-  forwardLightingShaderID  = std::make_shared<Shader>("Resources/Shaders/forwardLightingPass.vert", "Resources/Shaders/forwardLightingPass.frag", false);
-  gBufferShaderID          = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
-  colorAndBrightShaderID   = std::make_shared<Shader>("Resources/Shaders/ColorAndBright.vert", "Resources/Shaders/ColorAndBright.frag", true);
-  bloomFinalID             = std::make_shared<Shader>("Resources/Shaders/FinalBloom.vert", "Resources/Shaders/FinalBloom.frag", true);
-  splitScreenShaderID      = std::make_shared<Shader>("Resources/Shaders/gBufferViewer.vert", "Resources/Shaders/gBufferViewer.frag", false);
-  finalColorID             = std::make_shared<Shader>("Resources/Shaders/FinalColorOut.vert", "Resources/Shaders/FinalColorOut.frag", false);
+  forwardLightingShaderID = std::make_shared<Shader>("Resources/Shaders/forwardLightingPass.vert", "Resources/Shaders/forwardLightingPass.frag", false);
+  gBufferShaderID = std::make_shared<Shader>("Resources/Shaders/gBuffer.vert", "Resources/Shaders/gBuffer.frag", true);
+  colorAndBrightShaderID = std::make_shared<Shader>("Resources/Shaders/ColorAndBright.vert", "Resources/Shaders/ColorAndBright.frag", true);
+  bloomFinalID = std::make_shared<Shader>("Resources/Shaders/FinalBloom.vert", "Resources/Shaders/FinalBloom.frag", true);
+  splitScreenShaderID = std::make_shared<Shader>("Resources/Shaders/gBufferViewer.vert", "Resources/Shaders/gBufferViewer.frag", false);
+  finalColorID = std::make_shared<Shader>("Resources/Shaders/FinalColorOut.vert", "Resources/Shaders/FinalColorOut.frag", false);
 
   //generate global VAO
   glGenVertexArrays(1, &globalVAOID);
@@ -263,9 +267,36 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   //gets all the current mesh components in th scene
   std::vector<LightComponentPtr>& lights = scene.getLights();
 
-  //for all mesh  components
+  std::vector<DrawItem> items;
+  std::array<Plane, 6> planes;
+
+  glm::mat4 VP = scene.getViewProject();
+  glm::vec4 X = glm::row(VP, 0);
+  glm::vec4 Y = glm::row(VP, 1);
+  glm::vec4 Z = glm::row(VP, 2);
+  glm::vec4 W = glm::row(VP, 3);
+
+  planes[0] = W + X;
+  planes[1] = W - X;
+  planes[2] = W + Y;
+  planes[3] = W - Y;
+  planes[4] = W + Z;
+  planes[5] = W - Z;
+
+  /*
+  for (int i = 0; i < 6; ++i)
+  {
+    planes[i].NormalizePlane();
+    //float length = glm::length(glm::vec3{ planes[i] });
+    //planes[i] = (planes[i]) / length;// / glm::length(glm::vec3{ planes[i] });
+    //planes[i] = -glm::vec4{ glm::normalize(glm::vec3{planes[i]}), planes[i].w };
+  }
+  */
+
+  //for all mesh components
   for (auto& m : meshes)
   {
+    CalculateAABB(m); //calculate bounding volumes
     if (m->mesh->m_pScene != nullptr)
     {
       if (m->mesh->m_pScene->HasAnimations() == true)
@@ -278,31 +309,68 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
     }
   }
 
-  std::vector<DrawItem> items;
-
-  //for all mesh  components
-  for (auto& m : meshes)
+  for (int i = 0; i < meshes.size(); ++i)
   {
-    //for each mesh in the vector of meshes per model
-    for (int j = 0; j < m->mesh->meshes.size(); ++j)
+    bool isVisibile = true;
+
+    if (meshes[i]->mesh->m_pScene->HasAnimations() == false)
     {
-      DrawItem item;
-
-      item.mesh = &m->mesh->meshes[j];
-
-      item.objectToWorld = m->getEntityPtr()->getObjectToWorld();
-
-      for (int k = 0; k < m->mesh->m_BoneInfo.size(); ++k)
+      for (int j = 0; j < planes.size(); ++j)
       {
-        item.boneTransform[k] = m->mesh->m_BoneInfo[k].FinalTransformation;
+        glm::vec3 p = meshes[i]->bounds.min;
+        glm::vec3 n = meshes[i]->bounds.max;
+
+        if (planes[j].getNormal().x >= 0)
+        {
+          p.x = meshes[i]->bounds.max.x;
+          n.x = meshes[i]->bounds.min.x;
+        }
+
+        if (planes[j].getNormal().y >= 0)
+        {
+          p.y = meshes[i]->bounds.max.y;
+          n.y = meshes[i]->bounds.min.y;
+        }
+
+        if (planes[j].getNormal().z >= 0)
+        {
+          p.z = meshes[i]->bounds.max.z;
+          n.z = meshes[i]->bounds.min.z;
+        }
+
+        // is the positive vertex outside?
+        if (planes[j].PointBelowPlane(p))
+        {
+          isVisibile = false;
+          break;
+        }
       }
+    }
 
+    if (isVisibile == true)
+    {
+      //for each mesh in the vector of meshes per model
+      for (int j = 0; j < meshes[i]->mesh->meshes.size(); ++j)
+      {
+        DrawItem item;
 
-      item.boneSize = m->mesh->m_BoneInfo.size();
+        item.mesh = &meshes[i]->mesh->meshes[j];
 
-      items.push_back(item);
+        item.objectToWorld = meshes[i]->getEntityPtr()->getObjectToWorld();
+
+        for (int k = 0; k < meshes[i]->mesh->m_BoneInfo.size(); ++k)
+        {
+          item.boneTransform[k] = meshes[i]->mesh->m_BoneInfo[k].FinalTransformation;
+        }
+
+        item.boneSize = meshes[i]->mesh->m_BoneInfo.size();
+
+        items.push_back(item);
+      }
     }
   }
+
+  itemsSize = items.size();
 
   //Geometry Pass
   //------------------------------------------------------------
@@ -612,6 +680,25 @@ void RenderingSystem::Draw(DrawItem item, Scene& scene, bool isDeffered)
 
     //draw the objects with the mesh components
     glDrawElements(GL_TRIANGLES, (GLsizei)item.mesh->getIndices().size(), GL_UNSIGNED_INT, 0);
+  }
+}
+
+void RenderingSystem::CalculateAABB(MeshComponentPtr mesh)
+{
+  mesh->bounds.Empty();
+
+  //object to world matrix for a bounding box using the bounding boxes center and size
+  glm::mat4 ObjectToWorld = mesh->getEntityPtr()->getObjectToWorld();
+
+  for (auto& m : mesh->getMesh()->meshes)
+  {
+    //get the world vertices and create an AABB on the go
+    for (int i = 0; i < m.vertices.size(); ++i)
+    {
+      //get vec4 vertices from the mesh component and multiply them by object to woerk to get object to world verices
+      glm::vec3 temp = ObjectToWorld * glm::vec4(m.vertices[i], 1.0f);
+      mesh->bounds.Add(temp);
+    }
   }
 }
 
