@@ -128,7 +128,7 @@ public:
   ~RenderingSystem();
   void Update(Scene& scene, const int windowWidth, const int windowHeight, float dt);
   void Draw(DrawItem mesh, Scene& scene, bool isDeffered);
-  void CalculateAABB(MeshComponentPtr mesh);
+  static void CalculateAABB(MeshComponentPtr mesh);
 
   void drawBones(Scene& scene);
   void DrawQuad();

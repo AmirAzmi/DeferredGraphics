@@ -17,6 +17,9 @@ Creation date: January 4th , 2020
 #include <iostream>
 #include <algorithm>
 #include <array>
+#include <thread>
+#include <tuple> 
+
 #include <glm/glm/gtc/matrix_access.hpp >
 #include "RenderingSystem.h"
 #include "MeshComponent.h"
@@ -24,6 +27,26 @@ Creation date: January 4th , 2020
 #include "Entity.h"
 
 #include "Plane.h"
+
+static void emptyfunc()
+{
+
+}
+
+void ThreadCalculateAABB(const std::vector<MeshComponentPtr> & meshes)
+{
+  std::vector<std::thread> threads;
+
+  for (auto & m : meshes)
+  {
+    threads.emplace_back(emptyfunc);
+  }
+
+  for (auto & t : threads)
+  {
+    t.join();
+  }
+}
 
 RenderingSystem::RenderingSystem(const int windowWidth, const int windowHeight) :projectionMatrixID(-1), viewMatrixID(-1)
 {
@@ -283,20 +306,13 @@ void RenderingSystem::Update(Scene& scene, const int windowWidth, const int wind
   planes[4] = W + Z;
   planes[5] = W - Z;
 
-  /*
-  for (int i = 0; i < 6; ++i)
-  {
-    planes[i].NormalizePlane();
-    //float length = glm::length(glm::vec3{ planes[i] });
-    //planes[i] = (planes[i]) / length;// / glm::length(glm::vec3{ planes[i] });
-    //planes[i] = -glm::vec4{ glm::normalize(glm::vec3{planes[i]}), planes[i].w };
-  }
-  */
+  //ThreadCalculateAABB(meshes);
 
   //for all mesh components
   for (auto& m : meshes)
   {
     CalculateAABB(m); //calculate bounding volumes
+
     if (m->mesh->m_pScene != nullptr)
     {
       if (m->mesh->m_pScene->HasAnimations() == true)
