@@ -701,21 +701,25 @@ void RenderingSystem::Draw(DrawItem item, Scene& scene, bool isDeffered)
 
 void RenderingSystem::CalculateAABB(MeshComponentPtr mesh)
 {
-  mesh->bounds.Empty();
+  AABB l_Bounds;
 
   //object to world matrix for a bounding box using the bounding boxes center and size
-  glm::mat4 ObjectToWorld = mesh->getEntityPtr()->getObjectToWorld();
+  glm::mat3 ObjectToWorld = mesh->getEntityPtr()->getObjectToWorld();
 
   for (auto& m : mesh->getMesh()->meshes)
   {
+    int size = m.vertices.size();
+
     //get the world vertices and create an AABB on the go
-    for (int i = 0; i < m.vertices.size(); ++i)
+    for (int i = 0; i < size; ++i)
     {
       //get vec4 vertices from the mesh component and multiply them by object to woerk to get object to world verices
-      glm::vec3 temp = ObjectToWorld * glm::vec4(m.vertices[i], 1.0f);
-      mesh->bounds.Add(temp);
+      glm::vec3 temp = ObjectToWorld * m.vertices[i];
+      l_Bounds.Add(temp);
     }
   }
+
+  mesh->bounds = l_Bounds;
 }
 
 void RenderingSystem::drawBones(Scene& scene)

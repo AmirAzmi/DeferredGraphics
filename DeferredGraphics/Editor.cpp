@@ -64,7 +64,6 @@ static void ReadChildren(std::vector<Entity*> entities, Scene& scene, SystemMana
       ImGui::Indent();
       if (ImGui::TreeNode("Transform"))
       {
-        //ImGui::Text("Number of Vertices: %f", &entities.getEntities()[i]->get<>);
         if (ImGui::DragFloat3("Position:", &entities[i]->position.x, .1f))
         {
         }
@@ -92,6 +91,7 @@ static void ReadChildren(std::vector<Entity*> entities, Scene& scene, SystemMana
         {
           for (int j = 0; j < meshComponent->mesh->meshes.size(); ++j)
           {
+            ImGui::Text("Number of Vertices: %i", meshComponent->mesh->meshes[j].vertices.size());
             if (meshComponent->mesh->meshes[j].material)
             {
               std::string Mat("Material ");

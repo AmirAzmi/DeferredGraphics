@@ -12,6 +12,7 @@ Creation date: January 4th , 2020
 --------------------------------------------------------*/
 
 #pragma once
+#define GLM_FORCE_SSE2
 #include <glew/GL/glew.h>
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtx/transform.hpp>
