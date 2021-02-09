@@ -6,11 +6,17 @@
 
 namespace Math
 {
-  bool PointOnLine(const glm::vec3 & point, const Line & line);
+  //return magnitude
+  float PointOnLine(const glm::vec3 & point, const Line & line);
 
+  //check if point is on plane
   bool PointPlane(const glm::vec3& point, const Plane& plane);
-  bool LinePlane(const Line& point, const Plane& plane);
-  bool PlanePlane(const Plane & plane, const Plane & planetwo);
 
+  //Get intersection point
+  glm::vec3 LinePlaneIntersection(const Line& point, const Plane& plane);
+
+  //get intersection vector of two planes
+  glm::vec3 PlanePlane(const Plane & plane, const Plane & planetwo);
+
+  glm::vec3 Reflect(glm::vec3 vector, glm::vec3 normal);
 }
-
