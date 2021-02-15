@@ -23,30 +23,34 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader, bool isDeff
   // Read the Vertex Shader code from the file
   std::string VertexShaderCode;
   std::ifstream VertexShaderStream(vertexShader, std::ios::in);
-  if (VertexShaderStream.is_open()) {
+  if (VertexShaderStream.is_open()) 
+  {
     std::string Line;
     while (getline(VertexShaderStream, Line))
+    {
       VertexShaderCode += "\n" + Line;
+    }
+
     VertexShaderStream.close();
   }
-  else {
+  else 
+  {
     printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertexShader.c_str());
-
   }
 
   // Read the Fragment Shader code from the file
   std::string FragmentShaderCode;
   std::ifstream FragmentShaderStream(fragmentShader, std::ios::in);
-  if (FragmentShaderStream.is_open()) {
+  if (FragmentShaderStream.is_open()) 
+  {
     std::string Line;
     while (getline(FragmentShaderStream, Line))
+    {
       FragmentShaderCode += "\n" + Line;
+    }
+
     FragmentShaderStream.close();
   }
-
-  GLint Result = GL_FALSE;
-  int InfoLogLength;
-
 
   // Compile Vertex Shader
   printf("Compiling shader : %s\n", vertexShader.c_str());
@@ -54,10 +58,14 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader, bool isDeff
   glShaderSource(VertexShaderID, 1, &VertexSourcePointer, nullptr);
   glCompileShader(VertexShaderID);
 
+  GLint Result = GL_FALSE;
+  int InfoLogLength;
+
   // Check Vertex Shader
   glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
   glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-  if (InfoLogLength > 0) {
+  if (InfoLogLength > 0)
+  {
     std::vector<char> VertexShaderErrorMessage((size_t)InfoLogLength + 1);
     glGetShaderInfoLog(VertexShaderID, InfoLogLength, nullptr, &VertexShaderErrorMessage[0]);
     printf("%s\n", &VertexShaderErrorMessage[0]);
@@ -72,12 +80,12 @@ Shader::Shader(std::string vertexShader, std::string fragmentShader, bool isDeff
   // Check Fragment Shader
   glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
   glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-  if (InfoLogLength > 0) {
+  if (InfoLogLength > 0)
+  {
     std::vector<char> FragmentShaderErrorMessage((size_t)InfoLogLength + 1);
     glGetShaderInfoLog(FragmentShaderID, InfoLogLength, nullptr, &FragmentShaderErrorMessage[0]);
     printf("%s\n", FragmentShaderErrorMessage.data());
   }
-
 
   // Link the program
   printf("Linking program\n");
